@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/LaserCraft.Desktop/LaserCraft.Desktop.csproj" />
+    <Project Path="src/LaserCraft.Devices/LaserCraft.Devices.csproj" />
     <Project Path="src/LaserCraft.Domain/LaserCraft.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">

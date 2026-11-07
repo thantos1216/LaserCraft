@@ -39,3 +39,18 @@ Build passes with zero warnings/errors; 24 tests pass. UI checked with samples/s
 Next: line/Bezier/text primitives and node editor, complete SVG path/transform support, better selection handles/hit tests, configurable machine/display coordinates and units, cutting-order optimization, and a GRBL protocol simulator before physical integration. Full feature and parameter inventory remains active research.
 
 Release 0.2 publish: artifacts/windows-x64-v0.2 (framework-dependent, .NET 10). Versioned output preserves the previously running 0.1 application. Final build: zero warnings/errors; 24 passing tests.
+
+
+## Milestone 0.3 - ordered typed layers, raster assets and device profiles
+
+User-directed layer workflow replaces the 30 precreated layers for new projects: begin with one vector layer, create named Vector/Image layers, assign selected artwork, and reorder layers with up/down controls. List order is job order. Reordering remaps shape references and retains cut settings. Delete-empty protects populated layers. Every image requires a dedicated image layer, separate from all vector artwork and other images. Image duplication creates another layer. Layer settings include name/color, speed, power, mode, passes, interval, output/show and air assist.
+
+PNG/JPEG/BMP original data is embedded, validated and displayed with a layer-colored border. Images share movement, resizing, mirroring, clipboard, selection and native persistence with vector objects. SVG vector imports can be reassigned like drawn geometry. Raster engraving paths remain unimplemented and reject enabled image output rather than generating incorrect vector paths. Size/pixel/data limits bound the current decoder/JSON format. samples/layers-and-image.lcraft demonstrates the workflow with an original generated PNG fixture.
+
+Added LaserCraft.Devices: persistent validated profiles, GRBL simulator, serial/TCP transports and bounded read-only identity/status handshake. GRBL adapter is implemented; grblHAL/FluidNC use experimental compatible queries; Marlin/Smoothieware/Ruida/Trocen remain profile-only. No real hardware was contacted. Only $I and ? are sent by the monitor; no job, air, home or motion commands. Device origin/power/air capability are stored for future execution mapping. Apply device bed is explicit.
+
+Initial build and 44 tests pass. UI verified: image renders with original pixels; simulator connects and reports Idle/MPos; image layer moves below the vector layer while retaining artwork/settings; New layer creates Layer 3; selecting the outline and Assign selected changes it to the new layer/color. Final validation is recorded in docs/testing/milestone-03.md.
+
+Source is MIT-licensed. No proprietary code/assets were copied. Next: raster toolpaths and image adjustments, richer SVG paths, controller queue simulation and G-code generation, then separately authorized physical validation. Full LightBurn parity remains unfinished.
+
+Final 0.3 validation: build 0 warnings / 0 errors; 47 tests passed, 0 failed. Release output is artifacts/windows-x64-v0.3. Prior versioned builds are preserved.

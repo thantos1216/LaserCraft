@@ -1,47 +1,61 @@
 # LaserCraft Help
 
-Version 0.2 - compact workspace and vector preview
+Version 0.3 - ordered layers, images and device configuration
 
-## Workspace
+## Create layers and control order
 
-The layout follows the familiar laser-design arrangement: menus and compact tool icons at the top, numeric object controls below, drawing tools on the left, Cuts / Layers above Laser on the right, and layer colors along the bottom. Drag either divider to resize the panels. Hover icons for tooltips. Disabled tools and panels are not implemented yet.
+New projects start with one vector layer. In Cuts / Layers, choose + Layer, enter a name, and choose Vector or Image. You can optionally assign the current selection when creating it. Each layer has its own name, color, speed, power, passes, output, visibility and air-assist setting. Edit the fields below the list and click Apply cut settings.
 
-## Create and edit
+Enabled layers run from top to bottom. Select a row and use the up/down buttons to change its job order. Object associations and settings move with the layer. Reordering is undoable. Delete empty removes unused layers; move their objects elsewhere first. At least one layer remains. Existing projects keep their layer lists.
 
-Choose Rectangle or Ellipse and drag on the bed. Choose Select to click or move an object. Ctrl-click adds or removes objects from the selection; Ctrl+A selects all visible objects. Dragging one selected object moves the whole selection. Enter X, Y, width and height in the top bar, then Apply. Multiple-object sizing scales their combined bounding box. All dimensions are millimetres. The current design origin is top-left; this differs from some LightBurn/device coordinate setups.
+To reassign artwork, select objects on the canvas, select the destination layer row, and click Assign selected. Clicking its bottom color swatch also assigns the selection. With no selection, a swatch chooses the drawing layer. Imported SVG geometry uses vector layers, just like drawn shapes. Colors identify job settings; they do not recolor a photograph.
 
-Edit offers Copy, Cut, Paste, Duplicate, Delete and Select all. Copy/paste uses the LaserCraft session clipboard, not the Windows graphics clipboard. Paste offsets objects 5 mm and retains layer colors. Existing target layers keep their cut settings. Arrange offers edge/center alignment, horizontal/vertical flips and Center on bed. Alignment uses the selected objects' combined bounds. Single axis-aligned symmetric shapes will look unchanged when flipped.
+## Separate image layers
 
-## Navigation and history
+An image must have its own Image layer. It cannot share a layer with lines, shapes, SVG vectors or another image. Assignments that violate this rule are rejected without changing the document. Duplicating an image creates another dedicated layer. Vector layers support Line/Fill; image layers use Image mode.
 
-Wheel zooms. Middle-drag pans. Fit workspace resets the viewport. Snap rounds drawing and movement to 1 mm. Rulers follow design coordinates. Ctrl+Z undoes, Ctrl+Y redoes, Ctrl+D duplicates, Ctrl+C copies and Ctrl+V pastes. Delete works when the canvas is focused; Escape cancels drawing or clears selection. Numeric inputs keep their normal text-editing shortcuts.
+File / Import image accepts PNG, JPEG and BMP. Original encoded bytes are embedded in .lcraft, so reopening does not depend on the source file. Images support selection, movement, numerical resizing, mirroring, copy/duplicate and layer reassignment. They have a colored border showing the assigned layer while their original pixels remain unchanged. Drawing tools switch back to an eligible vector layer.
 
-## Cuts / Layers
+Raster engraving paths and image processing are not implemented yet. For vector previews, turn Output off for image layers; otherwise Preview explicitly rejects the unsupported raster job. Image-layer speed/power/air settings are saved for future raster planning. SVG export embeds original raster data; SVG import currently accepts only the vector subset described below.
 
-New projects have 30 layers, C00 through C29. Click a bottom color to assign every selected object to that layer; with no selection it chooses the layer for new shapes. The Cuts / Layers list shows used layers and the active drawing layer. Click a row or use the dropdown to edit a layer.
+Limits: 8 MB per imported encoded image; 16000 pixels per dimension; 40 megapixels per original; 128 image objects, 80 megapixels of unique assets and 24 MB of base64 image data per project. Preview textures are limited to 2048 pixels wide. Projects are limited to 32 MB on disk. Large-image tiling and asset deduplication remain planned.
 
-Choose Line or Fill. Set speed in mm/min, power in percent, passes and fill interval in mm. Output controls inclusion in preview; Show controls canvas visibility independently. A hidden layer can still be included in output. Air is saved as a requested air-assist setting; it does not operate hardware. Click Apply cut settings to commit changes. All these values round-trip with the project and participate in undo/redo.
+## Device profiles and connection
 
-## Preview and simulator
+Choose Devices… in the Laser panel or Laser Tools menu. Create a named profile and select the controller family, Simulator/Serial/TCP connection, COM port, baud rate, TCP host/port, bed dimensions, origin and S-value maximum. Serial uses 8 data bits, no parity, 1 stop bit and no flow control; DTR/RTS are optional. Opening some serial ports can reset their controller. Profile settings are stored under LocalAppData/LaserCraft/devices.json, separately from projects.
 
-Preview generates paths for enabled layers. Line follows rectangle boundaries and approximates ellipses with 128 segments. Fill scans horizontally using the even-odd rule across shapes on the same layer, leaving nested holes. Each pass repeats the layer. Grey dashed paths are travel; amber paths are cutting. Cut selected graphics limits the plan to selected IDs.
+GRBL has a read-only connection adapter. grblHAL and FluidNC use an experimental GRBL-compatible adapter. Marlin, Smoothieware, Ruida and Trocen can be saved as profiles but do not yet have connection adapters. Selecting a controller family is not a claim of tested machine compatibility. No Atezr hardware has been tested.
 
-Start plays the preview at 10 times ideal time. Pause freezes playback; Start resumes a paused plan. Stop resets playback and returns to editing. Geometry/layer edits, changing selected-only scope or switching documents invalidate the previous plan. Frame preview checks the output bounds and fits the bed; it does not move a machine.
+Select a saved profile, then Connect. The application queries firmware identity ($I) and status (?), without homing, jogging, firing or streaming a job. Read status refreshes the report; Disconnect closes the connection. Status coordinates identify MPos or WPos exactly as reported. Missing coordinates stay unknown. A built-in GRBL simulator is the default and works without hardware. Connection cancellation, line limits and response timeouts bound reads; real serial hardware behavior remains unverified.
 
-Output outside the bed is rejected. Estimates assume constant layer speed and 6000 mm/min travel. They omit acceleration, controller delays and material effects. Power and air settings are stored but no physical behavior is simulated. Limits are 100000 fill rows and 200000 plan segments. Increase the line interval or reduce repeated passes for very dense previews.
+Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
 
-## Projects and SVG
+## Air assist
 
-New creates a document tab. Open loads .lcraft. Save / Ctrl+S persists it. Save as creates another file. A dot in the tab and an asterisk in the title indicate unsaved work. File / Close project saves modified work before closing; canceling the save keeps it open. Closing the entire window asks before discarding unsaved projects.
+Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Vector cut-plan segments carry the requested state; travel segments do not. The device profile also records whether its controller has a configured air-assist output. In this build these are configuration and preview requests only: no air, M8/M9 or other physical output commands are sent.
 
-Import SVG supports untransformed rectangles, circles and ellipses with numeric geometry. Root dimensions can use mm, cm, in or px; pixels use 96 DPI. Uniform viewBox scaling is supported. Imported shapes go to the active layer. CSS styles, paths, transforms, rounded rectangles and other unsupported constructs reject the entire import rather than silently omitting content. Styles and original layer colors are not imported. Export SVG writes geometry with millimetre dimensions; cut settings stay in .lcraft.
+## Vector editing and navigation
 
-Try samples/studio-demo.lcraft for line/fill preview, or samples/basic-shapes.svg for the supported import subset. The sample settings are illustrative, not material recommendations.
+Choose Rectangle or Ellipse and drag. Select clicks or moves an object. Ctrl-click adds/removes selection; Ctrl+A selects visible objects. Line shapes are selected near their outlines so a surrounding frame does not intercept an image inside it. Dragging a selected object moves the selection. Enter X, Y, width and height at the top, then Apply. Multi-object sizing scales their combined bounds, in millimetres.
 
-## Appearance and Help
+Wheel zooms; middle-drag pans; Fit workspace resets the view. Snap rounds to 1 mm. Ctrl+Z/ Ctrl+Y undo/redo. Ctrl+C copies, Ctrl+V pastes, Ctrl+D duplicates. The internal artwork clipboard is separate from the Windows graphics clipboard. Paste offsets 5 mm and retains layer colors; target vector layers keep existing settings. Delete removes selected objects when the canvas is focused; Escape deselects/cancels. Arrange provides alignment, flips and Center on bed.
 
-Window / Light / dark switches the theme; the preference is saved for your account. Window / Help opens this document, which is copied from docs/help/Help.md on each build. The design canvas stays dark in both themes.
+## Vector preview and playback
 
-## Remaining functionality
+Preview plans enabled layers in list order. Line follows rectangles and approximates ellipses with 128 segments. Fill scans horizontally with the even-odd rule, leaving nested holes. Passes repeat their layer. Grey dashed paths are travel; amber paths are cutting. Cut selected graphics limits the plan to selected objects.
 
-This is an independently implemented application under development. Full LightBurn parity is not achieved. Lines/Bezier paths, text, nodes, groups, booleans, raster processing, tracing, advanced imports, real docking, multi-page documents, cameras, rotary, material libraries and AI remain planned. Save G-code, Run G-code, Home, Go to origin and Devices are disabled because controller integration is not implemented. No serial/network connection or laser operation occurs in this build. The feature parity matrix records detailed progress.
+Start/Pause/Stop control only offline playback, even while a controller monitor is connected. Playback is 10 times ideal time. Edits, layer reordering, selected-only scope changes or document switches invalidate the old plan. Frame preview checks bed bounds and fits the viewport; it does not move a machine. Estimates assume constant layer speed and 6000 mm/min travel, without acceleration or material effects. Power is stored, not physically simulated. Dense plans are limited to 100000 fill rows, 200000 segments and a bounded intersection-work budget.
+
+## Files and SVG
+
+New opens a document tab. Save / Ctrl+S persists .lcraft; Save as creates another file. A tab dot/title asterisk marks unsaved work. File / Close project saves modified work first; canceling save keeps it open. Closing the entire window asks before discarding changes. A .lcraft path can also be supplied as a startup argument.
+
+SVG import supports untransformed numeric rectangles, circles and ellipses, root mm/cm/in/px dimensions (96 DPI pixels) and uniform viewBox scaling. Unsupported paths, styles, transforms, rounded rectangles and other constructs reject the entire import. Geometry goes to the active vector layer, or a new vector layer if an image layer was active. SVG export retains geometry and embedded raster sources; .lcraft retains job settings. Full SVG and additional formats remain planned.
+
+Try samples/layers-and-image.lcraft for the image/layer workflow, samples/studio-demo.lcraft for nested vector fill, and samples/basic-shapes.svg for supported SVG import. Sample settings are illustrative, not material recommendations.
+
+## Appearance, source and remaining work
+
+Window / Light / dark switches the persisted theme. Help is copied from docs/help/Help.md at build time. LaserCraft's original source is MIT-licensed; third-party packages retain their own licenses. No LightBurn source or protected assets are used.
+
+Full parity remains unfinished: paths/Bezier/text/nodes, booleans, raster engraving/dithering, advanced imports, real docking, cameras, rotary, materials, AI, G-code generation and physical job streaming remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.

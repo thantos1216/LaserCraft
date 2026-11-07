@@ -15,3 +15,12 @@ Device integration will be isolated from the editor, first using a simulated con
 The BDK WPF ThemeManager and ThemeDefinition were inspected read-only. Their WPF ResourceDictionary/SystemEvents coupling prevents direct use in Avalonia. The original LaserCraft implementation adopts runtime light/dark selection and account-local persistence. Portable palettes and workspace layouts remain planned; no BDK source was copied.
 
 Known design debt: snapshot history is unbounded and copies complete lists; viewport has no spatial index; document tabs cannot close individually; only axis-aligned geometry is supported. Benchmark representative files before introducing native acceleration or a command-based history.
+
+
+## Addendum: 0.3
+
+LaserCraft.Devices references Domain and owns profile persistence and read-only GRBL transports/monitoring. Desktop orchestrates it through explicit UI actions. The default transport is an in-process simulator. No machine job API is exposed yet. Identity/status queries are bounded; shutdown cancels pending reads before disposing transports. Loopback TCP tests exercise real transport framing.
+
+LayerKind separates vector and image job steps. One image per image layer is enforced. Layer list order is execution order; move operations remap every object reference without changing identities or settings. New projects create one vector layer; older projects keep existing lists. Additional layer settings remain per-layer records and participate in history/native saves.
+
+RasterAsset embeds immutable original PNG/JPEG/BMP encoded data and metadata on an Image object. Desktop validates codec metadata and complete decode, then caches bounded-resolution previews by asset ID. Shared asset IDs must have identical data. Mirror flags preserve source bytes. Native saves enforce output size before replacement. JSON duplicates shared asset data on disk, so total encoded-data limits include repeated objects; asset-table deduplication/tiled storage remain future work. Raster path generation explicitly fails for enabled image layers.

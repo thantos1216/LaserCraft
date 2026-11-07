@@ -9,6 +9,7 @@ public static class SvgImport
 {
     public static List<DesignShape> Read(string text, int layer = 0)
     {
+        if (layer < 0 || layer >= 256) throw new InvalidDataException("Invalid target SVG layer.");
         using var reader = XmlReader.Create(new StringReader(text), new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = 4_000_000 });
         var root = XDocument.Load(reader).Root ?? throw new InvalidDataException("Empty SVG.");
         if (root.Name.LocalName != "svg") throw new InvalidDataException("Expected SVG root.");
@@ -34,7 +35,7 @@ public static class SvgImport
             };
             if (s is not null) result.Add(s);
         }
-        (DesignDocument.Empty() with { Shapes = result }).Validate(); return result;
+        (DesignDocument.Empty() with { Shapes = result, Layers = Enumerable.Range(0, layer + 1).Select(i => new CutLayer($"Layer {i + 1}", "#4169E1")).ToList() }).Validate(); return result;
     }
     private static double N(string value)
     {

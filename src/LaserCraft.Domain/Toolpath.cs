@@ -1,7 +1,7 @@
 namespace LaserCraft.Domain;
 
 public readonly record struct PointMm(double X, double Y);
-public sealed record ToolpathSegment(PointMm From, PointMm To, int Layer, bool Travel, double Speed)
+public sealed record ToolpathSegment(PointMm From, PointMm To, int Layer, bool Travel, double Speed, bool AirAssist = false)
 {
     public double Length => Math.Sqrt(Math.Pow(To.X - From.X, 2) + Math.Pow(To.Y - From.Y, 2));
     public double Seconds => Length / Speed * 60;
@@ -22,6 +22,7 @@ public static class ToolpathPlanner
             var shapes = d.Shapes.Where(s => s.Layer == layer && (selected is null || selected.Contains(s.Id))).ToArray();
             foreach (var s in shapes) if (s.X < 0 || s.Y < 0 || s.X + s.Width > d.Width || s.Y + s.Height > d.Height) throw new InvalidDataException("Output geometry is outside the design bed.");
             if (shapes.Length == 0) continue;
+            if (shapes.Any(s => s.Kind == ShapeKind.Image)) throw new InvalidDataException("Raster engraving paths are not implemented yet. Disable image layer Output to preview vectors.");
             for (int pass = 0; pass < cut.Passes; pass++)
             {
                 if (cut.Mode == CutMode.Line)
@@ -57,7 +58,7 @@ public static class ToolpathPlanner
                 {
                     if (segments.Count + (position != from ? 2 : 1) > 200000) throw new InvalidDataException("Preview exceeds the 200000-segment limit.");
                     if (position != from) segments.Add(new(position, from, layer, true, 6000));
-                    segments.Add(new(from, to, layer, false, cut.Speed)); position = to;
+                    segments.Add(new(from, to, layer, false, cut.Speed, cut.AirAssist)); position = to;
                 }
             }
         }

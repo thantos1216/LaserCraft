@@ -10,11 +10,17 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.5" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LaserCraft.Domain\LaserCraft.Domain.csproj" />
     <None Include="..\..\docs\help\Help.md" Link="Help.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LaserCraft.Devices\LaserCraft.Devices.csproj" />
   </ItemGroup>
 
 </Project>

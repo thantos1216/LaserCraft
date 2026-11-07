@@ -7,3 +7,5 @@ Tests use xunit 2.9.3 (Apache-2.0), xunit.runner.visualstudio 3.1.4 (Apache-2.0)
 Development-only: pypdf 7.0.0 (BSD-3-Clause), installed inside .venv. REA 6.8.0 (MIT), separately owned checkout and dependencies. REA's Ghidra provider uses the existing Ghidra 12.1.4 installation (Apache-2.0 and bundled third-party notices). Neither the manual nor LightBurn binaries are distributed.
 
 No custom icons, proprietary images or copied LightBurn UI assets are used.
+
+Milestone 0.3 adds System.IO.Ports 10.0.7 (MIT) to the isolated Devices project. Raster decoding declares SkiaSharp 3.119.4 directly (MIT), the same version already present transitively; no new image runtime was installed. Original LaserCraft source is MIT-licensed; third-party license notices still apply.

@@ -8,6 +8,7 @@ namespace LaserCraft.Desktop;
 
 public sealed class DesignCanvas : Control
 {
+    private readonly Dictionary<Guid, Avalonia.Media.Imaging.Bitmap> bitmaps = [];
     public EditorHistory History { get; } = new();
     public HashSet<Guid> Selection { get; } = [];
     public Guid? Selected { get => Selection.Count == 1 ? Selection.First() : null; set { Selection.Clear(); if (value is Guid id) Selection.Add(id); } }
@@ -33,6 +34,7 @@ public sealed class DesignCanvas : Control
     public void Refresh() { InvalidateVisual(); Changed?.Invoke(); }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
     public void Apply(DesignDocument d) { History.Apply(d); Refresh(); }
+    public void ReleaseImages() { foreach (var bitmap in bitmaps.Values) bitmap.Dispose(); bitmaps.Clear(); }
     public void DeleteSelected() { if (Selection.Count > 0) { Apply(History.Document with { Shapes = History.Document.Shapes.Where(s => !Selection.Contains(s.Id)).ToList() }); Selected = null; Refresh(); } }
     public void SelectAll() { Selection.Clear(); foreach (var s in History.Document.Shapes.Where(s => History.Document.Layers[s.Layer].Visible)) Selection.Add(s.Id); Refresh(); }
     public override void Render(DrawingContext ctx)
@@ -70,7 +72,13 @@ public sealed class DesignCanvas : Control
         {
             var r = new Rect(o.X + s.X * scale, o.Y + s.Y * scale, s.Width * scale, s.Height * scale);
             var pen = new Pen(Brush(d.Layers[s.Layer].Color), 1.8);
-            if (s.Kind == ShapeKind.Rectangle) ctx.DrawRectangle(null, pen, r); else ctx.DrawEllipse(null, pen, r);
+            if (s.Kind == ShapeKind.Image)
+            {
+                if (!bitmaps.TryGetValue(s.Image!.Id, out var bitmap)) { bitmap = RasterImages.Preview(s.Image); bitmaps.Add(s.Image.Id, bitmap); }
+                using (ctx.PushTransform(Matrix.CreateTranslation(-r.Center.X, -r.Center.Y) * Matrix.CreateScale(s.FlipX ? -1 : 1, s.FlipY ? -1 : 1) * Matrix.CreateTranslation(r.Center.X, r.Center.Y))) ctx.DrawImage(bitmap, new Rect(bitmap.Size), r);
+                ctx.DrawRectangle(null, pen, r);
+            }
+            else if (s.Kind == ShapeKind.Rectangle) ctx.DrawRectangle(null, pen, r); else ctx.DrawEllipse(null, pen, r);
             if (Selection.Contains(s.Id)) ctx.DrawRectangle(null, new Pen(Brushes.White, .8, DashStyle.Dash), r.Inflate(4));
         }
     }
@@ -82,11 +90,11 @@ public sealed class DesignCanvas : Control
         start = Snapped(World(e.GetPosition(this))); var p = start.Value; original = null; preview = null; moveDelta = default;
         if (Tool == "Select")
         {
-            original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && p.X >= s.X && p.X <= s.X + s.Width && p.Y >= s.Y && p.Y <= s.Y + s.Height);
+            original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 5 / Scale));
             if (e.KeyModifiers.HasFlag(KeyModifiers.Control)) { if (original is not null && !Selection.Add(original.Id)) { Selection.Remove(original.Id); original = null; } }
             else if (original is null || !Selection.Contains(original.Id)) Selected = original?.Id;
         }
-        else if (p.X >= 0 && p.Y >= 0 && p.X <= History.Document.Width && p.Y <= History.Document.Height)
+        else if (History.Document.Layers[ActiveLayer].Kind == LayerKind.Vector && p.X >= 0 && p.Y >= 0 && p.X <= History.Document.Width && p.Y <= History.Document.Height)
         { preview = new(Guid.NewGuid(), Tool == "Rectangle" ? ShapeKind.Rectangle : ShapeKind.Ellipse, p.X, p.Y, .1, .1, ActiveLayer); Selected = preview.Id; }
         e.Pointer.Capture(this); Refresh();
     }
@@ -109,7 +117,7 @@ public sealed class DesignCanvas : Control
         {
             var items = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList();
             if (!items.Any(s => s.Id == preview.Id)) items.Add(preview);
-            History.Apply(History.Document with { Shapes = items });
+            try { History.Apply(History.Document with { Shapes = items }); } catch (InvalidDataException) { Selected = null; }
         }
         preview = null; original = null; moveDelta = default; start = null; panStart = null; e.Pointer.Capture(null); Refresh();
     }

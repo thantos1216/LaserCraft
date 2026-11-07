@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.2
+# Feature parity matrix - working baseline 0.3
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -23,12 +23,12 @@
 | Text / text-to-path / text-on-path | R | Planned | Font shaping and editable text |
 | Arrays / nesting | R | Planned | Rotation and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
-| Layer assignment and settings | D p81 | Partial: 30 layers; Line/Fill, passes, speed/power, output, visibility and stored air | Sublayers, cut ordering, advanced settings |
+| Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |
 | Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses, tested | Offset fill, angles, overscan and controller planning |
 | Native editable project | R | Partial v1, tested | Assets, recovery, migrations, previews |
 | SVG | D p63-67 | Export + basic rect/ellipse/circle import tested | Paths, transforms, styling, broad unit coverage |
 | DXF / PDF / AI / EPS | R | Planned | Codec/license review and malformed input tests |
-| PNG / JPEG / BMP / TIFF / WebP / GIF | R | Planned | Decode dimensions, color, orientation |
+| PNG / JPEG / BMP / TIFF / WebP / GIF | R | Partial: PNG/JPEG/BMP embedding, rendering, transforms and dedicated layers | Raster paths, TIFF/WebP/GIF and orientation coverage |
 | Vector-to-bitmap | D p929 | Planned | Outlines/fills rendering correctness |
 | Nondestructive raster adjustments | R | Planned | Preserve original, deterministic pipeline |
 | Threshold raster engraving | D p1001 | Planned | Binary output and intensity fixtures |
@@ -36,14 +36,14 @@
 | DPI / scan interval / overscan | R | Planned | Unit conversion and bounded toolpaths |
 | Outline / centerline tracing | D p1705; R expanded tracing | Planned | Editable geometry with controlled error |
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
-| Path optimization / cut order | R | Planned | Inner-before-outer constraints |
+| Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Planned | Serializable presets and calibration evidence |
-| GRBL controller | R, Atezr priority | Planned | Simulated serial protocol before hardware |
-| grblHAL / FluidNC / Marlin / Smoothieware | R | Planned | Protocol adapter qualification |
+| GRBL controller | R, Atezr priority | Partial: read-only serial/TCP monitor, simulated and loopback-tested | Hardware qualification and job queue |
+| grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
 | G-code generation | R | Planned | Bounds, units, power-off travel tests |
 | Streaming / pause / resume / stop | R | Planned | Queue state machine and disconnect tests |
-| Device setup / machine profiles | R | Planned | Verify firmware, envelope and power range |
+| Device setup / machine profiles | R | Implemented profile configuration and persistence, read-only monitor | Device-specific origin/power/air validation |
 | Camera calibration / overlay | D p1705 | Planned | Measured calibration error |
 | Print-and-cut / fiducials | R | Planned | Transform accuracy and recovery |
 | Rotary calibration / compensation | R | Planned | Device-specific simulated fixtures |

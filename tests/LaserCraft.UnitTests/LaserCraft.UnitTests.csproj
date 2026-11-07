@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\LaserCraft.Domain\LaserCraft.Domain.csproj" />
+    <ProjectReference Include="..\..\src\LaserCraft.Devices\LaserCraft.Devices.csproj" />
   </ItemGroup>
 
 </Project>

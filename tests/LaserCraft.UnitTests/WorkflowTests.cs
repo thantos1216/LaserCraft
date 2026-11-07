@@ -6,7 +6,7 @@ namespace LaserCraft.UnitTests;
 public sealed class WorkflowTests
 {
     private static DesignDocument Shape(double x = 10, double y = 20, double w = 30, double h = 40) => DesignDocument.Empty() with { Shapes = [new(Guid.NewGuid(), ShapeKind.Rectangle, x, y, w, h)] };
-    [Fact] public void ThirtyLayersAreAvailable() { var d = DesignDocument.Empty(); Assert.Equal(30, d.Layers.Count); Assert.Equal("C29", d.Layers[29].Name); d.Validate(); }
+    [Fact] public void NewDocumentsStartWithOneExplicitLayer() { var d = DesignDocument.Empty(); Assert.Single(d.Layers); Assert.Equal(LayerKind.Vector, d.Layers[0].Kind); d.Validate(); }
     [Fact]
     public void SvgRoundTripPreservesMillimetres()
     {
@@ -33,7 +33,8 @@ public sealed class WorkflowTests
         var d = Shape(); d.Layers[0] = d.Layers[0] with { Visible = false }; Assert.True(ToolpathPlanner.Build(d).CutLength > 0); d.Layers[0] = d.Layers[0] with { Output = false }; Assert.Empty(ToolpathPlanner.Build(d).Segments);
     }
     [Fact] public void OffBedOutputIsRejected() => Assert.Throws<InvalidDataException>(() => ToolpathPlanner.Build(Shape(-1)));
-    [Fact] public void SelectedOnlyPlanningIncludesExactlyTheRequestedObjects()
+    [Fact]
+    public void SelectedOnlyPlanningIncludesExactlyTheRequestedObjects()
     {
         var d = Shape(); var id = d.Shapes[0].Id; d.Shapes.Add(new(Guid.NewGuid(), ShapeKind.Rectangle, 100, 100, 50, 50));
         Assert.Equal(140, ToolpathPlanner.Build(d, new HashSet<Guid> { id }).CutLength, 8);
