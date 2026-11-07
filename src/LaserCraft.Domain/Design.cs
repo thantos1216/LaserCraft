@@ -6,21 +6,22 @@ namespace LaserCraft.Domain;
 
 public enum ShapeKind { Rectangle, Ellipse }
 public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0);
-public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true);
+public enum CutMode { Line, Fill }
+public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1);
 public sealed record DesignDocument(int Version, string Name, double Width, double Height, List<DesignShape> Shapes, List<CutLayer> Layers)
 {
-    public static DesignDocument Empty(string name = "Untitled") => new(1, name, 400, 400, [], [new("Outline", "#47D7F0"), new("Detail", "#B99CFF")]);
+    public static DesignDocument Empty(string name = "Untitled") => new(1, name, 400, 400, [], LayerPalette.Create());
     public void Validate()
     {
         if (Version != 1) throw new InvalidDataException("Unsupported project version.");
         if (!FinitePositive(Width) || !FinitePositive(Height) || Width > 10000 || Height > 10000) throw new InvalidDataException("Invalid bed size.");
-        if (string.IsNullOrWhiteSpace(Name) || Name.Length>256 || Shapes is null || Layers is null || Layers.Count == 0 || Layers.Count>256 || Shapes.Count > 100000 || Shapes.Any(s=>s is null) || Layers.Any(l=>l is null)) throw new InvalidDataException("Invalid project contents.");
+        if (string.IsNullOrWhiteSpace(Name) || Name.Length > 256 || Shapes is null || Layers is null || Layers.Count == 0 || Layers.Count > 256 || Shapes.Count > 100000 || Shapes.Any(s => s is null) || Layers.Any(l => l is null)) throw new InvalidDataException("Invalid project contents.");
         if (Shapes.Select(s => s.Id).Distinct().Count() != Shapes.Count) throw new InvalidDataException("Duplicate object IDs.");
         foreach (var s in Shapes)
-            if (!Enum.IsDefined(s.Kind) || !double.IsFinite(s.X) || !double.IsFinite(s.Y) || Math.Abs(s.X)>10000 || Math.Abs(s.Y)>10000 || !FinitePositive(s.Width) || !FinitePositive(s.Height) || s.Width>10000 || s.Height>10000 || s.Layer < 0 || s.Layer >= Layers.Count)
+            if (!Enum.IsDefined(s.Kind) || !double.IsFinite(s.X) || !double.IsFinite(s.Y) || Math.Abs(s.X) > 10000 || Math.Abs(s.Y) > 10000 || !FinitePositive(s.Width) || !FinitePositive(s.Height) || s.Width > 10000 || s.Height > 10000 || s.Layer < 0 || s.Layer >= Layers.Count)
                 throw new InvalidDataException("Invalid shape geometry or layer.");
         foreach (var l in Layers)
-            if (string.IsNullOrWhiteSpace(l.Name) || !System.Text.RegularExpressions.Regex.IsMatch(l.Color??"", "^#[0-9a-fA-F]{6}$") || !FinitePositive(l.Speed) || l.Speed>100000 || !double.IsFinite(l.Power) || l.Power < 0 || l.Power > 100) throw new InvalidDataException("Invalid cut settings.");
+            if (string.IsNullOrWhiteSpace(l.Name) || !System.Text.RegularExpressions.Regex.IsMatch(l.Color ?? "", "^#[0-9a-fA-F]{6}$") || !FinitePositive(l.Speed) || l.Speed > 100000 || !double.IsFinite(l.Power) || l.Power < 0 || l.Power > 100 || !Enum.IsDefined(l.Mode) || l.Passes < 1 || l.Passes > 100 || !FinitePositive(l.Interval) || l.Interval < .01 || l.Interval > 100) throw new InvalidDataException("Invalid cut settings.");
     }
     private static bool FinitePositive(double v) => double.IsFinite(v) && v > 0;
 }
@@ -43,11 +44,13 @@ public static class ProjectFile
     {
         document.Validate();
         var temporary = Path.GetFullPath(path) + "." + Guid.NewGuid().ToString("N") + ".tmp";
-        try {
+        try
+        {
             using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
             { JsonSerializer.Serialize(stream, document, Options); stream.Flush(true); }
             File.Move(temporary, path, true);
-        } finally { if (File.Exists(temporary)) File.Delete(temporary); }
+        }
+        finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
     public static DesignDocument Load(string path)
     {

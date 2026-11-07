@@ -1,0 +1,72 @@
+{
+  "Version": 1,
+  "Name": "Studio demo",
+  "Width": 400,
+  "Height": 400,
+  "Shapes": [
+    {
+      "Id": "74261c96-1a54-4ef0-817f-94be0be7d945",
+      "Kind": 0,
+      "X": 30,
+      "Y": 30,
+      "Width": 340,
+      "Height": 340,
+      "Layer": 0
+    },
+    {
+      "Id": "c56ccfbb-3735-4598-92ce-b0ef684dfffb",
+      "Kind": 1,
+      "X": 110,
+      "Y": 95,
+      "Width": 180,
+      "Height": 180,
+      "Layer": 1
+    },
+    {
+      "Id": "6fb0ec50-ce5f-4ead-9c58-2840f504cb87",
+      "Kind": 1,
+      "X": 145,
+      "Y": 130,
+      "Width": 110,
+      "Height": 110,
+      "Layer": 1
+    },
+    {
+      "Id": "03f4d425-6068-47da-b5a5-2192ac8fd2e0",
+      "Kind": 0,
+      "X": 155,
+      "Y": 315,
+      "Width": 90,
+      "Height": 20,
+      "Layer": 2
+    }
+  ],
+  "Layers": [
+    {
+      "Name": "Frame",
+      "Color": "#4169E1",
+      "Speed": 1200,
+      "Power": 20,
+      "Output": true
+    },
+    {
+      "Name": "Ring fill",
+      "Color": "#D946EF",
+      "Speed": 2400,
+      "Power": 15,
+      "Output": true,
+      "Mode": 1,
+      "Passes": 1,
+      "Visible": true,
+      "AirAssist": false,
+      "Interval": 1
+    },
+    {
+      "Name": "Detail",
+      "Color": "#06B6D4",
+      "Speed": 1800,
+      "Power": 10,
+      "Output": true
+    }
+  ]
+}
