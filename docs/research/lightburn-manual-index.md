@@ -1,0 +1,1788 @@
+# LightBurn 2.2 manual index
+
+Generated November 5, 2026; local reference PDF. Physical PDF page numbers below. Full text extracted locally; index is not a completed review of every feature.
+
+- PDF page 1: LightBurn User Guide / Generated November 05, 2026 from https://docs.lightburnsoftware.com/2.2/ / LightBurn Software Inc.
+- PDF page 2: Contents / Home . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+- PDF page 3: Updating LightBurn . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. .
+- PDF page 4: Engraving Shifted Relative to Cut Lines . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+- PDF page 5: Main T oolbar . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . .
+- PDF page 6: Managing Preferences . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . .
+- PDF page 7: Laser Etched Clock . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+- PDF page 8: Home / Get Started / Our getting started guides will help you get started using LightBurn with your laser.
+- PDF page 9: Education / Educational resources for teachers and schools. / Education
+- PDF page 10: Safety and Warnings / WARNING / LASERS USE INTENSE BEAMS OF LIGHT, INCLUDING LIGHT THAT MAY NOT BE VISIBLE.
+- PDF page 11: ALWAYS WEAR PROPER EYE PROTECTION WHEN USING YOUR LASER. / WARNING / DO NOT LEAVE A LASER UNATTENDED WHILE IN OPERATION.
+- PDF page 12: Fire Safety / Here at LightBurn, we've always asked our users to supervise their lasers whenever they're running, / and discouraged the remote use of lasers. We've also reminded users to make proper preparations in
+- PDF page 13: A covering inside this laser got in the way of the laser beam, but the damage was spotted immediately and the laser / was stopped before anything worse could happen. / Safety and Warnings Fire Safety
+- PDF page 14: A minor 0‡are-up happened while the laser was unsupervised. Within a few minutes, this was the result. / Whenever you laser, you're deliberately burning away material, and that also creates smoke full of / 0‡ammable part
+- PDF page 15: Check the manufacturer's information on how to use the 0†re extinguisher and 0†re blanket before you / need them, and don't hesitate to use any of these if there's even a chance the situation calls for it. / The Laser Fi
+- PDF page 16: After the 0†re was extinguished. / Safety and Warnings Fire Safety / LightBurn User Guide 16
+- PDF page 17: An emergency stop button like this is an important safety feature for being able to cut power to the laser immediately / in an emergency situation. / Safety and Warnings Fire Safety
+- PDF page 18: The panel holding the machine's Ruida control panel melted and dropped down into the body of the laser cutter. / Safety and Warnings Fire Safety / LightBurn User Guide 18
+- PDF page 19: More damage inside the laser. / Fire Safety Preparations / Never run your laser unsupervised. A camera feed does not count as supervision.
+- PDF page 20: Refer to your manufacturer's recommendations for proper machine operation, including how to / reduce the chances for accidents and prevent 0†res. / Do not rely on hardware-based 0†re detection or 0†re suppression accesso
+- PDF page 21: They are somewhat less e0–ective than Dry Chemical extinguishers on combustible materials, / but because they don't damage equipment, users are likely to use them earlier, while a 0†re is still / small.
+- PDF page 22: Getting Started / Welcome! If you're here, it probably means you're new to LightBurn or the wider world of laser / cutting and engraving. If you're not sure where to begin, you're not alone '÷ there's a lot to take in.
+- PDF page 23: Identifying Your Laser / You'll need to know what type of laser you're using in order to know which LightBurn license you / need, and to follow along with some of the terms used throughout our documentation.
+- PDF page 24: LightBurn needs to know what type of 0†rmware your laser's controller is running to know what / "language" to speak to the machine. In most cases, LightBurn can automatically identify the / 0†rmware if you set up your ma
+- PDF page 25: There are two common motion systems: / Gantry motion systems have frames, wheels, and motors that move a laser head around a / work area. Some Gantry lasers use a system of mirrors to re0‡ect a beam from its source, whil
+- PDF page 26: Installing LightBurn / The 0†rst step to using LightBurn is downloading it and getting it installed on your computer. / See below for information on system requirements, where to download LightBurn, and how to install
+- PDF page 27: You will always be able to use the most recent version of LightBurn that is compatible with your / operating system and was released within your license's valid update period. You can download / earlier versions of Light
+- PDF page 28: Operating System Final Supported Release Notes / Windows 11 Currently Supported (2.2) / Windows 10 Currently Supported (2.2)
+- PDF page 29: Installation Directions / Choose your operating system below for additional installation help. / Windows Installation
+- PDF page 30: Installing Drivers / If you have never installed LightBurn on this computer before, you might need to install / drivers. This is not necessary when updating an existing installation.
+- PDF page 31: Notarization bypass for LightBurn 1.1 and earlier / Getting Started Installing LightBurn / LightBurn User Guide 31
+- PDF page 32: Versions before 1.2 were not notarized to be recognized by your computer as coming from a / trusted developer. If you installed an older version, you'll need to follow the steps below the / 0†rst time you run LightBurn:
+- PDF page 33: Find My Laser / Consult Manufacturer Instructions / Always consult the documentation that came with your laser, or the manufacturer's online
+- PDF page 34: Click the Find My Laser button to launch the Device Discovery Wizard. / Click the Next button to begin scanning for connected devices, or the Search Network button / to scan for networked devices.
+- PDF page 35: The Device Discovery Wizard will display a list of recognized devices. Select your laser from the / list and click Add Device. / Ruida: Packet vs. Serial
+- PDF page 36: If you don't have a laser available to connect, you'll need to manually create a device pro0†le. / Manually Create Pro0ﬁle / Name your device, choose the units you want to use for this device, and con0†rm that the
+- PDF page 37: GCode Devices / Set the machine origin. Nearly all GCode systems use the Front Left corner as the origin, / regardless of where they home to. If you select the incorrect origin, your output will be
+- PDF page 38: DSP Devices / Set the machine origin. For DSP lasers, the machine's origin is the same as the location it / homes to when it 0†rst starts up. If unsure, select the Rear Right corner, as most DSP
+- PDF page 39: If LightBurn can't 0†nd your laser, it could be for a number of reasons: / Missing drivers: Install your laser-speci0†c drivers and software. Even if you don't plan to use / their software, many device manufacturers incl
+- PDF page 40: Create Manually / Consult Manufacturer Instructions / Always consult the documentation that came with your laser, or the manufacturer's online
+- PDF page 41: New Device Wizard / Device Type / On the 0†rst page of the New Device Wizard, you'll see a list of controllers and types of 0†rmware
+- PDF page 42: If you don't have a device to connect yet, choose the No Machine type to move ahead with / using the software. / The Custom GCode device type allows you to create custom templates for generating GCode.
+- PDF page 43: Ethernet or Wi0ﬁ/TCP is used for both wired and wireless network connections. / See Connecting via Ethernet to Ruida Controllers or GRBL Network Connection for more / information.
+- PDF page 44: After setting the IP address, click Next. / Name and Work Area Size / You can give your laser a custom name, which is often useful if you have more than one, or just leave
+- PDF page 45: After naming and entering your machine's dimensions, click Next. / Laser Origin And Homing / The Origin setting is your laser's 0,0 point '÷ where the X & Y Axis both meet and begin. If you get
+- PDF page 46: If you have a DSP laser, set the Origin to the location the laser homes to when it 0†rst powers on. / If you are unsure about your laser's Origin point, consult your laser's manufacturer. / The Origin also controls the o
+- PDF page 47: Con0ﬁrming Device Creation / Click OK to save and con0†rm the creation of the new device. You'll return to the Devices window / once you've exited the New Device Wizard.
+- PDF page 48: Add a Galvo Laser / Consult Manufacturer Instructions / Always consult the documentation that came with your laser, or the manufacturer's online
+- PDF page 49: The New Device Wizard will ask you to import one or more con0†guration 0†les, which will con0†gure / your speci0†c laser appropriately. The name and expected location will vary depending on the type of / Galvo laser you'
+- PDF page 50: Importing a SeaCAD con0†g 0†le / Importing EZCAD3 con0†g 0†les / Select your con0†guration 0†le 'ö typically found on the USB drive you received from the manufacturer
+- PDF page 51: After entering the size of the work area, setting the name of the laser, and setting the travel distance / of your laser's Z axis (if it's motorized), you're ready to connect to your laser. / Next: Connect to the Laser
+- PDF page 52: Manually Add a Galvo / If your laser did not come with the settings on a USB drive or if you don't have the USB drive / available, you may need to contact the manufacturer for settings. Galvo settings can't be found
+- PDF page 53: Please note that when entering these settings manually, the Additional Settings tab needs to be / updated with the correct information for the simulation in Preview to function correctly. / Getting Started Add a Galvo La
+- PDF page 54: Connecting to Your Laser / Once a laser has been added to LightBurn, it should appear in the list of devices to the right of the / Devices button in the Laser Window. If you only have a single laser, it will be automatic
+- PDF page 55: User Interface Tour / Once you've installed LightBurn and set up your 0†rst device pro0†le, you'll see LightBurn's Main / Window. If you've never used LightBurn before, the Main Window might seem a little intimidating. T
+- PDF page 56: Your LightBurn window may not match the screenshot exactly. LightBurn's user interface / changes depending on what type of laser is selected and whether Beginner Mode is active. / A: Workspace / Edit Window
+- PDF page 57: Main, Arrange, Creation, and Modi0ﬁer Toolbars / These toolbars contain buttons that, when clicked, perform certain actions. / Above the Workspace, between the Menus and Numeric Edits and T ext Options T oolbars, are the
+- PDF page 58: The Arrange Toolbar contains tools for positioning objects, both on an individual basis and in / relation to each other. / The Creation Toolbar contains tools for selecting objects in your Workspace, or creating Primary
+- PDF page 59: Color Palette / Along the bottom of the Main Window, you'll see the Color Palette. / Lasers don't print in color, so these colors are only used to assign di0–erent kinds of operations to the
+- PDF page 60: Note / This window may look a little di0–erent depending on the type of device you have selected, / whether or not you have Beginner Mode enabled, and a few other options available in your
+- PDF page 61: Some buttons will be grayed out and unclickable '÷ that means you can't perform that button's / action unless you have valid shapes in your selection. We'll explain how to select objects later, but if / you ever run into
+- PDF page 62: Finally, you'll notice labeled tabs beneath the Cuts / Layers and Laser Windows. Clicking on one of / these tabs will bring a new window to the front, and hide the previously exposed window behind it. / We haven't covere
+- PDF page 63: Creating and Importing Artwork / If you've followed along so far, you've installed LightBurn, set up your 0†rst device pro0†le, connected / to your laser, and gotten familiar with the LightBurn interface. If you need a b
+- PDF page 64: Draw Shapes / Click the arrow in the bottom right corner of the Draw Shapes icon to select from a menu of eight / di0–erent types of shapes. Then click in your Workspace, hold, and drag to set the size of the shape.
+- PDF page 65: Create Text / Click the Create T ext icon to enable the tool, then click anywhere in your Workspace and type in the / text you'd like to add.
+- PDF page 66: Importing / We know that many people prefer to design in other software they're already familiar with, or to work / from stock artwork.
+- PDF page 67: Image formats: / .png  '÷ Portable Network Graphics / .jpg  / .jpeg  '÷ Joint Photographic Experts Group format
+- PDF page 68: Moving Around the Workspace / Once you've created or imported artwork into your Workspace, you may want to make modi0†cations, / and in many cases the easiest way to do that is to adjust your focus using the Zooming and
+- PDF page 69: When you've enabled Panning mode using any of the above methods, you'll see the mouse cursor / change to a hand . Select another tool, or press Esc  to exit Panning mode. / Getting Started Moving Around the Workspace
+- PDF page 70: Selecting, Moving, and Sizing Artwork / Now that you know how to get around the Workspace, you're ready to start selecting graphics and / making modi0†cations. LightBurn has lots of tools to do that, but we'll focus on a
+- PDF page 71: Click, hold, and drag to the left to create a green Crossing Selection box. Release to select all / objects that are fully contained or crossed by the lines of the box. / Getting Started Selecting, Moving, and Sizing Art
+- PDF page 72: Moving and Sizing / Once you've selected objects, you'll notice a few changes to their appearance. / Selected objects are drawn with an animated dash pattern instead of solid lines, and you'll see
+- PDF page 73: Click, hold, and drag any of the handles around the selection's perimeter to resize the selection. / Drag outward to make it bigger, or inward to make it smaller '÷ the handle on the opposite side of / the selection from
+- PDF page 74: Click, hold, and drag any of the curved double arrow icons around the selection area's corners to / rotate the selection. / Grouping
+- PDF page 75: T o treat the objects as individual units again, press the Ungrouping icon or Ctrl /Cmd +U . / Grouping objects interferes with the ability to use some of the tools in LightBurn, so if you can't use a / given a tool, it
+- PDF page 76: Getting Started Selecting, Moving, and Sizing Artwork / LightBurn User Guide 76
+- PDF page 77: Colors and Layers / If you've worked with other design software in the past, a lot of what we've covered so far may have / been pretty familiar to you '÷ you might even have skipped a few pages. That's ok, we forgive you
+- PDF page 78: If you don't have any objects selected, clicking a color will determine the color/layer that subsequent / new objects you create will be set to: / Once any graphic in your project has been assigned to a color/layer, you'
+- PDF page 79: By default, operations are performed by your laser according to the order of the layers in the Cuts / / Layers Windows. Click and drag a layer or use the arrow button on the side to change the layers' / order:
+- PDF page 80: Layer Modes / Note / By default, all vector graphics in LightBurn appear as outlines only, regardless of the type of
+- PDF page 81: Fill Mode / Fill Mode tells your laser to etch parallel lines within the boundaries of vector graphics. / The darkness and depth of a Fill Mode engraving also depend on your cut settings, though not in
+- PDF page 82: If those same two shapes are set to different layers, the entirety of the outer shape and the entirety / of the inner shape will both be engraved, meaning the area within the inner shape will be engraved / twice.
+- PDF page 83: The same logic holds true when shapes only partially overlap '÷ if the shapes are assigned to the / same Fill Mode layer, the area where they overlap will not be engraved. If they are set to different Fill / Mode layers,
+- PDF page 84: In most cases (but not all!) you probably do not want these overlapping areas engraved twice, so / always keep this in mind as you're creating and modifying designs. / Open vs. Closed Shapes
+- PDF page 85: For that reason, it's best never to rely on the appearance of graphics in your Workspace alone, and / always check the Preview window. We used the Preview window to make many of the examples / shown above, and we'll expl
+- PDF page 86: Cut Settings / Cut settings are a big topic, and we need to begin with an important caveat: the exact settings / required to achieve good engravings, or to cut through material, are highly dependent on your type
+- PDF page 87: Tip / Double-click in a 0†eld to select and overwrite current settings. / You can also double-click any layer in the Cuts / Layers Window to access the Cut Settings Editor.
+- PDF page 88: Output, Show, and Air / You'll see three switches next to each layer in the Cuts / Layers Window '÷ turning them on or o0– / changes the behavior of those layers in di0–erent ways.
+- PDF page 89: Line Mode / For Line Mode, when you're just starting out you only need to worry about a few settings: Speed, / Power, and Passes. As a general guideline, relatively slow speeds and relatively high powers
+- PDF page 90: Material Testing / While we've noted that manufacturer recommendations are the best place to begin looking for / cut settings, LightBurn also has a built-in Material T est that you can use to test di0–erent
+- PDF page 91: Previewing / Because it can be di0·cult even for experienced users to keep track of which layers are set to which / mode, and whether all of their cut settings are in order, we strongly recommend previewing every
+- PDF page 92: Understanding the Preview Window / When you 0†rst open the Preview window, you'll see a still image of the 0†nal result of your project '÷ / the contours to be scored or cut by Line Mode will be indicated by black lines,
+- PDF page 93: If they're both set to Fill Mode, neither will appear in the Preview window, or be sent to / your laser. / Go to Edit ): Delete Duplicates or press Alt /Option +D  to delete duplicate shapes.
+- PDF page 94: By default, the simulation will play in an approximation of the job's real runtime, and Total time / estimated is shown in the bottom right. You can adjust the Playback Speed slider to speed up or / slow down the simulat
+- PDF page 95: Coordinates and Job Origin / + Watch the video on YouT ube: https://www.youtube.com/watch?v=aphiLTUWcjE / This next section covers a fundamental concept in the world of lasering. Your laser has a work area
+- PDF page 96: Note for Galvo Users / If you have a Galvo laser, you won't see the Start From mode dropdown menu or 9-dot Job Origin / selector in the Laser Window '÷ that's because Galvo lasers always use Absolute Coordinates
+- PDF page 97: If output to your laser is mirrored or backwards, you may need to change the Origin setting in / the Device Settings window. / Note
+- PDF page 98: Current Position / With Current Position selected, your job outputs relative to wherever the laser head is located / when you press the Start button. The Job Origin control in the Laser Window tells LightBurn how
+- PDF page 99: Now imagine that you want to etch this four hexagon pattern onto a coaster or a phone case. Lining / it up from the lower left is not easy. If you change the Job Origin setting to center, you get this / instead:
+- PDF page 100: The job will be centered around the current position of the laser head. If you position the laser head / directly over the center of the item you want to etch, the output will be centered on the item. / Jogging Your Lase
+- PDF page 101: User Origin / User Origin works almost exactly the same as Current Position, except that the starting location / is programmable. T o set a User Origin, you must 0†rst jog your laser to the location you want your job
+- PDF page 102: After setting the origin, you are free to jog your laser around its work area. With User Origin selected / as the Start From mode, the laser will always move back to start the project in a position relative to / the prog
+- PDF page 103: Framing / Note for Galvo users / This section covers Framing behavior for Gantry lasers. If you have Galvo laser, see Galvo
+- PDF page 104: Bounding Box Frame / Bounding Box Framing commands the laser to trace a path de0†ned as the smallest possible / rectangle that will fully contain all graphics you're sending to the laser.
+- PDF page 105: Rubber Band Frame / Rubber Band Framing commands the laser to trace the smallest possible path that fully contains / all graphics in the design you're sending to the laser, as if a rubber band were stretched around
+- PDF page 106: Start From Mode, Job Origin, and Framing / Now let's look at a few examples of how we can test out various Start From mode and Job Origin / combinations. T o simplify things, we'll use Bounding Box Framing for all of the
+- PDF page 107: Now we'll leave the design in the same position in our Workspace, but change the Start From Mode, / and see how the Framing location changes. / Here we've selected Current Position as the Start From mode, and the top rig
+- PDF page 108: Here's Current Position again, but with the center Job Origin position selected '÷ now the laser moves / out from where it's sitting, and traces a rectangle centered on the location where it began: / Getting Started Fram
+- PDF page 109: Finally, here's User Origin and a top right Job Origin '÷ prior to Framing we'll jog the laser to the top / right of its work area, then set the origin (in this case, we used a DSP laser and set the origin from / the con
+- PDF page 110: Framing Tips / Laser On When Framing / We used a laser with a red dot pointer for the above examples. Pointers are extremely helpful for
+- PDF page 111: In the Basic Settings tab, toggle on the Enable laser 0ﬁre button and Laser on when framing / settings. Click OK to apply. / The Move Window should now have a Fire button and a box to enter a power level. Keep this
+- PDF page 112: Galvo Framing / Note for Gantry users / This section covers Framing behavior for Galvo lasers. If you have Gantry laser, see Framing.
+- PDF page 113: Framing Styles / The di0–erent options determine how the red dot light represents your shapes, and which shapes are / shown.
+- PDF page 114: Contour / Commands the red dot light to trace a path that follows the exact contours of your shapes '÷ it takes / the longest to draw, but it's the most accurate.
+- PDF page 115: Frame Individually / When you're using Bounds or Hull mode, this option determines whether to trace a single frame / around everything in your project, or a separate frame around each individual shape.
+- PDF page 116: Key(s) Result / ,  (comma) Rotate graphics 15° counter-clockwise / Shift +.  (period) Rotate graphics 1.5° clockwise
+- PDF page 117: Job Control / After you've created or imported your design, assigned appropriate layer modes and cut settings, / and checked (or double-checked) your project using the Preview window and Framing functions,
+- PDF page 118: There are a few exceptions to this behavior: / If you've made a settings or job positioning choice that could cause problems, LightBurn may give / you a warning message, and ask you whether you'd like to go ahead with th
+- PDF page 119: Pause / Click the Pause button while your laser is working to temporarily halt the job. You'll be able to click / again to Resume.
+- PDF page 120: Stop / Clicking the Stop button will permanently halt your job, meaning you won't be able to resume right / where you left o0–.
+- PDF page 121: First Material Test / + Watch the video on YouT ube: https://www.youtube.com/watch?v=pTx0RG_4Wbs / Getting recommendations directly from your laser's manufacturer is usually the best option for
+- PDF page 122: Selecting Current Position and the center Job Origin location means the Material T est grid will be / centered wherever the laser head is located when you press the Start button later on. / Click here to learn more about
+- PDF page 123: Notice that the green Job Origin indicator is positioned to the lower left of our graphics. This / represents the position of the laser when you start the job, so the laser is going to move / slightly up and to the right
+- PDF page 124: The job will be centered around the current position of the laser head. If you position the / laser head directly over the center of the item you want to etch, the output will be centered / on the item.
+- PDF page 125: Focusing the Laser / Lasers need to be focused correctly to achieve good results. / Place the material in the laser and move the head over the material. LightBurn has jog controls in
+- PDF page 126: Focus the laser according to your laser's user guide: / GCode-based Diode lasers usually have a focusing spacer to set the distance between the / laser and the material.
+- PDF page 127: You'll see 0†elds to select from a list of parameters to test, adjust the range of tested values, and / change the size, position, and number of test boxes. / Instead of adjusting those 0†elds manually, select a preset f
+- PDF page 128: Previewing / LightBurn has automatically applied all of the important settings for you, but checking the Preview / window before you start any job is still a good habit to get into.
+- PDF page 129: You'll see a still image of what the 0†nal test grid will look like. Press Play to see a simulation of / the order in which the grid will be engraved. / Click here to learn more about the Preview window
+- PDF page 130: By default, the simulation will play in a close approximation of the job's real runtime, and / Total time estimated is shown in the bottom right. You can adjust the Playback Speed / slider to speed up or slow down the si
+- PDF page 131: commands the laser to trace a path de0†ned as the smallest possible rectangle that will fully / contain all graphics you're sending to the laser. / Here's a representation of that path in LightBurn:
+- PDF page 132: Here's Current Position again, but with the center Job Origin position selected '÷ now the / laser moves out from where it's sitting, and traces a rectangle centered on the location / where it began:
+- PDF page 133: Note for Galvo laser users / If you have a Galvo laser, the grid will be outlined by your laser's red dot light instead. See / Galvo Framing for more information.
+- PDF page 134: If your laser has a red dot pointer, it makes framing easier to see. Otherwise, your laser / will travel around with the laser turned o0–. LightBurn does o0–er the ability to run diode / lasers at a very low power to aid
+- PDF page 135: If it's close, but a little bit o0– the material, try nudging the material (if you have room) to align it / to the framed area. If you don't have room, you'll need to exit the Material T est Generator window / and jog yo
+- PDF page 136: Repeating for Cuts / Note for Galvo laser users / If you have a Galvo laser, its cutting capability is most likely extremely limited. We recommend
+- PDF page 137: Preview and Frame the job. / Run the job. / Warning
+- PDF page 138: Click Edit Material Setting in the lower left to open the Cut Settings Editor, and set the Max / Power to 100.0%. / After Previewing and Framing, run the test again.
+- PDF page 139: First LightBurn Project / + Watch the video on YouT ube: https://www.youtube.com/watch?v=zfEt-kazd_w / One of the best ways to learn to use Lightburn is to use it. We recommend following along with our
+- PDF page 140: Click on the T ext tool  in the Creation T oolbar. / Click in the Workspace to place a cursor and type something out. Our demo coaster will say / "WiFi", since that's what the QR Code will be for.
+- PDF page 141: Create a QR Code / LightBurn has a built-in Bar Code tool, which can generate QR Codes as well as a variety of other / scannable codes. You'll use this to generate a QR Code that automatically logs someone into your
+- PDF page 142: Go to T ools ): Create Bar Code to open the Bar Code tool. You'll see the cursor change to a QR / Code. Click and drag in the Workspace to set the initial size of your QR Code and start creating it. / Put it somewhere ne
+- PDF page 143: Make sure the Bar Code Type is set to QR Code and click on the WIFI T ab. / Enter your WiFi login info into the window 'ö be very careful with your spelling and capitalization 'ö / and click OK to create the QR Code.
+- PDF page 144: Aligning and Grouping / Now that you have text and a QR Code, you'll want them to line up nicely. This is a great opportunity / to try out the Align and Group tools.
+- PDF page 145: No Alignment Tools Option? / New LightBurn installations start in Beginner Mode, which simpli0†es the user interface by hiding / less-used options. Beginner Mode combines all of LightBurn's alignment tools into the Align
+- PDF page 146: With both objects still selected, press Ctrl /Cmd +G  to Group them. This way both shapes will / move together without having to remember to select them both. T o move them individually, you'll / need to Ungroup them by
+- PDF page 147: View Styles / LightBurn o0–ers Wireframe and Filled options for the View Style. After setting Layer 0 to Fill, / if you don't see the shape 0†lled in, you can use Alt  / Option +W  to toggle between Wireframe
+- PDF page 148: If you command the laser to move quickly, or with low Power, it will likely just etch the / surface (sometimes called scoring). If you move slowly and with high power, especially with / a CO2 laser, the laser will cut de
+- PDF page 149: Turn o0– the Air toggle to disable air assist for this layer. It's helpful for cutting, but less useful for / engraving. / Learn More: Air Assist
+- PDF page 150: Create a Decorative Border / With the QR Code and text ready to engrave, we'll move onto a di0–erent style of engraving. / When you set Layer 00 to Fill, the preview shows that the laser will move back and forth over the
+- PDF page 151: Draw and Position the Circle / Select the Ellipse tool  from the Creation T oolbar. / Click near the top left of your QR Code and text to start drawing the circle. Drag toward the
+- PDF page 152: A given number of millimeters per second is much faster than that same number in / millimeters per minute. Mixing up units can lead to reduction in power output due to / unexpectedly high speeds, or excessive power outpu
+- PDF page 153: In the Cuts / Layers Window, adjust the Speed and Max Power settings to a higher speed and / lower power than your manufacturer recommends for cutting through the material you're using. / This will let you engrave (or sc
+- PDF page 154: Somewhere around 6 mm or ¼" should work well, but this is your coaster and it's up to you. Press / OK to create the new circle. / As you did before with the 0†rst circle, move this circle to a di0–erent layer and adjust
+- PDF page 155: In the simulation, you should see the following happen in order: / Raster engraving to 0†ll in the text and QR Code. / Vector engraving the decorative border '÷ the laser should follow the outline of the circle.
+- PDF page 156: When you 0†rst open the Preview window, you'll see a still image of the 0†nal result of your project / '÷ the contours to be scored or cut by Line Mode will be indicated by black lines, and the areas / to be etched or en
+- PDF page 157: Engraving and Cutting Your Design / Now that you've created and previewed your design, it's time to load material into your laser and / begin cutting.
+- PDF page 158: You can use the arrow keys in the Move Window to move your laser up, down, right, or / left. You can set the amount the laser travels with each click in the Distance 0†eld, and / the rate at which it travels in the Speed
+- PDF page 159: Set Start From to Current Position using the dropdown in the Laser Window. / Set the Job Origin in the Laser Window to the center of the artwork. / With these two settings, your engraving will be centered wherever the la
+- PDF page 160: Notice the location of green Job Origin indicator. This represents the position of the laser when / you start the job, so the laser is going to move slightly up and to the right from wherever it is, / cut the four hexago
+- PDF page 161: Now imagine that you want to etch this four hexagon pattern onto a coaster or a phone case. / Lining it up from the lower left is not easy. If you change the Job Origin setting to center, you get / this instead:
+- PDF page 162: The job will be centered around the current position of the laser head. If you position the laser / head directly over the center of the item you want to etch, the output will be centered on the / item.
+- PDF page 163: Learn More: Framing / Bounding Box Frame / Bounding Box framing
+- PDF page 164: Here we've selected Current Position as the Start From mode, and the top right Job Origin / position, so the laser moves down and to the left from its starting position: / Here's Current Position again, but with the cent
+- PDF page 165: Note for Galvo laser users / If you have a Galvo laser, the design will be outlined by your laser's red dot instead. See / Galvo Framing for more information.
+- PDF page 166: If your laser has a red dot pointer, it makes framing easier to see. Otherwise, your laser / will travel around with the laser turned o0–. LightBurn does o0–er the ability to run diode / lasers at a very low power to aid
+- PDF page 167: If it's close, but a little bit o0– the material, try nudging the material (if you have room) to align it / to the framed area. If you don't have room, you'll need to exit the Material T est Generator window / and jog yo
+- PDF page 168: Beginner Resources / If you've been following along, you've installed LightBurn, added a laser, learned a great deal about / the way LightBurn works, and created your 0†rst project. At this point, you know enough to expl
+- PDF page 169: LightBurn Forum / T alk with other users and LightBurn sta0–, see and share 0†nished projects, and ask questions on / our forum.
+- PDF page 170: Guides / Guides Guides / LightBurn User Guide 170
+- PDF page 171: How-To Guides / Our step-by-step guides will walk you throw how to accomplish a range of tasks in LightBurn. / 5 Steps to Perfect Image Engravings
+- PDF page 172: Customize the LightBurn Window / Learn to customize the LightBurn Window to better suit your needs. / Read More
+- PDF page 173: 3D Sliced Images on Galvo / Learn how to use LightBurn's 3D Sliced image mode to create 3D engravings on a galvo laser. / Read More
+- PDF page 174: Adjust Red Dot Laser Position / Learn to 0†ne tune the position of your red framing laser to accurately frame designs in / LightBurn.
+- PDF page 175: Con0ﬁgure a Ruida Controller from Scratch / Learn how to con0†gure a Ruida controller if you need to start from scratch with a new controller / or one that's been factory reset.
+- PDF page 176: Calibrate and Align the WeCreat Camera / Learn to calibrate and align your WeCreat Vision camera with LightBurn. / Read More
+- PDF page 177: How to Use These Docs / If you want to learn more about LightBurn, you've come to the right place. Now that you're here, you / might not know exactly where to go to 0†nd just the information you're looking for, so we cre
+- PDF page 178: Finding Help / LightBurn also has some built-in features to make it easier to learn more: / Easy Access Help Pages: Press F1  while hovering to launch the documentation page for
+- PDF page 179: Search / At the top right of any page you'll see the Search option. Enter the name of the tool you're looking / for there to search for the relevant page in our documentation.
+- PDF page 180: Interactive Features / Clickable Screenshots / In addition to the Main Window page, several other pages contain clickable screenshots '÷ as you
+- PDF page 181: Link Previews / If you hover over any link in our documentation that points to another page, you'll see a preview of / the linked-to page. That preview may provide all you need to know if you're just looking for a quick
+- PDF page 182: Advanced Hardware Setup / Guides Advanced Hardware Setup / LightBurn User Guide 182
+- PDF page 183: Laser 2 O0›set Setup / If you have a DSP laser with dual laser tubes and dual laser heads, the directions below will help you / set your Laser 2 O0›set values.
+- PDF page 184: Select Current Position as your Start From mode. / Press Start to mark the lines on the material. / Measure and record the distance between the lines.
+- PDF page 185: In the Cut Settings Editor, add a Sub-Layer to the layer the horizontal line is assigned to. / You'll now have two Sub-Layers. Keep both set to Line Mode. / Disable Laser 2 for the 0†rst Sub-Layer, but enable it for the
+- PDF page 186: Adjust Red Dot Framing O0›set / If your laser has a red dot pointer that is not aligned to the location of your laser's beam, use the / Laser O0–set in the Device Settings window to shift your laser's output to match the
+- PDF page 187: If you are using a DSP device, go to Laser T ools ): Machine Settings and make sure Return / Position is set to No Return. / Press Start in the Laser Window to run the job.
+- PDF page 188: Troubleshooting / If output shifts in the wrong direction in one or both dimensions, reverse the sign of the o0–set you / entered in the Device Settings window '÷ make it positive if it is negative, or vice versa.
+- PDF page 189: Scanning O0›set Adjustment / Modern lasers are capable of moving very fast, and with remarkable precision, but 0†ring the beam / still takes time. Some power supplies and tubes may respond in microseconds, but others tak
+- PDF page 190: Read and Write Buttons / Some Ruida controllers allow the ability to directly Read Scanning O0–set Adjustments stored in / the controller's settings, or Write new settings from LightBurn.
+- PDF page 191: Determining Scanning O0›set Adjustments / Already have Scan O0›set settings in a .lbso  0ﬁle? / If your laser manufacturer provided a .lbso  0†le or you've exported your own settings, skip
+- PDF page 192: Run the rectangle at multiple Speeds. At least two will be required for this process, but using / more will improve the quality of your results. Make sure you use speed settings your laser is / capable of reaching, and k
+- PDF page 193: T o compensate for the misalignment of lines, measure the distance between the ends of the lines / at each Speed. You'll need to enter half that distance in the next step. / In the Scanning O0›set Adjust section of the D
+- PDF page 194: Make sure to toggle Enable Scanning O0›set Adjustment on, and click OK to exit the Device / Settings window and save your changes. / You may need to perform this process multiple times, making minor adjustments to get cl
+- PDF page 195: Importing and Exporting Scan O0›set Settings / Importing / Use the Import button in the Scanning O0›set Adjustment section of Device Settings to load
+- PDF page 196: Line Wobble / A di0–erent, but equally common problem is line wobble, often caused by too high an acceleration / setting. When performing the test engraving above, you may notice lines that look like this:
+- PDF page 197: Related Topics / Mechanical Issues / Fill Mode
+- PDF page 198: WeCreate Camera Calibration & Alignment / + Watch the video on YouT ube: https://www.youtube.com/watch?v=wDxY-taFj80 / These instructions are no longer necessary for LightBurn 2.1 or newer. If you are using a
+- PDF page 199: You must have WeCreat 0†rmware version 2.0.24 or later in order to use the Focus Z / button. / For lasers that don't support auto focus, please check your user manual and focus according
+- PDF page 200: T ag each of the target markers by double-clicking in the center of each one in order. / You can pan and zoom around the image using the same controls as the LightBurn Workspace / and Preview window, or use the Zoom In a
+- PDF page 201: Firmware Con0ﬁguration / Guides Firmware Con0†guration / LightBurn User Guide 201
+- PDF page 202: GRBL Con0ﬁguration / Most GCode-based lasers are pre-con0†gured to work with LightBurn, but if you have a less common / machine like a Shapeoko, EleksMaker, X-Carve, or Acro system, you might need to make some
+- PDF page 203: that when the laser comes to a complete stop, the beam turns o0– (zero speed equals zero power), / meaning that pausing a job automatically turns o0– the laser. This is not always true with other / versions of GRBL.
+- PDF page 204: In the Console Window, enter $$  to have the controller return the machine's con0†guration. This will / show the settings in plain text, requiring more familiarity with what each command means but / allowing you to view
+- PDF page 205: Machines without homing sensors or limit switches / If your machine does not have homing switches (also called limit switches) you will need to home it / manually if you want to use Absolute Coords or User Origin modes.
+- PDF page 206: Detailed Explanation. / This image shows the origin at the front left, with positive X values moving to the right, and / positive Y values heading to the rear of the machine.
+- PDF page 207: If you enable a workspace o0–set, you will also need to make GRBL report its location relative to / this shifted origin, instead of in "machine space", by setting $10=0. Some systems, like Easel or / Carbide Motion, may
+- PDF page 208: Con0ﬁguring a Ruida Controller / Warning / A factory reset of a Ruida controller resets it to the stock con0†guration supplied by Ruida, not
+- PDF page 209: The top section of the list is referred to as user settings 'ö these are settings that are intended to be / tunable by the user if necessary. The lower section, under Vendor Settings, are things usually / con0†gured for
+- PDF page 210: The 0†rst section is general con0†guration, and then there are settings that are speci0†c to each axis, / followed by a Laser Settings section, for con0†guration speci0†c to the laser type. / Homing, Directions, and Trav
+- PDF page 211: Step 1: Correct direction of travel / Before continuing onto other steps, make sure that the X axis and Y axis move properly when you / power on the machine.
+- PDF page 212: Adjust the X Axis and Y Axis settings for Step Length based on what you saw with the framing. The / changes are proportional to the di0–erence between the size of the rectangle and the amount of / travel:
+- PDF page 213: If your output looks like this, you likely have your motor pulse step polarity set incorrectly. On Ruida / controllers, each axis has a setting called PWM Rising Edge Valid. This setting tells the controller / whether th
+- PDF page 214: In the image above, the upper line of steps is interpreted as 4 steps in one direction, then two in / the other. The lower line is interpreted as 3 and 3, and the only di0–erence is which side of the / step signal the dr
+- PDF page 215: Galvo Laser Guides / Guides Galvo Laser Guides / LightBurn User Guide 215
+- PDF page 216: Changing a Galvo Laser Lens / T o ensure optimal performance following a physical lens swap on a Galvo laser, there are several / changes and settings you'll need to con0†rm. Some manufacturers provide the calibration in
+- PDF page 217: When working with a new laser, you can usually import lens correction values provided by your / machine's manufacturer when you 0†rst set up your laser with LightBurn. / If your manufacturer didn't provide the necessary
+- PDF page 218: Installing Galvo Drivers / Note / These instructions are for Windows users only '÷ macOS users do not need to install a driver to
+- PDF page 219: If you didn't check this box during initial installation, you can run the installer again, and select the / box to ensure the driver is installed. Windows will prompt you for permissions escalation to install it, / and r
+- PDF page 220: In Zadig, go to Options ): List All Devices. / If your EZCAD laser is powered up and connected with the USB cable, you should see / USBLMCV2 (or very similar) in the device list, like this:
+- PDF page 221: On the rare occasion that Zadig fails, try it again '÷ it almost always works, and sometimes / reports a failed installation erroneously, when it actually succeeded. You should see this: / Restoring the EZCAD Driver
+- PDF page 222: Next, 0†nd the USBLMC device in the list - it should be near the bottom, under Universal Serial / Bus devices, shown below: / Guides Installing Galvo Drivers
+- PDF page 223: Right-click the device and choose Uninstall Device from the pop-up menu. / In the next window, check the box to delete the driver. This doesn't actually delete anything / from your system, it just completely disassociate
+- PDF page 224: If you power o0– the laser and power it back on, Windows will reconnect, realize that it already / has a driver for this device (the old LMC driver) and it will appear in the Devices list again, near / the top, as a BJJC
+- PDF page 225: Success! An EZCAD-based Galvo device as it appears after the driver has been installed / Installing the Driver (BSL-Based Lasers) / T o connect a BSL Galvo laser to LightBurn, you may need to install the same driver used
+- PDF page 226: Install Stock BSL Software / Search the USB drive that came with your laser for the executable 0†le that installs your laser's stock / software. Double-click the 0†le to begin the installation process.
+- PDF page 227: The CypressDriverInstaller.exe 0†le will install the necessary driver for this laser. The speci0†c name of this 0†le may vary / for your laser. / Verify Driver Installation
+- PDF page 228: A BSL-based Galvo device as it appears before the driver has been installed / Guides Installing Galvo Drivers / LightBurn User Guide 228
+- PDF page 229: Success! A BSL-based Galvo device as it appears after the driver has been installed / Related Topics / Add a Galvo Laser
+- PDF page 230: Focusing Galvo Lasers / Danger / Any use of a laser as outlined in this section requires e0–ective and useful laser safety glasses,
+- PDF page 231: Step-By-Step Guide for Focusing Flat Objects / Raise your galvo head as high as it can go. / Start a Repeat engraving.
+- PDF page 232: Add a Galvo(" / Guides Focusing Galvo Lasers / LightBurn User Guide 232
+- PDF page 233: LightBurn Con0ﬁguration / Guides LightBurn Con0†guration / LightBurn User Guide 233
+- PDF page 234: Customizing the LightBurn Window / + Watch the video on YouT ube: https://www.youtube.com/watch?v=t0p4U2eSFQs / The LightBurn layout is highly customizable '÷ you can choose which windows and toolbars to
+- PDF page 235: Right-Click Context Menu / Right-click over any toolbar, or over the top bar of any window, to open a window and toolbar / selection context menu. Just as in the Window Menu, enabled windows and toolbars have
+- PDF page 236: Toggle Side Panels / Click Toggle Side Panels or press F12  to disable all windows that are docked on the left or right / side of the Workspace. Click or press F12  again to re-enable them.
+- PDF page 237: Docking and Undocking / Windows / Click and drag any window from its top bar to undock it '÷ you can leave the window 0‡oating
+- PDF page 238: Toolbars / Click and drag any toolbar from the dotted line to undock it '÷ you can leave the toolbar 0‡oating / anywhere you'd like, or re-dock it to another position.
+- PDF page 239: Space permitting, you can stack toolbars in spaces that are not occupied by any toolbars in the / default layout. / Guides Customizing the LightBurn Window
+- PDF page 240: Reset to Default Layout / Reset to Default Layout restores the layout of the full LightBurn window to the same format it was / in when you 0†rst installed and opened LightBurn. If you've made lots of changes to your layo
+- PDF page 241: Updating LightBurn / Upgrading to the latest version of LightBurn gets you new features, improved machine support, and / bug 0†xes.
+- PDF page 242: If, for some reason, there is a problem with your LightBurn con0†guration on the new installation, / follow the directions for Importing a User Bundle to restore settings from your previous LightBurn / installation. This
+- PDF page 243: Downgrading to Older Versions / Although we always encourage users to run the current release of LightBurn, there are times when / you may need to either downgrade to an older release, or share 0†les with someone using a
+- PDF page 244: T o download release candidates, please go to our release candidate download page . / Whether you're installing the current version of LightBurn, a release candidate, or an older version, / the best place to download is
+- PDF page 245: Move LightBurn to a New Computer / If you've been using LightBurn and need to set up a new computer, this guide will help you move / your LightBurn settings and devices from an existing installation to a new computer.
+- PDF page 246: Migrate Settings and Devices With User Bundles / What about .lbdev  0ﬁles? / Guides and videos based on older versions of LightBurn may still reference .lbdev  0†les, which
+- PDF page 247: Open LightBurn on the new computer, and drag the .lbzip  0†le into LightBurn to load it. / Make sure that all components you want to import are selected, and uncheck any components / you want to ignore. Components that a
+- PDF page 248: Move Project Files / Because users are free to store and organize their project 0†les however they want, LightBurn is / unable to move project 0†les automatically. Please make sure that you copy any project 0†les you wan
+- PDF page 249: Opening Multiple LightBurn Instances / Open Additional LightBurn Windows / Each LightBurn window can open a single project and communicate with a single device at a given
+- PDF page 250: Copy the LightBurn shortcut and paste it twice. Rename each 0†le 'ö this guide uses LightBurn_A / and LightBurn_B . Grant administrator privileges in the User Account Control window by selecting / Ok and then Continue to
+- PDF page 251: Click Apply followed by OK and grant admin permissions again to save the changes. / Repeat Step 6 through Step 8 for the second shortcut, this time using this target link: / 8.
+- PDF page 252: Info / Replace LightBurn_B  with whatever name you want your 0†rst pro0†le to use. Do not include a / space between the 0†le name and the &&  characters as formatting and syntax matters.
+- PDF page 253: Starting LightBurn with the new shortcuts will launch multiple LightBurn instances that are / completely independent of one another. They will not overwrite the other's preferences 0†le and any / changes you make to the
+- PDF page 254: CorelDraw Macro Setup / LightBurn o0–ers CorelDRAW users on Windows an optional macro to simplify and speed up the / process of sending work to LightBurn directly through CorelDRAW.
+- PDF page 255: Open the CorelDRAW Technical Suite ###  folder, with ###  being your CorelDRAW program version / number, the Draw  folder, and 0†nally the GMS  folder. Paste the ExportToLightBurn.gms  0†le copied / earlier into this GMS
+- PDF page 256: If the ExportToLightBurn macro doesn't show up in the Visual Basic For Applications / category, load it manually. / A. Right-click on the background of the Script Manager window, select Load Macro Project, and
+- PDF page 257: Suggested con0†guration for the macro / Using the Export to LightBurn Macro / Click the Export to LightBurn macro button to launch LightBurn with your current selection from
+- PDF page 258: Automation with UDP / LightBurn has a network command interface that allows you to launch LightBurn, load a 0†le, run the / laser, and perform several other basic operations. It can be used to run commands on the same
+- PDF page 259: .\"..\..\Program Files\LightBurn\SendUDP.exe" "C:\Users\JG\Projects\UDPTest.lbrn2" / Sending UDP Commands / Although SendUDP is Windows-only, the listener socket should work on any support operating
+- PDF page 260: data, addr = inSock.recvfrom(1024) / print(data, addr) / The b  before the string converts it into a bytes-like object. The socket protocol doesn't accept
+- PDF page 261: Shared Settings for Multiple Users / For schools, makerspaces, businesses, and other users who may need to con0†gure multiple / computers to share Devices, Settings, Material Libraries, and other con0†guration, we have s
+- PDF page 262: Make LightBurn is con0†gured the way you want on your 0†rst computer. / Create a User Bundle by going to File ): Bundles ): Export Bundle. / Save your User Bundle somewhere accessible to all the other computers you want
+- PDF page 263: In earlier forum posts, there are references to using a defaultprefs.ini  to set default Lightburn / settings each time the program starts up. At the present time, this is not currently / recommended as it may not work r
+- PDF page 264: Art Library / For art resources you want to share, consider using a shared Art Library. This can be useful for / shared artwork, but also for creating placeholders representing engraving blanks you use, various
+- PDF page 265: Network and Wireless Connections / Guides Network and Wireless Connections / LightBurn User Guide 265
+- PDF page 266: Connect to a Ruida or Trocen Laser with / Ethernet / If you have a laser using a Ruida or Trocen controller, you may want to connect via Ethernet to avoid
+- PDF page 267: Windows / Open the command prompt (type "cmd" in the start menu or in the Win +R  search box). At the / command prompt, type ipconfig , and press Enter . Your results will look similar to this:
+- PDF page 268: 2. Choose a unique IP address for your laser / Start with the IP address you found in the previous step. The 0†rst three segments need to stay the / same, but the last segment needs to be a value from 1 to 255 that isn't
+- PDF page 269: Add the laser in LightBurn / DSP controllers accessed over a network are a separate type of connection than connecting directly / over USB, and must be added separately, even if you've already added the laser to LightBur
+- PDF page 270: GRBL Network Connection Setup / This guide explains how to set up a GRBL laser over a local network (e.g. your home router). / The Sculpfun iCube is used as an example, but the process should be similar for any GRBL devi
+- PDF page 271: In the next two sections of this guide, you'll use the Console Window to con0†gure your / network connection. / Part 2: Find Network Info in Console
+- PDF page 272: Part 3: Con0ﬁgure Network Connection / This process varies between devices. If you're not sure how to change WiFi settings and the / directions below don't work for you, try checking your laser's user manual or seeking s
+- PDF page 273: Name Parameter Value / Network type$50 T ypically STA / SSID $53 The name of the WiFi network to connect to
+- PDF page 274: Set Network Name / Use $53=ExampleNetwork , to set the SSID, replacing "ExampleNetwork" with the actual name of your / WiFi network.
+- PDF page 275: Check Connection / After con0†guring network settings, you may need to restart your laser to get it to connect. The Radio / Mode  status message now shows updated network settings and ends with Connected :
+- PDF page 276: If you have trouble connecting, you may need to change the network port LightBurn is using to / communicate with your laser. / If you can connect but the laser is stuttering, stopping, or restarting mid-job, you may need
+- PDF page 277: LightBurn Bridge / Guides LightBurn Bridge / LightBurn User Guide 277
+- PDF page 278: Connecting to the LightBurn Bridge / + Watch the video on YouT ube: https://www.youtube.com/watch?v=LaNQv5C33s8 / Follow the steps below to connect to your laser using a LightBurn Bridge.
+- PDF page 279: Connecting the LightBurn Bridge to Your Network / Ethernet on macOS 15+ / If you're using macOS 15 or higher, you'll need to allow LightBurn access to the local network.
+- PDF page 280: On your computer or a mobile device, use the WiFi settings to 0†nd the LightBurn Bridge device, and / connect to it: / Note
+- PDF page 281: Con0ﬁguring the Bridge in LightBurn / Now you need to tell the LightBurn Bridge which WiFi network to connect to, and give it the network / password. In most cases, the con0†guration page on the Bridge will open automati
+- PDF page 282: Select your WiFi network from the list of options, enter your password, then click the Connect button / at the bottom. You'll see a message appear near the top, telling you that the bridge is connecting to / your WiFi ne
+- PDF page 283: If LightBurn is able to connect to the Bridge device, and the Bridge was able to talk to your laser, you / should see something like this: / If everything looks good, click Add Device, and you'll be taken to the setup sc
+- PDF page 284: You must set the size of the work area for your laser so that LightBurn can try to prevent things from / going out of bounds. If you don't know the exact size, you can change this later in the Device / Settings page.
+- PDF page 285: All Done! / That's it '÷ the 0†nal page will show you a summary of your choices. You can go back and 0†x anything / if necessary, or click Finish to create the new device entry.
+- PDF page 286: LightBurn Bridge Kit Setup / Whether you want to roll your own LightBurn Bridge with your own Raspberry Pi or just want to dive / deeper into con0†guration options, this page is for you.
+- PDF page 287: Tips on removing the SD card from an existing kit / If you're upgrading an existing Pi, power o0– the unit and remove the SD card from the bottom, / shown here:
+- PDF page 288: Browse to the folder you downloaded the .img.xz  0†le to (most likely your Downloads folder), select / the 0†le, then click Open. / Insert your SD card into your computer and, back on the main Raspberry Pi Imager window,
+- PDF page 289: Finally, click the WRITE button. It will warn you that you're about to overwrite the SD contents '÷ / click OK, and wait for it to write the image. At the end of the process, it will verify it was written / correctly.
+- PDF page 290: This will, of course, be a little di0–erent on each operating system. Some systems may show two / drives/partitions and the other will likely be unreadable. That's ok, just 0†nd the one labeled boot  and / open it.
+- PDF page 291: If it succeeds, it will be renamed to wifi.txt.loaded . If it fails, it will be renamed to wifi.txt.failed / and the WiFi con0†guration access point will make itself available as normal. The access point will / generally
+- PDF page 292: Projects and Techniques / Guides Projects and T echniques / LightBurn User Guide 292
+- PDF page 293: 5 Steps to Perfect Image Engraving / Getting an image to engrave well is a task that often stumps even experienced laser-folk. Often / images appear too dark, too light, or "muddy" and lacking detail.
+- PDF page 294: Some people prefer the look of a slightly defocused laser for engraving, as it softens the edges / between scan lines. However, adjusting settings is easiest with a focused laser. We recommend / keeping the laser focused
+- PDF page 295: 3. Line Interval/DPI / Ideal settings for Line Interval/DPI / Line Interval and DPI are tied together. They change the distance between each pass (scan) of the
+- PDF page 296: For best results, create future images with the same DPI as dictated by the Line Interval you / found in this step. / 4. Dot Correction
+- PDF page 297: Use Convert to Bitmap to create a 50% gray rectangle. / Once you have found the optimal Dot Width Correction value, apply it to a layer set to Image Mode in / the Cut Settings Editor, or save it to an entry in the Materi
+- PDF page 298: Kerf - What it is and How to Compensate / + Watch the video on YouT ube: https://www.youtube.com/watch?v=BKWHWXi6Wz0 / Well-managed Kerf is the key to perfectly-0†tted parts such as intricate marquetry or secure 0†nger-
+- PDF page 299: Applying a Kerf O0›set in LightBurn / Closed Shapes Only / This feature only works with shapes that are closed. A shape is closed when it is a complete,
+- PDF page 300: The Kerf O0–set will be applied to all closed shapes assigned to the layer. Shapes that lie within other / shapes on the same layer will have the o0–set direction inverted, to ensure that holes become the / correct size.
+- PDF page 301: Because Kerf O0–set takes more space, it's important to leave room between the parts. / Kerf O0–sets are shown in the Preview window, so it's a good idea to check it before sending the job / to the machine.
+- PDF page 302: Download Kerf Test / Instructions / Set up the Cut (red) and Score (black) layers with your usual settings, and ensure the Kerf
+- PDF page 303: D . E        2 . 3 / -----   =    -----   =  0.0575 mm / 40           40
+- PDF page 304: Adjusting Tabs For Di0›erent Thicknesses of Material / Kerf O0–set is not the right tool for changing the height of tabs and adjusting slots to suit di0–erent / thicknesses of material. See the T ab and Slot Resizer for
+- PDF page 305: Engraving Full Wrap Tumblers / + Watch the video on YouT ube: https://www.youtube.com/watch?v=LsHBv3QCD0c / Whether you're looking to make a personalized gift for a friend, add a new product to your lineup, or
+- PDF page 306: A powder-coated tumbler (or any surface you're sure your laser can engrave on) / A full wrap design, either imported or made from scratch / Seamstress' (0‡exible) tape or calipers
+- PDF page 307: Hard / Tumblers with step downs are the most di0·cult to work with. The dramatic di0–erences in / circumference make it more challenging to get all your measurements and focus right, in addition to
+- PDF page 308: Con0ﬁguring the Rotary / Before running your 0†rst rotary job you'üll need to open the Rotary Setup window to establish some / important values, and enable Rotary Mode.
+- PDF page 309: You will also need to accurately enter the diameter of your rollers. This value is usually / provided by your rotary's manufacturer, but you can measure it with high-precision calipers if / not.
+- PDF page 310: Creating the Design / Next we'll explain how to create a template for your tumbler, go over some important considerations / to keep in mind when you're selecting or creating a design, and show how you can use Grid Array
+- PDF page 311: Keyboard Shortcuts / Rectangle/Square / Ctrl  / Cmd +R
+- PDF page 312: You can orient the rectangle however you'd like while you design, but remember which side is / which, and, if necessary, take care to rotate it 90 degrees later, before sending the job to your / laser. In the 0†nal orien
+- PDF page 313: If your tumbler has a logo you'd like to work your design around, get a rough measurement of its / dimensions, and its distance from the top of your cup. / Tip
+- PDF page 314: LightBurn's automatic Snapping tools help align objects to other shapes in your / Workspace, or ..to the Workspace grid itself '÷ when you move objects close to a valid / location, they will snap to that point.
+- PDF page 315: Click and drag the logo outline from that point, until you see the midpoint snapping icon appear / again on the side of the larger template, then release to place the outline there. / In the Numeric Edits T oolbar, adjus
+- PDF page 316: Testing the Template / Before moving forward, it's a good idea to test the template to make sure it is sized correctly, and / the logo outline is positioned appropriately.
+- PDF page 317: Set the layer the thin rectangle is on to appropriate Speed and Power settings to lightly etch the / surface of the painter's tape, without going through. / The precise settings for that will depend on your laser, but we
+- PDF page 318: Change your Control Units in the Dimensions / Units tab of the Device Settings / window. LightBurn automatically converts any existing values when you switch between / units.
+- PDF page 319: Lasers need to be focused correctly to achieve good results '÷ the space between the laser and / the surface of your material must be set to precise distance. Focus the laser according to your / laser's user guide '÷ we
+- PDF page 320: Note for Galvo Users / Steps 7 - 9 do not apply to Galvo lasers, which always work in Absolute Coordinates, and / handle positioning di0–erently. See Rotary Mode (Galvo) '÷ Positioning Graphics for more
+- PDF page 321: After setting the origin, you are free to jog your laser around its work area. With User Origin / selected as the Start From mode, the laser will always move back to start the project in a / position relative to the prog
+- PDF page 322: Notice the location of green Job Origin indicator. This represents whatever location you've set / for your custom origin. When you start the job, the laser is going to move from wherever it is / currently located and cut
+- PDF page 323: Now imagine that you want to etch this four hexagon pattern onto a coaster or a phone case. / Lining it up from the lower left is not easy. If you change the Job Origin setting to center, you / get this instead:
+- PDF page 324: The job will be centered around the custom origin you set. If you position the laser head / directly over the center of the item you want to etch before setting the User Origin, the / output will be centered on the item.
+- PDF page 325: You can use the arrow keys in the Move Window to move your laser up, down, right, or / left. You can set the amount the laser travels with each click in the Distance 0†eld, and / the rate at which it travels in the Speed
+- PDF page 326: Press the Start button in the Laser Window to run the job. / If your rotary set up is correctly, and you've measured your object accurately, the starts and ends / of the thin rectangle engraving should line up perfectly.
+- PDF page 327: This guide will focus on an easy design, while incorporating one intermediate element '÷ we'll show / how to work your design around a logo on the tumbler. / Easy
+- PDF page 328: Hard / Graphics that are very tightly spaced, with little to no margin for error. / Lots of straight lines or geometric shapes that will show clear distortions.
+- PDF page 329: Laying Out and Patterning the Design / Now we'üre ready to place our elements into our design. First we'll place our graphics, and then we'll / use Grid Array to make a repeating pattern from them.
+- PDF page 330: A given number of millimeters per second is much faster than that same number in / millimeters per minute. Mixing up units can lead to reduction in power output due to / unexpectedly high speeds, or excessive power outpu
+- PDF page 331: The Grid Array tool creates copies of an object (or objects) in regularly spaced rows and / columns, and includes options to adjust spacing, mirror the shapes, randomize / orientation, and more.
+- PDF page 332: Delete any graphics that are overlapping with the logo outline box, and rearrange anything / nearby, if necessary to make the graphics surrounding the box look more organic. / Once you're happy with the placement of your
+- PDF page 333: The Group tool combines collections of objects into single units, and the Ungroup tool / splits Groups back into the individual objects that make them up. / Normally, all objects are independent of one another, and can b
+- PDF page 334: Keyboard Shortcuts / Grouping / Windows: Ctrl +G
+- PDF page 335: Note / If you aren't working around a logo on your tumbler, you can skip the rest of this section, and / Frame your entire design before moving on to engraving it.
+- PDF page 336: The Job Origin is indicated on your design as a green square. You'll see its position move as / you toggle Cut Selected Graphics and Use Selection Origin on and o0– in di0–erent / combinations.
+- PDF page 337: After setting the origin, you are free to jog your laser around its work area. With User Origin / selected as the Start From mode, the laser will always move back to start the project in a / position relative to the prog
+- PDF page 338: Notice the location of green Job Origin indicator. This represents whatever location you've set / for your custom origin. When you start the job, the laser is going to move from wherever it is / currently located and cut
+- PDF page 339: Now imagine that you want to etch this four hexagon pattern onto a coaster or a phone case. / Lining it up from the lower left is not easy. If you change the Job Origin setting to center, you / get this instead:
+- PDF page 340: The job will be centered around the custom origin you set. If you position the laser head / directly over the center of the item you want to etch before setting the User Origin, the / output will be centered on the item.
+- PDF page 341: Where's the Set Origin button? / The Set Origin button is presented in the Move Window, which is docked behind the Cuts / / Layers Window by default. If you don't see it, go to Window ): Move to re-enable.
+- PDF page 342: The Move Window should now have a Fire button and a box to enter a power level. / Keep this value very low to avoid burning the material '÷ start at 0.25%, and only / increase that value only if the beam is not visible.
+- PDF page 343: Engraving / Tip / Make sure your tumbler is still level on your rotary and your laser is still in focus. Refer back to
+- PDF page 344: After we remove the tumbler from the rotary, we'll give it quick spray with a cleaning product and / a scrub with a magic eraser to clean up remaining powder coat residue, and we'üve got a great / looking tumbler.
+- PDF page 345: 3D Sliced Engravings / LightBurn's 3D Sliced Image Mode enables Galvo users to create engravings with both visual and / physical depth. This 2.5D engraving mode does not require a live Z Axis and can produce highly
+- PDF page 346: Enable 3D Sliced Mode / Use the Cut Settings Editor to set the Image Mode to 3D Sliced. This mode is only available when / using a Galvo laser.
+- PDF page 347: If you've tried to use a 24-bit depth map in LightBurn 2.1, you may have been confused that it / shows up as an 8-bit depth map. This is because a 24-bit depth map is really using 3 channels of / 8-bits each.
+- PDF page 348: Cleanup passes are typically run with a tighter Line Interval, higher Frequency, and lower Max / Power than the main engraving passes, and are used to clear debris and produce a better 0†nish. / Angle Increment
+- PDF page 349: Preview and Run / Check the Preview to con0†rm your design is outputting as you're expecting. If you click the Play / button, you should see your design render from the bottom to the top, with black indicating the
+- PDF page 350: More Examples / Guides 3D Sliced Engravings / LightBurn User Guide 350
+- PDF page 351: Guides 3D Sliced Engravings / LightBurn User Guide 351
+- PDF page 352: Guides 3D Sliced Engravings / LightBurn User Guide 352
+- PDF page 353: Licensing / LightBurn is not a subscription service. Buy LightBurn once and use it forever, with a year / of updates included. Purchase another year of updates if you want new features after
+- PDF page 354: Users limited to 32-bit versions of Windows should download LightBurn 1.5.06 , which is / the 0†nal 32-bit release of LightBurn. See our legacy documentation for more information and / installation instructions.
+- PDF page 355: Educational and Volume Licensing / Information on licensing options that work well for large numbers of users. / Read More
+- PDF page 356: License FAQ / Is a LightBurn license a subscription? / No. You pay once and and can use it forever, with a year of updates included.
+- PDF page 357: Does the license expire? / No, but your license's update period has an expiration date '÷ a year from when you 0†rst / activated it. When the update period ends, the key is still valid, but you won't be able to use any
+- PDF page 358: I already have a LightBurn license. Can I try a di0›erent version before upgrading? / Yes. If you are already have a LightBurn license, but would like to try it with a device type your / key does not currently support, g
+- PDF page 359: License Management Guide / The license system used by LightBurn has a web portal  where you can view the computers / activated on your license, deactivate unused computers, or process an O0–ine Activation.
+- PDF page 360: If you no longer have access to the computer you wish to remove: / Log in to the License Portal . On the main screen you will see any licenses associated with your / email address.
+- PDF page 361: Click the three dot icon to the right of any computer in the list, to show the option to Delete that / computer, removing the license from the computer, and freeing up the license seat for use on / another machine.
+- PDF page 362: Step 2: Upload the request 0ﬁle to the License Portal / Bring the .ofr  0†le from Step 1 to a computer with an internet connection. / On this computer, open the License Portal and log in. If you're logging into the porta
+- PDF page 363: Step 3: Complete activation on the o0–ine computer / If you entered the information correctly, you'll see a message saying Task Successful. Click / Download to download the .dat  response 0†le.
+- PDF page 364: way to ensure accuracy. / Save the 0†le to the 0‡ash drive and transfer it back to the o0µine computer. / On the o0µine computer, in LightBurn's License Management window, click Process O0–ine
+- PDF page 365: If you're not comfortable performing all of the above steps yourself, email us at / support@lightburnsoftware.com  with the .ofr  0†le and license key, and we will process the 0†le / and return the .dat  response 0†le fo
+- PDF page 366: Educational and Volume Licensing / A LightBurn license key comes with 3 seats by default, meaning that it can be installed and run on / up to three computers. If you need more than 3 seats, you can buy additional seats a
+- PDF page 367: System Locked and Floating License Setup / System Locked and Floating licenses are advanced licensing setup options, often required for / installations of LightBurn in shared spaces such as school computer labs.
+- PDF page 368: Open up a Terminal window. / Press Cmd +Space  then type "T erminal". / Click T erminal to open it.
+- PDF page 369: Examples of valid proxy strings: / http://127.0.0.1:8000/ / http://user:pass@127.0.0.1:8000/
+- PDF page 370: Enterprise Security FAQ / This page contains answers to common questions we receive from corporate or educational IT / departments prior to purchasing. If your question is not answered here, please email support for
+- PDF page 371: Information is collected directly from the individual, and may be shared with our payment / processor, our license key processor, and our sales tax remittance processor. It may also be / shared with the following:
+- PDF page 372: Where can I access more detailed information on privacy and security? / LightBurn's Privacy Policy / LightBurn's End User License Agreement (EULA)
+- PDF page 373: LightBurn End User License Agreement / Version June 2026 / IMPORTANT 'ö PLEASE READ THIS CAREFULLY
+- PDF page 374: We may change this EULA, the Privacy Policy or other terms in URLs at any time. By continuing to / access or use the LightBurn Software Materials you agree to be bound by the most recent version of / such terms. If we ma
+- PDF page 375: download the LightBurn Software. A trial license does not require a LightBurn Key. T o convert to a / regular license from a trial license you must purchase a LightBurn Key, and, when you do so and / implement such Light
+- PDF page 376: attempt to split is void); (b) you must cease all use of the LightBurn Software Materials covered by / the transferred license and retain no copies in your possession or control; and (c) the transferee / must agree to th
+- PDF page 377: interoperability purposes); (e) attempt to access or derive the source code of the LightBurn Software / Materials; or (f) use the LightBurn Software Materials except for the applicable Permitted Use by the / applicable P
+- PDF page 378: 3. Updates / We may from time to time provide patches, bug 0†xes, updates, upgrades, and other modi0†cations to / improve the performance, security, functionality, or compatibility of the LightBurn Software. You will
+- PDF page 379: 6. Warranty Disclaimer / NOTWITHSTANDING ANYTHING TO THE CONTRARY AND TO THE MAXIMUM EXTENT PERMITTED BY / APPLICABLE LAW, WE PROVIDE THE LIGHTBURN SOFTWARE MATERIALS ON AN 'ÿAS-IS( AND 'ÿWITH
+- PDF page 380: WILL NOT BE INCREASED BY THE EXISTENCE OF MORE THAN ONE END USER LICENSE AGREEMENT, / INCIDENT OR CLAIM. NOTHING IN THIS EULA AND IN PARTICULAR WITHIN THIS 'ÿLIMITATION OF / LIABILITY( CLAUSE WILL ATTEMPT TO EXCLUDE LIAB
+- PDF page 381: T errorist Financial and Economic Sanctions Policy; and (d) the anti-boycott regulations, guidelines, / and reporting requirements under the EAR and Section 999 of the Internal Revenue Service Code / (collectively, 'ÿU.S
+- PDF page 382: 11.4. Governing Law; Venue. / This EULA and any matters arising in connection with this EULA will be governed, interpreted, and / construed in accordance with the laws of the State of Delaware, USA without regard to the
+- PDF page 383: 12. Variation of EULA Terms for Licensee Based in or Resident of / the European Union / 12.1. Generally.
+- PDF page 384: contract and including any warranties or product guarantees that you may purchase or receive in / connection with the LightBurn Software Materials) and you may not transfer your right to receive / such services to any tr
+- PDF page 385: Language. The o0·cial version of this EULA is in English, except where you are purchasing a license / to the LightBurn Software Materials as an individual consumer, in which case, if a version of this / EULA is provided
+- PDF page 386: 13.3. Section 1.6. / The following shall be added to Section 1.6: / Transferability. Where you purchase a perpetual license for the LightBurn Software Materials and the
+- PDF page 387: The remaining provisions of Section 1.9 in sub-sections (a) to (f) are unchanged. / 13.7. Section 7. / The following sentence is added at the end of Section 7:
+- PDF page 388: LightBurn Accessibility Statement / Accessibility Statement for LightBurn Software Inc. / This is an accessibility statement from LightBurn Software Inc.
+- PDF page 389: Downloads and Resources / Our resources section has 0†les and links we hope you'll 0†nd useful. / Art Libraries
+- PDF page 390: Download the Endoscope Camera Mount / Overhead Camera Mounts / If you're using one of LightBurn's cameras and have access to a 3D printer, you can print your own
+- PDF page 391: If you have the 8MP 85 or 120W LightBurn camera, please download the large camera mount. / Large Camera Mount / Downloads and Resources Downloads and Resources
+- PDF page 392: If you have any 5MP LightBurn camera or the 8MP 75 or 120N LightBurn camera, please / download the small camera mount. / Small Camera Mount
+- PDF page 393: Downloadable Art Libraries / Welcome to our Art Libraries download page. On this page, you'll 0†nd curated Art Libraries with / themed clip art and LightBurn-created artwork for you to use in your projects.
+- PDF page 394: Summer Foods / Back To School / Download
+- PDF page 395: Sea Creatures / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 396: Summer Foods / Download / April 2026
+- PDF page 397: Graduation, with artwork to focus on celebrating graduates of all levels. / Garden / Download
+- PDF page 398: Bugs / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 399: Graduation / Download / January 2026
+- PDF page 400: Emoji / This Art Library has 1366 emoji symbols in 0†ve di0–erent weights. Each font weight is a separate / library and can be downloaded with the download buttons below.
+- PDF page 401: Countries / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 402: Retro Valentines / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 403: September 2025 / Fall/Autumn 2025 / Download
+- PDF page 404: Halloween 2025 / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 405: Winter 2025 / Download / Downloads and Resources Downloadable Art Libraries
+- PDF page 406: External Resources / Unsurprisingly, we love using LightBurn here. But there are some other great tools that pair well with / it.
+- PDF page 407: My Laser Tools / Price: Free & Paid Tiers / My Laser T ools has a wide variety of generators for laser cutters, CNC routers, and 3D printers.
+- PDF page 408: Single Line Fonts / Price: Paid / A collection of single line fonts and artwork. The fonts are more varied and stylish than the SHX
+- PDF page 409: Involute Spur Gear Builder / Price: Free / Open source web-based tool for generating gears you can cut with your laser.
+- PDF page 410: Art Files / Public Work / Price: Free
+- PDF page 411: Voronoi / Price: Free / Art Type: Vector
+- PDF page 412: Troubleshooting / If you're having trouble using LightBurn, our troubleshooting resources are a great place to start / looking for help with common problems and frequently asked questions.
+- PDF page 413: LightBurn Editor Help / Frequently asked questions about creating and editing designs in LightBurn. / Read More
+- PDF page 414: Setting up CNC-Based Lasers / Get help setting up a CNC router as a laser cutter. / Read More
+- PDF page 415: Vector Artwork Imports with Extra Lines / If you get a lot of extra lines and unexpected shapes in your design when bringing in designs / made outside of LightBurn, we can help.
+- PDF page 416: Reset to Default Settings / Messed up your settings and not sure what to do? Here's how to reset them. / Read More
+- PDF page 417: Device Speci0ﬁc Troubleshooting / Some machines use non-standard commands or con0†gurations, and need special settings to work / properly with LightBurn.
+- PDF page 418: Darkly Labs Emblaser Devices / Overview / T o use a Darkly Labs Emblaser with LightBurn, you will need to use LightBurn license that's
+- PDF page 419: Existing xTool Devices / If you've already set up an xT ool device in previous versions of LightBurn, you'll need to re-add the / device to LightBurn.
+- PDF page 420: If you're using an xT ool laser created in an older version of LightBurn as a GRBL laser, you will need / to use a 0†rmware version below the ones listed at xT ool Devices: Firmware. We recommend that you / instead recre
+- PDF page 421: Job Quality / This page contains a collection of various issues you may see in your completed cuts and / engravings, along with their most probable solutions.
+- PDF page 422: "GRBL: Low or No Power Output" / "GRBL: Low or No Power Output" / Troubleshooting Job Quality
+- PDF page 423: Job Starting in Wrong Location / Job Starting in Wrong Location / Troubleshooting Job Quality
+- PDF page 424: Warped or Disconnected Lines / Warped or Disconnected Lines / Troubleshooting Job Quality
+- PDF page 425: Move Actions Are Burned / Move Actions Are Burned / Troubleshooting Job Quality
+- PDF page 426: Incorrect Size / Incorrect Size / Troubleshooting Job Quality
+- PDF page 427: Fuzzy, Blurry, or Overblown Edges / Fuzzy, Blurry, or Overblown Edges / Troubleshooting Job Quality
+- PDF page 428: Edges of Engravings Are Dark or Burned / Edges of Engravings Are Dark or Burned / Troubleshooting Job Quality
+- PDF page 429: Wobbly Engraving / Wobbly Engraving / Troubleshooting Job Quality
+- PDF page 430: Poor Image Quality / Poor Image Quality / Troubleshooting Job Quality
+- PDF page 431: Inconsistent Engraving Tone or Color / Inconsistent Engraving Tone or Color / Troubleshooting Job Quality
+- PDF page 432: Periodic Defects in Engravings / Periodic Defects in Engravings / Troubleshooting Job Quality
+- PDF page 433: Jagged Lines / Jagged Lines / Troubleshooting Job Quality
+- PDF page 434: Corners Are Too Dark, Too Light, or Missing / Corners Are Too Dark, Too Light, or Missing / Troubleshooting Job Quality
+- PDF page 435: Laser is Losing Power or Not Cutting at Low Speeds / Laser is Losing Power or Not Cutting at Low Speeds / Troubleshooting Job Quality
+- PDF page 436: Slanted or Skewed Jobs / Slanted or Skewed Jobs / Troubleshooting Job Quality
+- PDF page 437: Engravings Within Cuts Are Shifted / Engravings Within Cuts Are Shifted / Troubleshooting Job Quality
+- PDF page 438: Layers Shift When Cutting Multiple Objects / Layers Shift When Cutting Multiple Objects / Troubleshooting Job Quality
+- PDF page 439: Wiggly Lines at Corners / Wiggly Lines at Corners / Troubleshooting Job Quality
+- PDF page 440: Wrong Orientation / Description / Job 0‡ipped, mirrored, reversed, inverted, upside down, or re0‡ected when comparing appearance in
+- PDF page 441: If your engraving is mirrored sideways, change whether the origin is on the left or right / side. / If your engraving is 0‡ipped in both directions, move the origin to the opposite corner.
+- PDF page 442: GRBL: Low Power or No Output / Description / Low or no power output with a GRBL device. The two most common causes of this behavior are:
+- PDF page 443: Solution / Set speed within the allowed range of your machine. Go to Machine Settings or enter $$  in the / Console window to see the \(110/\)111, X/Y Max rates set in your machine's 0†rmware. The X
+- PDF page 444: Wrong Start Location / Description / Job is starting in an unexpected locaation.
+- PDF page 445: Warped or Disconnected Lines / Description / Circles and other closed shapes are not joining up.
+- PDF page 446: Laser Fires During Travel Moves / Description / Unexpected lines where they shouldn't be. Laser doesn't turn o0– when moving between cuts.
+- PDF page 447: Incorrect Size / Description / Job is larger or smaller than the sizes shown in LightBurn
+- PDF page 448: Fuzzy, Blurry, or Overblown Edges / Description / Fine details are blown out, or edges of engravings are fuzzy or blocky.
+- PDF page 449: Dark & Burned Edges / Description / When doing a Fill or Image engraving, the edges or slow areas are darker or more burned than the
+- PDF page 450: Wobbly Engraving / Description / Shaky, warped, or wiggly engravings on images and 0†lls.
+- PDF page 451: Poor Image Quality / Description / The photo/ image engraved doesn't look good in some way or another.
+- PDF page 452: Inconsistent Engraving Tone or Color / Description / Dark and light patches within your engraving.
+- PDF page 453: Periodic (Repeated) defects in Engravings / Description / A repeated pattern visible in the output of engravings.
+- PDF page 454: Jagged Lines / Description / Your laser is outputting shaky, jittery, jagged, or sharp lines.
+- PDF page 455: Corners are Too Dark, Too Light, or Missing / Description / Corners or any area where your laser changes directions while cutting are too dark, too light, or
+- PDF page 456: If Min Power is so low that it falls below the 0†ring threshold of your laser you will 0†nd completely / unburned areas. If you are running a cut at very low speed, set your Min Power and Max Power to / the same value to
+- PDF page 457: Laser Lowing Power at Low Speeds or Not / Reaching Full Power / Description
+- PDF page 458: If Min Power is so low that it falls below the 0†ring threshold of your laser, it will not 0†re at all when / moving slower than the Start Speed. The 0†ring threshold is usually around 10% of your laser's / wattage. In o
+- PDF page 459: Slanted or Skewed Results / Description / Engraves are angled or skewed. Lines might be either correct or skewed.
+- PDF page 460: The controller sends commands to the motor drivers with a series of step pulses in which a / signal is brie0‡y switched from high to low or low to high. Motor drivers will look for either a / transition from high to low
+- PDF page 461: Engraving Shifted Relative to Cut Lines / Description / Engravings on small pieces aren't matching up with the cut lines around them.
+- PDF page 462: Layers Shift When Cutting Multiple Objects / Description / Cuts and engravings aren't lining up as expected when cutting multiple objects, but are correctly (or
+- PDF page 463: Wiggly Lines at Corners / Description / A wavy "ringing" pattern in places where direction changes suddenly and at high speed. .
+- PDF page 464: Preview Window / We strongly recommend checking the Preview window before starting any job. If you see something / that doesn't look right, but aren't sure what to do, check below for common issues and how to 0†x
+- PDF page 465: Ballooned or Incorrectly Sized Shapes / Ballooned or Incorrectly Sized Shapes / Troubleshooting Preview Window
+- PDF page 466: Double-Engraved Areas / Double-Engraved Areas / Troubleshooting Preview Window
+- PDF page 467: Engraved Areas Opposite of Expectation / Engraved Areas Opposite of Expectation / Troubleshooting Preview Window
+- PDF page 468: "Excessive Overscanning" / "Excessive Overscanning" / Troubleshooting Preview Window
+- PDF page 469: "Blurry Edges" / "Blurry Edges" / Troubleshooting Preview Window
+- PDF page 470: Gaps in Lines / Gaps in Lines / Troubleshooting Preview Window
+- PDF page 471: Gray Shapes / Gray Shapes / Troubleshooting Preview Window
+- PDF page 472: Inaccurate Time Estimates / Inaccurate Time Estimates / Troubleshooting Preview Window
+- PDF page 473: Missing Shapes / Missing Shapes / Troubleshooting Preview Window
+- PDF page 474: Solid Black Images / Solid Black Images / Troubleshooting Preview Window
+- PDF page 475: Strange Banding / Scan Lines Not Visible / Strange Banding / Scan Lines Not Visible / Troubleshooting Preview Window
+- PDF page 476: Added Lines / Description / Extra lines appear at the starts and/or ends of closed cutting paths.
+- PDF page 477: Troubleshooting Added Lines / LightBurn User Guide 477
+- PDF page 478: Ballooned or Incorrectly Sized Shapes / Description / Shapes are sized incorrectly and rounded on some corners, in extreme cases appearing balloon-like.
+- PDF page 479: Troubleshooting Ballooned or Incorrectly Sized Shapes / LightBurn User Guide 479
+- PDF page 480: Blurry Edges / Description / The edges of graphics set to Fill Mode are blurry.
+- PDF page 481: Troubleshooting Blurry Edges / LightBurn User Guide 481
+- PDF page 482: Double-Engraved Areas / Description / Areas of your graphics that you intend to engrave only once '÷ or not at all '÷ are instead engraved
+- PDF page 483: See Fill Mode and How to Invert a Vector Engraving for more information on these concepts. (" / Troubleshooting Double-Engraved Areas / LightBurn User Guide 483
+- PDF page 484: Click here for examples fully and partially overlapping shapes set to the same or / di0›erent layers / Fully overlapping shapes set to the same layer
+- PDF page 485: Partially overlapping shapes set to the same layer / Partially overlapping shapes set to di0–erent layers / Try setting overlapping shapes to the same layer to see if the new result in the Preview window
+- PDF page 486: If you are using a Filled View Style, try switching to Wireframe mode to make sure there aren't / any unwanted graphics hidden behind other graphics in your design. Delete them if necessary. / ("
+- PDF page 487: Engraved Areas Opposite of Expectation / Description / Areas of your graphics that you intend to engrave are not engraved, and areas you don't intend to
+- PDF page 488: + Watch the video on YouT ube: https://www.youtube.com/watch?v=EAlw371Ey0M / T o invert an image engraving, toggle on the Negative Image switch in the Cut Settings / Editor or Adjust Image window.
+- PDF page 489: Troubleshooting Engraved Areas Opposite of Expectation / LightBurn User Guide 489
+- PDF page 490: Excessive Overscanning / Description / Red lines depicting traversal moves show the laser traveling a signi0†cant distance past the edges of
+- PDF page 491: If you enable Overscanning for a GCode-based laser and there isn't enough room at the edge of / the job to accommodate the extra travel distance, you may see LightBurn's Cut may be out of / bounds due to overscan setting
+- PDF page 492: Gaps in Lines / Description / Some sections of graphics set to Line Mode are skipped.
+- PDF page 493: T o disable this setting, toggle o0– the Perforation Mode switch in the Common Settings tab Cut / Settings Editor. / Dot Mode tells the laser to pause and pulse at regular intervals along the path, instead of
+- PDF page 494: Troubleshooting Gaps in Lines / LightBurn User Guide 494
+- PDF page 495: Gray Shapes / Description / Graphics are rendered in a shade of gray rather than black.
+- PDF page 496: + Watch the video on YouT ube: https://www.youtube.com/watch?v=NC-UZokVvt4 / Troubleshooting Gray Shapes / LightBurn User Guide 496
+- PDF page 497: Inaccurate Time Estimates / Description / The T otal time estimated is very far o0– the actual run times of your projects.
+- PDF page 498: Missing Shapes / Description / Graphics you expect your laser to cut or engrave are not shown.
+- PDF page 499: You can also go to Edit ): Delete Duplicates to automatically identify and delete duplicate / shapes. / If you have enabled Cut Selected Graphics, make sure all graphics you want to cut or engrave are
+- PDF page 500: Troubleshooting Missing Shapes / LightBurn User Guide 500
+- PDF page 501: Solid Black Images / Description / Image engravings appear as solid black shapes, with no detail.
+- PDF page 502: If you are using a dithered Image Mode such as Stucki or Jarvis, you may need to zoom in to / see detail in the engraving. / ("
+- PDF page 503: If you are using 3D Sliced mode, make sure you have set the Image layer to engrave multiple / Passes, and, for best results, that you've set an Angle Increment. / When set up properly, with Show traversal moves enabled y
+- PDF page 504: Troubleshooting Solid Black Images / LightBurn User Guide 504
+- PDF page 505: Strange Banding / Scan Lines Not Visible / Description / Alternating black and relatively lighter gray lines appear, or individual scan lines are not visible.
+- PDF page 506: Troubleshooting Strange Banding / Scan Lines Not Visible / LightBurn User Guide 506
+- PDF page 507: Connection Troubleshooting / Can't Connect Laser to Computer / First steps:
+- PDF page 508: Laser Behaves Unexpectedly / If your device is restarting when you try to use it, you are most likely experiencing either / communication problems or brief losses of power. This is often visible when a device set to home
+- PDF page 509: If you're using an ethernet connection, it's possible that the IP address you con0†gured in / LightBurn no longer points at the the laser. T o test this, you can ping the laser. Click the blue box / below for directions.
+- PDF page 510: It's possible that your laser is running out of storage space, preventing LightBurn from sending / the 0†le. Try clearing existing 0†les o0– the controller. Controllers vary, but typically you'll want to / 0†nd File ): D
+- PDF page 511: LightBurn Editor Help / This page contains help for common pitfalls, errors, and frequently asked questions that users have / encountered while using LightBurn. If you're looking for help 0†guring out why your laser's ou
+- PDF page 512: Example Summary Resources / Filled / shapes
+- PDF page 513: Example Summary Resources / Filled / shapes
+- PDF page 514: Example Summary Resources / Need to / invert
+- PDF page 515: GRBL Errors / GRBL devices have a number of di0–erent alarms and error codes you may encounter. These will be / visible in the Console Window.
+- PDF page 516: ALARM:3 / + Watch the video on YouT ube: https://www.youtube.com/watch?v=zzQ9-K-7UqU / The laser halted abruptly, sometimes due to another Alarm or Error, or, often, the computer losing
+- PDF page 517: Make sure GCode Clustering is disabled in Device Settings. / If you are using Custom GCode, check your settings for accuracy. If you're typing commands in by / hand in the Start or End GCode 0†elds under GCode tab of the
+- PDF page 518: T o check what version of GRBL your laser is running, enter $I  into the Console window and / press Enter . The messages shown in response should include the GRBL version in a message / starting with VER .
+- PDF page 519: GRBL Communication / Check Transfer Mode / LightBurn defaults to the Bu0›ered transfer mode for communication with GRBL devices. This is
+- PDF page 520: Network Connection Port / If you're connecting to the laser over a network instead of with a USB cable, you may need to change / the network port setting in Device Settings.
+- PDF page 521: License Troubleshooting / This page contains solutions to common License Activation errors, and other License Management / issues.
+- PDF page 522: System Time Incorrect / Your computer's system time is inaccurate, probably because your computer isn't set to sync / automatically.
+- PDF page 523: T o permit access without disabling restrictions, whitelist api.cryptlex.com for port 443. / It is also possible to con0†gure LightBurn to access the network through a proxy. You can append the / proxy connection address
+- PDF page 524: How to Fix / Go to the License Management Portal and copy your LightBurn license key. You can also get your / license key from your purchase con0†rmation email, if you still have it.
+- PDF page 525: Activation Limit / You have used up the maximum amount of simultaneously allowed activations for your key. / Deactivate LightBurn from an unused computer by opening LightBurn on that computer and clicking
+- PDF page 526: If you purchased your key through our web store, make sure you are attempting to access the portal / using the email address you used to purchase your key. If you purchased your key through a 3rd / party vendor, you'll n
+- PDF page 527: License Shows as Expired But Shouldn't / If you get the error about your license being expired but your license's update period is current (or / valid for the version you're installing), it's possible that LightBurn isn'
+- PDF page 528: Camera Troubleshooting / Don't forget to calibrate and align your camera / If you haven't already done so, make sure you've gone through the lens calibration and
+- PDF page 529: For Mac / Open the built-in Photo Booth app, and use the Camera menu to select the camera you / want to use in LightBurn.
+- PDF page 530: USB cameras only / These directions are for USB cameras that connect with a USB cable. If you're using a / network camera (wireless, or connected with an Ethernet cable), directions are in Network
+- PDF page 531: If LightBurn isn't in that list, it should be. / You might need to reboot your machine and try again after the settings change. / If LightBurn still can't access the camera, and you're using Windows, try changing the
+- PDF page 532: T o 0†x the error, try the following, as shown in the GIF: / Right-click on the camera feed in the browser. / In the context menu that comes up, choose Open Image, Open Image in New Tab, or Open
+- PDF page 533: download it here. Some hardware manufacturers link to or ship a card with the older circle / pattern, which doesn't work with our updated calibration method. / Keep the calibration pattern as 0‡at as possible by gluing i
+- PDF page 534: If these checks don't 0†x the problem, we have suggestions below for di0–erent situations. / Misaligned on First Setup / If your Camera Overlay is misaligned immediately after your 0†rst setup:
+- PDF page 535: Misaligned Between Uses / If the overlay becomes misaligned between uses, it means the position of your camera relative to / your laser's work area has changed from when you did your initial alignment.
+- PDF page 536: Troubleshooting Camera Troubleshooting / LightBurn User Guide 536
+- PDF page 537: CNC-Based Lasers / Some of our users have set up CNC routers 'ö particularly the inexpensive and widely available 3018 / machines 'ö as lasers. Although these are GRBL devices similar to most diode lasers, they are pre-
+- PDF page 538: Set the power output to 0 to turn o0– the laser when moving between cuts / Enable Variable Power mode to adjust the laser's power output from 0% when the laser is / stopped, to 100% of the power output you've set, once t
+- PDF page 539: In the console, type $100  and press Enter  to 0†nd the X steps/mm value, and repeat the process / with $101  for Y . If you prefer to use the Machine Settings window, look in Outputs setup for X / Steps per mm (\(100)**
+- PDF page 540: With Overscanning disabled, the laser slows down and changes directions while within the bounds of / the engraving. The reduced speed near the edges make the engraving darker. With Overscanning / enabled, LightBurn runs
+- PDF page 541: Drivers / If you have trouble connecting to your laser, you may need to install or update the drivers that allow / your computer to communicate with the laser's controller software.
+- PDF page 542: Electrical Problems / Shared Power Circuits / Other devices sharing the same power circuit as your laser, such as chillers and external air assists,
+- PDF page 543: Galvo Laser Troubleshooting / Below are some common problems and frequently asked questions related to using a Galvo laser / with LightBurn.
+- PDF page 544: Turn the laser back on. / My Galvo is trying to engrave my rotary, what's wrong? / LightBurn allows you to shift the center position of your rotary output to compensate for the center
+- PDF page 545: How to Ask For Help / + Watch the video on YouT ube: https://www.youtube.com/watch?v=cpm9hSia6Gk / If you're having trouble using your laser with LightBurn, you're in the right place '÷ the
+- PDF page 546: Setup Information / Laser Model / We support hundreds of machines, and they all behave di0–erently depending on their exact type.
+- PDF page 547: The 0†rmware version will usually appear on the controller's display when you start it up, but / when you've connected to it using LightBurn, you can also go to Laser T ools ): Get Controller / Info to see it.
+- PDF page 548: Your LightBurn version is always visible in the topbar of the LightBurn window. It's o0– to the left on / Windows, and centered on macOS. / The location of the LightBurn version on Windows.
+- PDF page 549: Connection Method / Tip / Be sure to check out our Connection Troubleshooting page before contacting support.
+- PDF page 550: Context / Some additional context helps too: / Is this your 0†rst time setting up your laser or using LightBurn?
+- PDF page 551: A low quality cell phone photo, lacking almost any useful information. This will make your Support Agent sad. / Videos can sometimes be helpful as well, especially when you need to show us the behavior of your / machine.
+- PDF page 552: Go to Help ): Generate Support Data to copy an automatically-generated block of encoded / characters to your clipboard. The clipboard is the temporary storage location your computer uses / when you copy and paste items.
+- PDF page 553: Crash Logs / If LightBurn crashes, we want to know about it. You might see a LightBurn Stack Trace message, / and a LightBurn_Crash_Log.txt  0†le will be saved to your computer's desktop.
+- PDF page 554: Feature Requests / If you've got an idea for a new feature, we're all ears. But the best way to share it with us isn't to / contact support.
+- PDF page 555: Vector Artwork Imports With Extra Lines / When importing vector artwork into LightBurn, sometimes 0†les open with a large number of extra / lines and shapes that aren't visible in the output from other graphics editing s
+- PDF page 556: If shapes extend further than wanted '÷ as with the teeth in the sample image above '÷ you may / need to use LightBurn's editing tools to modify the shapes to produce the end result you want. / Use Boolean and Weld tools
+- PDF page 557: Machine Size Mismatch / A machine size mismatch occurs when the machine size LightBurn reads from your device's 0†rmware / doesn't match the machine size saved in Device Settings.
+- PDF page 558: Update Device Settings / Click this button to automatically adjust the Device Settings to match the device's 0†rmware. Check / your device's user manual or contact your machine's manufacturer to verify the correct dimens
+- PDF page 559: macOS-Speci0ﬁc Problems / Unable to Connect over Ethernet / Starting with macOS Sequoia (macOS 15), connecting to a laser over Ethernet requires granting
+- PDF page 560: Windows-Speci0ﬁc Problems / Power Management Causes Dropped Connection / If you're on a Windows computer and can connect to your laser, but tend to lose your connection
+- PDF page 561: Click on Advanced Power Settings / Uncheck both boxes in USB Settings / Save settings and close the window
+- PDF page 562: Mechanical Issues / If there is play/ slop/ backlash somewhere in the machine's mechanics you will see wobbly engraves, / closed shapes that don't match up at the end, wiggly bits on corners of lines and a range of other
+- PDF page 563: Reset to Default Settings / Follow these steps to restore LightBurn to the same settings as when you 0†rst installed '÷ be aware / that you will also lose any device pro0†les you've created in this process.
+- PDF page 564: Restoring Lost or Changed Settings / If you've opened up LightBurn and settings and devices are missing or not as you expect, don't / panic! We have information to help you get things back to how you expect them.
+- PDF page 565: Cut Settings are Di0›erent / Sometimes, we hear from users that their cut settings changed. What's more likely is that your cut / settings have stayed the same, but the units they're displayed in have changed.
+- PDF page 566: Why It Happens / The Speed you cut at can display di0–erently if your Control Units accidentally get changed. This / happened to some users who used di0–erent units for designing and controlling when they installed
+- PDF page 567: Serial Port Problems / Depending on the type of device you have and the connection method you're using, you may have a / dropdown in the Laser window to choose the serial port. The screenshot below highlights its locatio
+- PDF page 568: T o exclude a port: / Select the port in the dropdown. / Right-click the dropdown and choose Exclude <portname>.
+- PDF page 569: USB Cables / If you're connecting over USB, cable problems can be a frustrating problem to solve. The steps below / may help you identify and solve problems. If you're not sure what type of USB port or connector you
+- PDF page 570: Try A Di0›erent USB Port / USB ports can occasionally fail, even without physical damage. If your computer has multiple USB / ports, try plugging into a di0–erent USB port and see if that makes a di0–erence.
+- PDF page 571: Reference / Our reference pages are here to help you use all of LightBurn's tools and features. / If you know what tool you're looking for, you can search for it or use the navigation list on the left
+- PDF page 572: Main Window / Below is the default layout of the full LightBurn window, for a GCode-based device. This layout will be / slightly di0–erent depending on the type of laser you're working with.
+- PDF page 573: J: Modi0ﬁers Toolbar / K: Cuts / Layers Window / L: Move Window
+- PDF page 574: Numeric Edits Toolbar / Contains options for adjusting the size, position, and orientation of shapes or groups of shapes in / your project.
+- PDF page 575: Move Window / Provides buttons to jog and position your laser, along with additional options for users with GCode- / based lasers.
+- PDF page 576: Color Palette / Contains the colors/layers that you can assign to individual graphics in LightBurn. Use these colors/ / layers to assign di0–erent kinds of operations and settings to the shapes in your design.
+- PDF page 577: Arrange Menu / The Arrange Menu contains tools for positioning objects, both on an individual basis, and in relation / to each other. It also contains tools for moving the physical laser in relation to objects within you
+- PDF page 578: Ungroup / Ctrl  / Cmd  + U / Splits Groups back into the individual objects that make them up.
+- PDF page 579: Align / Repositions objects according to their edges or centers. / See Align for more information.
+- PDF page 580: See Move Laser to Selection for more information. / Move Laser To Selection ): Jog Laser / Moves the laser by the amount speci0†ed in the Move Window, in a chosen direction.
+- PDF page 581: See Push in Draw Order for more information. / Lock Selected Shapes / Unlock Selected Shapes / Lock Selected Shapes prevents editing of selected objects.
+- PDF page 582: Arrange Toolbars / The Arrange Toolbars each contain a selection of tools found in the Arrange Menu, that are broadly / used for positioning objects.
+- PDF page 583: Flip or Mirror / Flips objects across their vertical or horizontal centers, or a custom-selected line. / See Mirror T ools for more information.
+- PDF page 584: Reference Arrange T oolbars / LightBurn User Guide 584
+- PDF page 585: Color Palette / In LightBurn, di0–erent colors indicate di0–erent layers. These colors don't represent the 0†nal product's / colors but instead di0–erentiate each operation needed to complete the job.
+- PDF page 586: Change the Color for New Objects / With nothing selected in your Workspace, click a color entry. Subsequent new shapes will be created / in that color, and assigned to the corresponding layer in the Cuts / Layers Window.
+- PDF page 587: Change the Color of Existing Objects / With the objects already selected, click a color entry to switch them to that color, and assign them to / the corresponding layer in the Cuts / Layers Window.
+- PDF page 588: + Watch the video on YouT ube: https://www.youtube.com/watch?v=tnISpDQkq74 / Importing Graphics from Other Software / When importing graphics, LightBurn will attempt to match the colors used in that 0†le to the default
+- PDF page 589: 14 rgb( 0, 160, 255) #00A0FF / 15 rgb( 160, 0, 160) #A000A0 / 16 rgb( 128, 128, 128) #808080
+- PDF page 590: Creation Toolbar / The Creation Toolbar contains tools for selecting, creating, and editing objects. / Accessing the Creation Toolbar
+- PDF page 591: The Creation T oolbar is normally vertical, but can also be removed from the left-side toolbar and / oriented horizontally, as presented above. See Customizing the LightBurn Window for more / information.
+- PDF page 592: Add Tabs / Ctrl /Cmd +Tab / Use Add Tabs to add tabs 'ö small sections of material deliberately left uncut 'ö to your project. T abs
+- PDF page 593: Edit Menu / The Edit Menu contains tools for selecting and manipulating objects in addition to LightBurn / settings.
+- PDF page 594: Restores actions previously reversed using Undo, starting with the most recent action Undone, and / proceeding to previous reversed actions with successive Redos. / See Undo/Redo for more information.
+- PDF page 595: Inserts objects that are copied to your clipboard (temporary storage location) into your. Pasted / objects are centered at the location of the cursor at the time of pasting. / See Clipboard T ools for more information.
+- PDF page 596: See Close Path for more information. / Close Selected Paths With Tolerance / Opens a dialog window to close selected paths with one start and one end node within a speci0†ed
+- PDF page 597: Select Open Shapes Set to Fill / Selects all shapes assigned to a layer set to Fill or O0–set Fill mode that are open, meaning they are / not closed, continuous loops but, instead, have start and end points that are di0–
+- PDF page 598: Settings / View and edit general, device-independent LightBurn settings. / See Settings/Preferences for more information.
+- PDF page 599: File Menu / The File Menu contains tools for creating, opening, and saving projects; importing designs and / images; and changing, saving, exporting, or importing your LightBurn preferences.
+- PDF page 600: See Multiple Independent LightBurn Instances for more information on running two completely / independent LightBurn instances. / Recent Projects
+- PDF page 601: Store and view project-speci0†c notes and comments. / See Show Notes for more information. / Save
+- PDF page 602: Import Prefs / Import previously copied or exported .lbprefs  LightBurn preference 0†les. / Note
+- PDF page 603: Import Bundles / Load previously exported Bundles into the current instance of LightBurn. Any component contained / within the bundle that your computer detects is already present will be grayed out and unavailable
+- PDF page 604: Help Menu / The Help Menu contains links to documentation and instructional videos; information on your / LightBurn license and version; and tools for troubleshooting software issues.
+- PDF page 605: Access the LightBurn forum at: Forum.LightBurnSoftware.com. / Submit Feature Request / Go directly to LightBurn's feature request page, to make your own requests and suggestions, and
+- PDF page 606: See View Usage Data for more information. / Report a Bug / Opens up a contact form to report bugs directly to LightBurn from within the software. If you've
+- PDF page 607: Debug Drawing / Activates the internal tool that shows the bounds of shapes being drawn in the Workspace, to aid / LightBurn developers in troubleshooting and debugging.
+- PDF page 608: Language Menu / Change the LightBurn program interface language by selecting between 25 supported translations. / The currently selected language is indicated by a dot next to the language in the list. English (United
+- PDF page 609: Laser Tools Menu / The Laser Tools menu contains tools, tests, and step-by-step wizards for performing advanced / lasering operations, dialing in settings to optimize product quality, and setting up accessory
+- PDF page 610: Manage Cameras / Opens the Device Cameras window, which shows a list of cameras associated with your current / device. Use the buttons on the bottom to Add, Edit, or Remove a camera.
+- PDF page 611: Repeat Marking / Enables the use of a Rotating or Linear axis table with Galvo lasers, to move parts past a laser / while running repetitions of identical jobs.
+- PDF page 612: See Calibrate Galvo Lens for more information. / Manage Devices / Opens the Devices window, where you can create and edit pro0†les for your lasers.
+- PDF page 613: Main Toolbar / The Main Toolbar contains tools for creating, opening, and saving projects; copying, pasting, and / deleting graphics; accessing your LightBurn preferences and Device Settings; and more.
+- PDF page 614: Warning / Selecting a supported image or vector 0†le instead of a project 0†le will create a new LightBurn / project, replacing the currently loaded project. Use Import to bring artwork 0†les or designs into
+- PDF page 615: Pan / Drag View / Click to drag the Workspace around. Mouse users can click the mouse wheel or third button and / drag.
+- PDF page 616: Menu Toolbar / The Menu Bar contains all of LightBurn's top-level menus. / Click any menu in the image below to go directly to the relevant page for that menu, or scroll down
+- PDF page 617: All Web T ools open directly in a browser built into LightBurn, and you can import your results straight / into your Workspace. From there you can utilize our laser control tools to apply Cut Settings, position / your ou
+- PDF page 618: Modes Toolbar / The Modes Toolbar contains buttons to open dialog windows or wizards for advanced lasering / processes.
+- PDF page 619: Rotary Mode / Rotaries are used to turn cylindrical objects so that their surfaces can be marked by a laser. In order / to use your laser with a rotary, you must 0†rst establish several important parameters in the Rotary
+- PDF page 620: Modi0ﬁers Toolbar / The Modi0ﬁers Toolbar contains tools for combining, altering, and producing arrayed duplicates of / graphics.
+- PDF page 621: Modi0ﬁers Toolbar Options / Click any button in the image below to jump to information on that tool, or scroll down for a list of / options and descriptions.
+- PDF page 622: See Set Start Point for more information. / Radius / Fillets (rounds over) sharp corners, takes a round bite out of a corner (using a negative radius value),
+- PDF page 623: Status Bar / The Status Bar provides contextual information related to the active tool or process being / performed. Check the Status Bar for related information, instructions on the next steps, or options
+- PDF page 624: Example Tool Statuses / Selection Tool / Message: Min (34.5x, 43.5y) to Max (67.5x, 70.5y) 2 objects
+- PDF page 625: Note / The Cursor Coordinates are always displayed to the left of T ool Status, and are displayed twice / with this tool.
+- PDF page 626: If the connection is established, you'll see message identifying the laser's controller, and indicating / that it is connected. / If you are unable to connect to your laser, see Troubleshooting: Connection Problems.
+- PDF page 627: Tools Menu / The Tools Menu contains an array of options for selecting, creating, editing, and modifying graphics. / Click any option in the image below to go directly to the relevant page for that tool, or scroll down f
+- PDF page 628: See Draw Lines for more information. / Draw Shape / Opens a submenu for the various Primary Shapes.
+- PDF page 629: Dual Star / Creates dual stars '÷ two overlapping stars '÷ with an adjustable number of sides. Each star can / have a separate radius.
+- PDF page 630: Measure / Ctrl /Cmd +M / Allows you to hover over any shape in your Workspace and display an array of useful information
+- PDF page 631: Boolean Intersection / Alt /Option +* / Creates a new shape from the area where two vector graphics overlap.
+- PDF page 632: See Multi-File Trace Image for more information. / Apply Path to Text / Attaches text to a vector object, reshaping it to follow the contour of the chosen path.
+- PDF page 633: Tooltips and Topic-Aware Help / T o help users navigate LightBurn's interface, we've included Tooltips and Topic-Aware Help for / most features.
+- PDF page 634: Reference T ooltips and T opic-Aware Help / LightBurn User Guide 634
+- PDF page 635: Web Tools Menu / Use the Web Tools Menu to access LightBurn's built-in web tools and to add and manage your own / custom web tools. These are all completely optional third-party services, and our built-in tools all
+- PDF page 636: My Laser Tools / You can use our built-in My Laser T ools integration to access My Laser T ools without leaving / LightBurn, and to import your designs directly into the workspace in LightBurn.
+- PDF page 637: User Tools / You can also add your own tools to the Web T ools and use them in much the same way as the built-in / Web T ools. User T ools are only installed for your computer.
+- PDF page 638: Open the Manage User T ools Window from the Web T ools menu. / Click the Add button. / Enter the required information. Click Advanced if you need to access advanced settings.
+- PDF page 639: Edit the information. / Click OK to con0†rm. / Removing User Tools
+- PDF page 640: Window Menu / Use the Window Menu to control and customize your Workspace view, enable and disable windows / and toolbars, or reset LightBurn's layout to its original state.
+- PDF page 641: Preview / Alt /Option +P / Displays a simulation of movements and lasering operations before a project is sent to the machine.
+- PDF page 642: Camera Control / Provides options for capturing, adjusting, and displaying an overlay image of your laser's work area / in the LightBurn Workspace.
+- PDF page 643: Material Library / Stores preset cut settings for di0–erent operations and materials, so you can quickly reapply them / later.
+- PDF page 644: Variable Text / Provides options for controlling and incrementing Variable Text output. Variable T ext allows you to / use special codes in text entries that will be substituted for something else when a project is sent
+- PDF page 645: Workspace / Edit Window / The Workspace, or Edit Window, is the area where you create, adjust, modify, and arrange / artwork in LightBurn.
+- PDF page 646: Background Examples / Default Light Color Background / Type Color
+- PDF page 647: Dark Color Background / Type Color / Hex #484848
+- PDF page 648: Essential Functions / Reference Essential Functions / LightBurn User Guide 648
+- PDF page 649: File Management / Use the 0†le management tools to start New projects, Save projects you're working on, Open / previously saved projects, and Import or Export artwork in alternative 0†le formats.
+- PDF page 650: If you have an existing project open with unsaved changes, LightBurn will ask you if you'd like to / Save before Opening the project, click No to discard the changes, or Cancel to abort the process. / If you have multipl
+- PDF page 651: Click any 0†le in the list to Open it. / Read More / Save
+- PDF page 652: Save As Template / Save As Template opens a dialog window where you can save a copy of your 0†le as a LightBurn / Template. T emplate 0†les were introduced in LightBurn 2.1 and are intended to make it easier to
+- PDF page 653: Import / Ctrl /Cmd +I / Loads graphics from a variety of 0†le formats into LightBurn. Click on the dropdown in your system's
+- PDF page 654: Compatible Image Formats / .png  '÷ Portable Network Graphics / .jpg  / .jpeg  '÷ Joint Photographic Experts Group format
+- PDF page 655: .gbs / .gto / .gbo
+- PDF page 656: .obj / .off / .ply
+- PDF page 657: Make your modi0†cations. / Choose Save as T emplate. / We'll have a guide with more information on using templates out soon, but some of our sta0– and
+- PDF page 658: Selection Tools / + Watch the video on YouT ube: https://www.youtube.com/watch?v=mTpR42AsOfk / In order to modify graphics, you must 0†rst select them. The Select tool is the primary means of
+- PDF page 659: Box Selection / Select several shapes at once using one of two box selection options. / Enclosing Selection
+- PDF page 660: + Watch the video on YouT ube: https://www.youtube.com/watch?v=Fcya6slPnUc / Selection Modi0ﬁers / T o supplement both click and box selection, LightBurn supports the following modi0†er keys.
+- PDF page 661: Ungrouped Objects Selected / Reference Selection T ools / LightBurn User Guide 661
+- PDF page 662: Grouped Objects Selected / Several options for modifying or manipulating objects are available once they are selected: / The Transform Control handles for Sizing, Moving, Skewing, or Rotating the selection appear.
+- PDF page 663: Invert Selection / Ctrl  / Cmd  + Shift  + I / Deselects all objects that are currently selected and selects all objects that are not currently
+- PDF page 664: Select Contained Shapes / Selects all shapes contained by the currently selected shape. T o use this tool, the selected shape / must be closed '÷ a path that forms a continuous loop. The containing object remains in the
+- PDF page 665: If you 0†nd that you're getting odd 0‡ashing instead of the expected pattern when selecting / objects, the most likely problem is overlapping geometry. This is often the result of importing the / same 0†le twice, or othe
+- PDF page 666: Zooming and Panning / Use the Zooming and Panning functions to adjust the visible area in your Workspace while / designing and making edits.
+- PDF page 667: Zoom to Page / T o Zoom your 0†eld of view to show the entire Workspace, go to Window ): Zoom to Page, press / Ctrl  / Cmd +0 , or click the Zoom to Page button  in the Main T oolbar.
+- PDF page 668: Frame Selection / T o Zoom your 0†eld of view to frame your current selection, go to Window ): Frame Selection, press / Ctrl  / Cmd +Shift +A , or click the Frame Selection button  in the Main T oolbar.
+- PDF page 669: Related Topics / Selection / Main T oolbar
+- PDF page 670: Undo & Redo / Undo and Redo reverse or reapply changes you've made to your project, allowing you to backtrack / if you've made edits you regret, or restore the edits you reversed, if that regret was only temporary.
+- PDF page 671: LightBurn's new Undo History feature makes it easier to navigate a long undo list. / Go to Edit ): Undo History to open the Undo History window. You can scroll through the list and / select actions to preview your projec
+- PDF page 672: Clipboard Tools / The clipboard commands are tools for copying, inserting, removing, or duplicating objects in your / Workspace, and transferring graphics into and out of LightBurn.
+- PDF page 673: Inserts objects copied to your clipboard into your Workspace. Pasted objects are centered at the / location of your cursor at the time of pasting. / Copy and paste from Adobe Illustrator
+- PDF page 674: Related Topics / Selection T ools / Undo/Redo
+- PDF page 675: Transform Controls / The Transform Controls are tools for directly editing selections in your Workspace by clicking and / dragging control handles that alter their position, dimensions, orientation, or shape.
+- PDF page 676: Tip / T o precisely adjust a selection's position, use the Numeric Edits T oolbar. / Moving From Snapping Points
+- PDF page 677: Hold Alt /Option  to show temporary Alignment Guides for selection snapping. / Hold Ctrl /Cmd  to disable snapping while moving selections. / Move Increment Hotkeys
+- PDF page 678: Modi0ﬁer Keys / Hold Shift  while dragging from a corner handle to rescale both dimensions at once, while not / maintaining the original aspect ratio. Left-right movement will adjust the width, while up-down
+- PDF page 679: As you Rotate your selection, the Status Bar will actively show the change in degree of rotation. / Modi0ﬁer Keys / Hold Shift  while dragging to lock rotation to 15° increments.
+- PDF page 680: Action Windows macOS / Rotate 90° clockwise . . / Rotate 90° counterclockwise, ,
+- PDF page 681: Tip / Use Warp/Deform Selection to skew selections in any direction. / Transform Control Toggles
+- PDF page 682: Tip / Use Lock Shapes to lock editing of individual objects in a design. / Related Topics
+- PDF page 683: Grouping & Ungrouping / The Group tool combines collections of objects into single units, and the Ungroup tool splits Groups / back into the individual objects that make them up.
+- PDF page 684: Ungroup / Ctrl /Cmd  + U / Ungroup selected (previously Grouped) objects to treat them as discrete, independently adjustable
+- PDF page 685: Selection Appearance of Grouped Objects / You can tell whether an object is Grouped based on its appearance when you select it. / Ungrouped objects are drawn with an animated dash pattern instead of solid lines, while Gr
+- PDF page 686: Ungrouped Objects Selected / Reference Grouping & Ungrouping / LightBurn User Guide 686
+- PDF page 687: Grouped Objects Selected / Auto-Grouping / Auto-Group identi0†es shapes that are fully contained within another shape and Groups them
+- PDF page 688: In the animation above, the objects shown in red are una0–ected by Auto-Group, either because / they're not fully contained within the rectangle or because they are already Grouped. The green / objects are automatically
+- PDF page 689: Imported shapes are Grouped by default. Disable Group imported shapes in your Settings to / turn o0– automatic Grouping upon importation. / The following tools cannot be used with Grouped objects:
+- PDF page 690: Order by Group / Selection T ools / Numeric Edits T oolbar
+- PDF page 691: Preview / + Watch the video on YouT ube: https://www.youtube.com/watch?v=o1_FKGhJoek / The Preview window is an accurate representation of what LightBurn will send to the laser. Black
+- PDF page 692: Zooming and Panning / Zoom in and out using your mouse's scrollwheel, two-0†nger dragging if you're using a trackpad, or / by pressing the +  or -  keys on your keyboard.
+- PDF page 693: Job Time Statistics / + Watch the video on YouT ube: https://www.youtube.com/watch?v=s1jCqB233N0 / Below the Time Slider are statistics about the job and the estimated run time. The Additional
+- PDF page 694: Preview Settings / The settings here only a0–ect the Preview window 'ö they don't change anything about LightBurn's / output to the laser.
+- PDF page 695: Start Here / Use the Start Here button to recover interrupted jobs by starting the laser at a precise time partway / through the operation. Move the Time Slider to the point at which you want to start, then click Start
+- PDF page 696: New Window / New Window opens a separate instance of LightBurn in a new window, allowing you to edit multiple / projects at once, or edit one 0†le while cutting a di0–erent one.
+- PDF page 697: View Style / Changing the View Style alters the appearance of vector graphics in your Workspace, which can be / useful for spotting potential design issues and visualizing the 0†nal output from a project.
+- PDF page 698: Edge Rendering Quality / Smooth: High detail, slower rendering. / Course: Lower detail, faster rendering.
+- PDF page 699: Show Notes / Show Notes allows you to add, edit, and view notes for a project. This is often useful for 0†les that / will be shared with others, or to store related information for working with a project in the future. G
+- PDF page 700: Print / Use File ): Print (Black Only) or File ): Print (Keep Colors) to print the current contents of the / work area using your computer's print dialog. Most computers have built-in PDF creation tools,
+- PDF page 701: Layout and Design / Reference Layout and Design / LightBurn User Guide 701
+- PDF page 702: Creation Tools / Reference Creation T ools / LightBurn User Guide 702
+- PDF page 703: Draw Lines / + Watch the video on YouT ube: https://www.youtube.com/watch?v=RURJuZhn_IA / Draw Lines is the fundamental tool for creating vector paths out of straight lines and curves. Use it
+- PDF page 704: Click anywhere in the Workspace to place a node at the start of a new line, then move your cursor / and click again in a di0–erent location to place another node with a line in between. / Draw Lines will continue adding
+- PDF page 705: Controlled Mode: click, hold, and drag while placing a node to create a smooth node with / control handles '÷ move your cursor while holding the click to control the direction and intensity / of the curve handle. Release
+- PDF page 706: Continue an Existing Drawing / Click on the start or end point of an open path to continue an existing drawing '÷ new lines started / from these points are automatically connected to the pre-existing path.
+- PDF page 707: If you create a line or curve that connects the start or end points of two existing open shapes, / LightBurn will Auto-Join them, and the new, combined path will be indicated by the animated dash / selection pattern.
+- PDF page 708: Measuring / T o measure while drawing a line, check the Status Bar. / It shows:
+- PDF page 709: How to Practice / + Watch the video on YouT ube: https://www.youtube.com/watch?v=O7kzRu1f3Xs / Related Topics
+- PDF page 710: Draw Shapes / This page covers the creation and editing of various Primary Shapes: / Rectangles and squares
+- PDF page 711: + Watch the video on YouT ube: https://www.youtube.com/watch?v=e0-CDS4DxqE / Shape Creation / Click, hold, and drag in your Workspace to create the selected Primary Shape.
+- PDF page 712: Enable Switch to Select mode after drawing a shape in the Editor Settings tab of your Settings / to immediately exit the Draw Shapes tool after creating a shape and enable Selection mode / instead.
+- PDF page 713: Corner Radius '÷ Rectangle Only / Corner Radius rounds out the corners by a given amount, which remains consistent even if the / dimensions of the rectangle are later changed.
+- PDF page 714: It's also possible to change the number of sides by holding Ctrl  / Cmd  and dragging the purple / control handle that appears near the polygon. / Points, Bulge, and Ratio '÷ Stars Only
+- PDF page 715: Bulge / Applying a Bulge value creates an arc from the top of each point to its base. Accepted values range / from 0 to 1.
+- PDF page 716: Node-Editing a Primary Shape / Primary Shapes must be Converted to Paths to make editing their nodes possible. This process / permanently removes the ability to edit a shape's dimensions, Corner Radius, or number of Side
+- PDF page 717: Text / Use the Create Text tool to add text to your projects. T ext created using the Create T ext T ool is a / special type of built-in shape called a Text Object.
+- PDF page 718: Editing Text / T o edit a Text Object after creating it, enable the Create Text Tool and click on it again, or double- / click it without the Create T ext T ool enabled.
+- PDF page 719: Bending Text / In addition to the Transform Control Handles used to Move, Resize, Rotate, and Shear objects, / Text Objects have a special handle for Bending.
+- PDF page 720: Double-click the dot to clear the curve and restore the text. / Enable or disable the Distort toggle in the Text Options Toolbar to choose whether to distort the / text as part of the curve, or leave the individual chara
+- PDF page 721: To curve text around more complex paths, use Apply Path to Text. / . / Text Options Toolbar
+- PDF page 722: Accessing the Text Options Toolbar / The Text Options Toolbar is located in the top toolbar in LightBurn by default, to the right of the / Numeric Edits T oolbar. The options in this toolbar are only available when you h
+- PDF page 723: Align X determines the horizontal anchor position of the text '÷ Left, Right, or Middle. / Align Y determines the vertical anchor position of the text '÷ Bottom, Top, or Middle. T op aligns / text to the top of capital l
+- PDF page 724: Enabling Bold displays the font in bold typeface, if available for the selected font. / Enabling Italic displays the font in italics, if available. / Enabling Upper Case forces all characters to be upper case.
+- PDF page 725: On Windows, after you have downloaded a font, right-click it and choose Install. On Mac, / double-click the font and click Install in the font preview window that opens. / Font Manager
+- PDF page 726: Search / Use the search bar in the Font Manager to search for fonts by name. / Zoom Level
+- PDF page 727: Hide Font / Click the green circle next to a font preview to set it hidden/inactive. T o unhide a font, go into the / Inactive category and click the outlined circle next to the preview.
+- PDF page 728: Moving LightBurn Files With Fonts / If you want to move designs containing text between computers and continue to edit the Text / Objects, be sure to install all necessary fonts on all computers you're using.
+- PDF page 729: Converting Text to Paths in LightBurn / In order to directly edit the lines and nodes of text in LightBurn, select all Text Objects you wish to / convert, then go to Edit ): Convert to Path, press Ctrl /Cmd  + Shift  + C
+- PDF page 730: Variable Text / + Watch the video on YouT ube: https://www.youtube.com/watch?v=5KONOAPuXV8 / Use Variable Text to have LightBurn automatically substitute specially formatted expressions with
+- PDF page 731: The Variable T ext Window will appear docked behind the Cuts / Layers Window on the upper right / side of your screen. Click the Variable T ext tab to bring the Variable T ext Window to the front. / Tip
+- PDF page 732: For values other than 0, on the 0†rst run of a project you must Reset the Current value to the / Start value, or the values will not match. The Current and Start values are only matched / automatically when advancing for
+- PDF page 733: Using Variable Text in Virtual Arrays / When using Variable T ext in a Virtual Array, the T est button will not show the 0†nal output of the / Variable T ext in LightBurn's workspace. T o see an accurate preview, you'll
+- PDF page 734: Clear / Unloads a previously loaded CSV 0†le. / Variable Text O0›sets
+- PDF page 735: Use Grid Array, Circular Array, or Copy Along Path to lay out copies of designs while increasing the / O0–set of each copy by a speci0†ed amount. / Reference Variable T ext
+- PDF page 736: Shape Properties and Variable Text / There are three settings in the Shape Properties Window that are useful when working with Variable / Text.
+- PDF page 737: Max Width sets the maximum possible width of selected T ext Objects '÷ use this 0†eld to prevent / Variable T ext outputs from exceeding a speci0†ed width after they're converted from formatted / expressions.
+- PDF page 738: Related Topics / Variable T ext Formatting / Create and Edit T ext
+- PDF page 739: Variable Text Formatting / Use the following formatting expressions with the appropriate Variable T ext mode to have LightBurn / replace the expressions with alternate data when you output a project to your laser.
+- PDF page 740: Output Expression / The day as number with a leading zero (01 to 31) dd / The abbreviated localized day name (e.g. "Mon" to "Sun"). Uses the system locale to localize
+- PDF page 741: Additional Notes / Any sequence of characters enclosed in single quotes will be included verbatim in the output / string (stripped of the quotes), even if it contains formatting characters.
+- PDF page 742: Use the following expressions for serial numbers: / Output Expression / The serial number as a decimal value d
+- PDF page 743: Additional Notes / Any sequence of characters enclosed in single quotes will be included verbatim in the output / string (stripped of the quotes), even if it contains formatting characters.
+- PDF page 744: A CSV 0†le is a Comma Separated Values 0†le '÷ a very simple text format that uses a line in a 0†le as / the row, and commas to separate columns. You can create a CSV 0†le using a plain text editor, or by / exporting fro
+- PDF page 745: Additional Notes / Use the O0–set 0†eld in the T ext Options T oolbar to enter multiple indentical formatting strings that / output a di0–erent row from a CSV.
+- PDF page 746: Cut Setting / When using Cut Setting formatting, LightBurn will automatically substitute certain characters with / values from the Cut Settings applied to the text, or another speci0†ed layer.
+- PDF page 747: Expression Output / L Displays the name of the laser. Can optionally be followed by a character index to start / displaying from, and optionally, a comma and a 2nd number for the number of characters to
+- PDF page 748: Create Bar Code / Create Bar Code generates a Bar Code which stores data that's visible when the Code is scanned. / This tool o0–ers a wide range of common Bar Code formats, including QR Codes.
+- PDF page 749: Note / Edit Bar Code will only appear in the context menu if you have exactly one Bar Code '÷ and / nothing else '÷ in your selection.
+- PDF page 750: Code 128 / Code 93 / Data Matrix
+- PDF page 751: AprilTag and ArUco markers are used di0–erently from typical Bar Codes. These markers are / typically used as computer vision targets 'ö we use AprilT ags for Camera Calibration 'ö and come from / a list of pre-de0†ned s
+- PDF page 752: Character Limit / The character limit beneath the Raw Content 0†eld displays the amount of remaining characters / supported by the Bar Code Type you have selected.
+- PDF page 753: Error Correction Level / Error Correction helps to keep Bar Code data readable even if the Bar Code is partially damaged or / obscured '÷ use the Error Correction slider to adjust the amount of Error Correction in a Bar
+- PDF page 754: Show Bar Code Text / For supported Bar Code Types, tells LightBurn to output the text from the Raw Content 0†eld along / with the Bar Code. This switch is enabled by default.
+- PDF page 755: Extra Data Spacing / Some Bar Code Types support adding a secondary Bar Code based on extra data input after a "+" / symbol. The Extra Data Spacing slider controls the distance between the primary and secondary
+- PDF page 756: Force Square / When Data Matrix is the selected format, some data inputs can result in a rectangular Bar Code. / Enable Force Square to have the Data Matrix always remain square. This switch is enabled by
+- PDF page 757: Error Messages / If the data you've entered is invalid for the type of Bar Code you've selected, you'll see an X in the / Workspace and an error message in the Bar Code Properties window.
+- PDF page 758: Shape Properties Window / The Shape Properties Window displays editable properties of selected objects. / Accessing the Shape Properties Window
+- PDF page 759: Video: Fine Tune Laser Output With Power Scaling / + Watch the video on YouT ube: https://www.youtube.com/watch?v=NC-UZokVvt4 / Locked: prevents any edits to the selected shape(s). See Lock Shapes for more information.
+- PDF page 760: Ellipses / These settings are presented for shapes made using the Create Ellipse tool. / Width: the length of the ellipse in the horizontal (X Axis) dimension.
+- PDF page 761: Text / These settings are presented for text made using the Create T ext tool. / Max Width: text begins scaling if the length in the horizontal (X Axis) dimension exceeds this '÷ use
+- PDF page 762: Add Tabs / T abs are small sections of cuts that the laser is commanded to skip, used to prevent objects that you / are cutting from immediately falling out of the base material. When sized appropriately, the tabs can
+- PDF page 763: Click and drag the red dot to move its location on the shape, or even to another valid shape in your / Workspace. / The default width of manually-placed tabs is .5 mm. T abs cannot be placed closer together than is
+- PDF page 764: Global Enable / Disable / The switch next to Tabs / Bridges controls whether tabs are enabled for the layer. If you have / manually added tabs to a shape, this will automatically be switched on for the layer the shape is
+- PDF page 765: Tab Cut Power / This setting a0–ects both Manual and Automatic tabs. / If Tab Cut Power is set to any value other than 0%, the laser will make pulsed cuts across the width
+- PDF page 766: Ramp Length(" / Reference Add T abs / LightBurn User Guide 766
+- PDF page 767: Measure / + Watch the video on YouT ube: https://www.youtube.com/watch?v=azPoxglNHk4 / Use the Measure tool to hover over any shape in your Workspace and display an array of useful
+- PDF page 768: Hold Shift  while dragging to lock the temporary line to horizontal, vertical, and 45 degree angles. / View shape dimensions as you create them / When using any of LightBurn's shape creation tools, you can also view the
+- PDF page 769: The Measurement dialog window describes the highlighted shape and individual segment. You can / click the button displaying mm or in to switch between either unit of measurement. / The dialog displays the following value
+- PDF page 770: Tangent Circle Generator / With the Tangent Circle Generator, you can select three circles and automatically create a circle / tangent to those three circles - meaning that it touches each of the three circles at exactly
+- PDF page 771: Troubleshooting / Make sure your circles are actually circles, with equal height and width. You can draw circles with / the ellipse tool by holding down Shift  while drawing, or resize ellipses using the Numeric Edits
+- PDF page 772: Art Library / + Watch the video on YouT ube: https://www.youtube.com/watch?v=30hYVXQ-4CA / An Art Library provides a way to store artwork so you can quickly access and reuse it in future
+- PDF page 773: Loading and Unloading Libraries / T o add a previously saved Library, click the Load button in the bottom of the Art Library Window. / Saving, transferring, and Loading Libraries makes it possible to share artwork betwee
+- PDF page 774: Editing Art and Libraries / Right-clicking artwork in an Art Library brings up the options to Delete or Rename it. / T o change the name of a Library, change the .lbart  0†le name in your 0†le browser, and then Unload
+- PDF page 775: Editing / Reference Editing / LightBurn User Guide 775
+- PDF page 776: Edit Nodes / + Watch the video on YouT ube: https://www.youtube.com/watch?v=eFmLKBr5Xxg / Edit Nodes allows you to make precise, granular edits to vector paths, by controlling the placement
+- PDF page 777: Click on the desired node tool, then click on a valid node or line in your Workspace to perform that / action. / + Watch the video on YouT ube: https://www.youtube.com/watch?v=LpLdBrZAhYc
+- PDF page 778: Keyboard Actions / Each of the actions in the Edit Nodes Toolbar has a corresponding hotkey, listed below, that you / can use to edit and manipulate lines, curves, and nodes.
+- PDF page 779: You can quickly reference the keyboard commands for each of these at any time by hovering over / the Edit Nodes tool in the toolbar. / Action Key Description Method
+- PDF page 780: . / Square nodes represent corner nodes. / Round nodes represent smooth or bezier nodes, which have handles that can adjust the curves
+- PDF page 781: There are two ways to do convert your object to a standard path. / With the Edit Nodes tool open, double-click on the shape to convert it to a path. If you're / already in the Edit Nodes tool, hovering over a shape that
+- PDF page 782: Trim and Extend Demo / + Watch the video on YouT ube: https://www.youtube.com/watch?v=1sbK-Dux214 / There is also a separate tool, Trim Shapes that you can use to perform the Trim Line function.
+- PDF page 783: Open vs. Closed Shapes / Auto-Join Selected Shapes / Break Apart
+- PDF page 784: Trim Shapes / + Watch the video on YouT ube: https://www.youtube.com/watch?v=DGkAJtQxhKM / Use the Trim Shapes tool to cut line segments back to the next intersection with another line.
+- PDF page 785: If you hover over a shape that does not intersect with any other lines, the entire shape will be / highlighted in red, and deleted when you click. / Auto-Joining With Trim Shapes
+- PDF page 786: Note / Hold Ctrl  / Cmd  while clicking to disable automatic joining when using Trim Shapes. / Preserve Trimmed Line Segment
+- PDF page 787: Troubleshooting / Trim Shapes does not work on Grouped objects '÷ you'll need to Ungroup them 0†rst. / Related Topics
+- PDF page 788: Numeric Edits Toolbar / + Watch the video on YouT ube: https://www.youtube.com/watch?v=Orf9v0bplpA / Use the Numeric Edits Toolbar to adjust the size, position, and orientation of shapes in your
+- PDF page 789: When working with any of the Numeric Edits options, imagine the selection area as the smallest / possible rectangle that can contain every object in your selection. Each position in the 9-Dot / Control is a point around
+- PDF page 790: Width and Height / Width and Height display and determine the length of your selection in the X (Width) and Y(Height) / dimensions. You can enter exact values in the 0†eld directly to the right of Width and Height, or
+- PDF page 791: Rotate / Use the Rotate 0†eld to turn the current selection by a precise number of degrees. Positive values / rotate the selection clockwise, while negative values rotate it counterclockwise.
+- PDF page 792: Tip / You can rotate your selection by imprecise values directly in your Workspace using the Rotate / handles, or by precise values using hotkeys.
+- PDF page 793: Press enter to process the equation and adjust the value. / You can also use the constants e and pi, and functions like sin, cos, tan, sqrt, abs, atan, log, pow, and / more.
+- PDF page 794: Convert to Path / Convert to Path transforms built-in shapes created in LightBurn into paths made up of lines, / curves, and nodes, that can be edited using the Edit Nodes tool.
+- PDF page 795: After converting an object to a path, you will lose the ability to adjust attributes associated with / the type of shape it was converted from. / The following attributes can no longer be edited in the Shape Properties W
+- PDF page 796: Auto-Join Selected Shapes / Auto-join selected shapes connects line or curve segments whose start and end nodes are / directly on top of (or very near to) one another, but not technically connected. When the segments
+- PDF page 797: Break Apart / Open vs. Closed Shapes / ("
+- PDF page 798: Close Path / Close Path closes shapes with their start and end points close together but disconnected by / creating a new line between the points.
+- PDF page 799: Close Selected Paths with T olerance / Auto-Join Selected Shapes / ("
+- PDF page 800: Close Selected Paths With Tolerances / Close selected paths with tolerance closes individual shapes with disconnected start and end / points by creating a new line between the points or moving the two points together. By
+- PDF page 801: Close selectected paths with tolerance can close muliple paths at once, but they must already / be completely connected except for their start and end nodes. This tool cannot connect fully / separate paths, each with the
+- PDF page 802: Delete Duplicates / Delete Duplicates 0†nds and removes duplicated objects in your project. Objects don't need to be / selected in order to be identi0†ed and deleted, but must be Ungrouped and identical in size, shape,
+- PDF page 803: Break Apart / Break Apart separates the paths of selected vector graphics into the individual curves and lines / that make them up. The individual segments become disconnected, allowing them to be selected
+- PDF page 804: Optimize Selected Shapes / The Optimize Shapes tool simpli0†es and smooths selected shapes by reducing the node count or / by 0†tting them to arcs or lines. This is often useful when importing art created in other softwa
+- PDF page 805: The Optimize Shapes tool adjusts selected shapes within a speci0†ed error tolerance, which de0†nes / the maximum amount the new optimized shapes can deviate from the original source shapes. / Error tolerance is controlle
+- PDF page 806: Warp and Deform / Use Warp Selection and Deform Selection to stretch and shape objects in a non-linear fashion by / dragging handles positioned around the perimeter of the selection or in a grid overlaid on the
+- PDF page 807: Use Warp to: / Adjust the percieved perspective of an object (apply a perspective warp) / Stretch or compress the corners of objects
+- PDF page 808: Use Deform to: / Fit text into the shape of another object / Make an object 0†t the countours of another
+- PDF page 809: Two-Point Rotate / Scale / Two-Point Rotate / Scale allows you to turn and resize objects around custom pivot points in your / Workspace.
+- PDF page 810: Calibrating an Image to Known Dimensions / You can use Two-Point Rotate / Scale to straighten and calibrate an image to its real-life / dimensions. This is especially useful when designing to 0†t existing, tangible items
+- PDF page 811: Related Topics / Align T ools / Docking
+- PDF page 812: Create Rubber band Outline / Create rubber-band outline automatically makes a new shape outlining the graphics in your / current selection. The new shape is de0†ned as the shortest possible path that can contain all
+- PDF page 813: Trace Image(" / Reference Create Rubber band Outline / LightBurn User Guide 813
+- PDF page 814: Generate Path From Cut / Generate Path From Cut creates new paths based on your currently selected objects. The new / paths include properties you've added through the Cut Settings Editor, such as T abs, Kerf O0–sets,
+- PDF page 815: Additional Information / Generate Path From Cut can be used to export designs for use with other programs while keeping the / properties you set up in LightBurn, or anywhere you want to directly use or edit those propert
+- PDF page 816: Modifying and Combining / Reference Modifying and Combining / LightBurn User Guide 816
+- PDF page 817: Flip and Mirror Shapes / Flip Vertical and Flip Horizontal mirror selected objects across their vertical or horizontal centers. / Mirror Across Line creates a mirrored duplicate of selected objects across a custom-select
+- PDF page 818: Mirror Across Line / + Watch the video on YouT ube: https://www.youtube.com/watch?v=0c1Q0vbtiTA / *Mirror Across Line *is available in the Arrange Menu, Arrange T oolbar, and by hotkey (see below).
+- PDF page 819: Hotkeys / The keyboard shortcuts listed under Edit Window in Focus will only work when the Workspace '÷ / the area where you create and edit graphics '÷ is in active focus.
+- PDF page 820: Related Topics / Transform Controls / Align
+- PDF page 821: O0›set Shapes / + Watch the video on YouT ube: https://www.youtube.com/watch?v=rEJ7ntlmEyU / The O0›set Shapes tool creates a new shape by outlining the objects in your selection at a distance
+- PDF page 822: Both creates two new o0–set shapes, one Outward and one Inward from the originals. / Note / You can only create Inward o0–sets for shapes that are closed, meaning they are complete,
+- PDF page 823: Options / Each switch beneath Options can be enabled or disabled. When enabled: / Outer shapes only: will ignore any shapes contained within others when creating the o0–set,
+- PDF page 824: Tip / T o repeat an o0–set with the last settings you used, select the shapes you wish to o0–set, then / hold Ctrl /Cmd  while clicking the O0›set button. It will perform the o0–set operation using the
+- PDF page 825: Boolean Tools / + Watch the video on YouT ube: https://www.youtube.com/watch?v=rTYixcObMuU / Use the Boolean tools to combine existing shapes (or Grouped shapes) into new or more complex
+- PDF page 826: There are a few important things to keep in mind when using the Boolean tools and Weld: / All selected shapes must be closed shapes, meaning they are complete, continuous loops whose / start and end points are the same.
+- PDF page 827: If you select the shapes in the incorrect order, and subtract the wrong shape from the other, Undo / the action, then use Boolean Subtract again '÷ the alternate shape will be removed instead. / + Watch the video on You
+- PDF page 828: Weld / Ctrl /Cmd +W / Weld works similarly to Boolean Union, but instead of being limited to combining only two shapes or
+- PDF page 829: Weld vs. Boolean Union / In cases where some shapes are fully contained within other outer shapes, using Weld won'üt yield / the result you'üre looking for, but Grouping related shapes together and using Boolean Union wi
+- PDF page 830: Hotkeys / Action Icon Hotkey / Boolean Assistant Ctrl /Cmd +B
+- PDF page 831: Cut Shapes / + Watch the video on YouT ube: https://www.youtube.com/watch?v=aHzZA_JKeXM / The Cut Shapes tool divides selected vector objects into separate shapes, using a closed shape as
+- PDF page 832: The cutting shape must not be Grouped with any other shapes. Ungroup any shape you'd like to / use as a cutting shape. / The cutting tool is deleted in the process '÷ if you'd like the shape you're using as a cutting too
+- PDF page 833: Troubleshooting / If Cut Shapes is grayed out in the T ools Menu, it means the object you selected last is not a valid / shape to use as a cutting tool.
+- PDF page 834: Grid Array / + Watch the video on YouT ube: https://www.youtube.com/watch?v=WhjJvWE7T1k / The Grid Array tool creates copies of an object (or objects) in regularly spaced rows and columns,
+- PDF page 835: X Columns and Y Rows / Specify the number of copies to make in the horizontal (X) and vertical (Y) dimensions. / Total Width and Total Height
+- PDF page 836: X Column Shift and Y Row Shift / O0–set every other column or row by the speci0†ed amount, shifting alternate columns or rows left, / right, up, or down.
+- PDF page 837: Auto-Increment Variable Text / Applies an O0›set to text in each copy created in the array, automatically advancing output if you / are using Merge/CSV or Serial Number formatting. The 0†eld next to the switch determines
+- PDF page 838: Virtual Array Quick Tips / The Power of Virtual Arrays / + Watch the video on YouT ube: https://www.youtube.com/watch?v=2YeA8xxZ0Kk
+- PDF page 839: Using Variable Text in Virtual Arrays / When using Variable T ext in a Virtual Array, the T est button will not show the 0†nal output of the / Variable T ext in LightBurn's workspace. T o see an accurate preview, you'll
+- PDF page 840: Related Topics / Variable T ext / Circular Array
+- PDF page 841: Circular Array / Circular Array arranges multiple copies of an object '÷ or multiple objects '÷ in a radial pattern / around either a point in space, or a central object.
+- PDF page 842: Start and End / An array doesn't have to span the whole 360-degree rotation, you can limit the duplications to only / part of the circle using the Start and End 0†elds.
+- PDF page 843: Auto-Increment Variable Text / Auto-Increment variable text works in conjunction with Variable T ext, increasing the O0–set value / in the T ext Options T oolbar value by the speci0†ed amount for each copy. Using O0–sets
+- PDF page 844: Copy Along Path / Use Copy Along Path to create repeated designs that follow a line, curve, or perimeter of a shape, / for example:
+- PDF page 845: Requirements / The object to be copied must be: / A vector object '÷ not an image
+- PDF page 846: Open vs. Closed / When using a closed path, the copied objects will start at whatever part of the path is closest, and / then wrap around the circuit of the path to meet back up at the same point.
+- PDF page 847: Spacing / The spacing of copied objects is measured from the centers of each copied object. There are two / ways of spacing the copies objects along the path:
+- PDF page 848: Rotate Copies / Enable Rotate Copies to create duplicates that are oriented acording to the changes in direction of / the path. Disable this option to create objects that remain in the same orientation as the originally-
+- PDF page 849: Enable Scale Copies and enter a value in the adjacent 0†eld to incrementally change the size of / each copy, with the 0†nal one reaching a size equal to this percentage of the original's size. A number / larger than 100
+- PDF page 850: Apply Path to Text / Apply Path to Text attaches text to a vector object, reshaping it to follow the contour of the chosen / path. This tool makes it possible to use existing or custom-created paths to apply more complex
+- PDF page 851: The horizontal position of the text is oriented relative to the start and end points of the path using / the Align X options. Middle aligns the text between the start and end points, Left aligns it so that / the start of
+- PDF page 852: T o remove the text from the path, the path must be deleted. Deleting the path returns the text to its / original orientation, but does not a0–ect any settings in the T ext Edit toolbar. / Tip
+- PDF page 853: Copy Along Path / Draw Lines / Edit Nodes
+- PDF page 854: Radius / Fillet / Use the Radius Tool to 0†llet (round over) sharp corners, take a round bite out of a corner (using a / negative radius value), or turn a radius back into a sharp corner (remove a radius).
+- PDF page 855: When the Radius T ool is active, the icon changes as you hover over a corner to indicate whether the / Radius T ool can be used. If it can't be used, the cursor will change to indicate that there is not / enough space.
+- PDF page 856: Troubleshooting / The Radius Tool cannot be used with Grouped shapes. Ungroup any shapes you'd like to apply / a radius to.
+- PDF page 857: Make Same Width or Height / The Make Same Width and Make Same Height buttons resize all objects in your selection to the / width or height of a single object in the selection.
+- PDF page 858: Resizing Priority / When using either of the Make Same options, all selected objects are matched to the width or / height of a single object or Group in your selection.
+- PDF page 859: Resize Slots & Tabs / + Watch the video on YouT ube: https://www.youtube.com/watch?v=0Yep7sYi9Rs / Use Resize Slots to adjust the dimensions of slots or tabs in selected objects.
+- PDF page 860: This helps if the slots or tabs vary slightly in length, or if there are kerf o0–sets built into the / original design. / Select Adjust Slot Depth to adjust the bottom/innermost line of slots. This allows you to keep
+- PDF page 861: The tool searches Ungrouped objects. Exit the Resize Slots dialog and Ungroup your objects if you / see a warning message indicating that there are Grouped objects in your selection. / The tool only works on sharp (not 0
+- PDF page 862: Arrangement / Reference Arrangement / LightBurn User Guide 862
+- PDF page 863: Align Tools / + Watch the video on YouT ube: https://www.youtube.com/watch?v=jbSoR-FcHSY / The Align tools reposition selected objects to align them along their:
+- PDF page 864: Align Option Icon Action Windows macOS Edit Window in / Focus (All Systems) / Align Centers Aligns the center points of
+- PDF page 865: Align Tools Helper / If you're using Beginner Mode, clicking the Align Left icon  in the Arrange T oolbar will open the / Align Tools Helper.
+- PDF page 866: Click or hover over any button in the Helper to see a preview of how alignment will change. / Click OK to con0†rm the changes, or Cancel to discard them. / Alignment Priority
+- PDF page 867: Distribute & Move Together / The Distribute tools move selected objects to evenly space them either vertically or horizontally, / with options to set the same distance between the centers, or edges of each object.
+- PDF page 868: Distribute Horizontally / Distribute H-Spaced creates even spacing between the edges of all selected objects in the / horizontal dimension.
+- PDF page 869: Move Together / Both Move Together options are available in the Distribute submenu of the Arrange Menu, and by / hotkey.
+- PDF page 870: Move V Together / Alt /Option +Shift +V / Moves all selected objects so that they are evenly distributed, and their vertical edges are abutting
+- PDF page 871: Related Topics / Align T ools / Docking
+- PDF page 872: Docking / The Docking tool moves selected objects left, right, up, or down, until they meet the edge of the / Workspace or another object. Docking can bring objects together or move them in unison, making
+- PDF page 873: Each of the Docking buttons moves selected objects in a speci0†ed direction, until they hit / something '÷ either the outer edge of another object, or an inner edge of your Workspace. / Objects contained within another o
+- PDF page 874: Related Topics / Snapping / Distribute
+- PDF page 875: Move Selected Objects / The Move Selected Objects tools move objects to a corner, midpoint, or center of your Workspace. / If you have a Gantry style laser, it can also move objects to the last reported position of your
+- PDF page 876: Move Selected Objects in the Arrange (long) Toolbar / Options and Icons / Info
+- PDF page 877: In order to use Move to Laser Position, LightBurn must be connected to your laser, and it / must be capable of reliably homing and reporting its position accurately. If the position reported / by the laser is inaccurate,
+- PDF page 878: Movement of Selections / When using the Move Selected Objects tools, all objects in your selection move as a single unit, / maintaining their relative position to one another.
+- PDF page 879: Align T ools / Distribute / Move T ogether
+- PDF page 880: Nesting / Reference Nesting / LightBurn User Guide 880
+- PDF page 881: True Nest / Nesting enables you to arrange objects to use less material. LightBurn 2.2 o0–ers you a choice / between True Nest (LightBurn Pro only), Quick Nest, and SVGNest (External Tool).
+- PDF page 882: Getting Started / Create a rectangle to use as a container for the shapes you want to nest. / Select the container and all of the objects you want to nest.
+- PDF page 883: Mode / Choose between Quick Nest and True Nest. / Options
+- PDF page 884: If Lock Objects for Rotation is enabled, the value chosen here doesn't matter, because True Nest / won't rotate objects. / Optimize
+- PDF page 885: Fix the error by selecting a rectangle to arrange your parts inside of in addition to the parts to be / nested. In the example below, the blue rectangle wasn't selected, so LightBurn has nothing to nest / the parts into.
+- PDF page 886: When you press OK, LightBurn will still nest as many of the parts as possible, leaving out the ones / that can't be nested. If your target rectangle is big enough to nest your largest part, you will not see / this error
+- PDF page 887: At Least One Selected Shape is Degenerate / If you get this warning message, it means at least one of the shapes you're trying to nest is / degenerate, or invalid.
+- PDF page 888: Related Topics / SVGNest (External) / Quick Nest
+- PDF page 889: Quick Nest / Nesting enables you to arrange objects to use less material. LightBurn 2.2 o0–ers you a choice / between True Nest (LightBurn Pro only), Quick Nest, and SVGNest (External Tool).
+- PDF page 890: Getting Started / Create a rectangle to use as a container for the shapes you want to nest. / Select the container and all of the objects you want to nest.
+- PDF page 891: Padding / Sets the minimum distance between the parts to nest. The units are either millmeters or inches, / depending on your Design Units. Increase this number to leave more space between parts.
+- PDF page 892: Nesting Errors and Warnings / Target Rectangle Must be Axis Aligned / T o use Quick Nest, the rectangle you're nesting into must have sides that are straight up and down
+- PDF page 893: Why is the I in LightBurn not selected? / In the screenshot above, the letter I in LightBurn isn't selected, because selecting it and not the / larger blue box results in a di0–erent error. The reason for this is a bit t
+- PDF page 894: Optimization Yielded Zero Bounding Box / If you get this error message, it means Quick Nest is unable to create a suitable arrangement at all. / In certain circumstances, if you don't select a rectangle to nest into you
+- PDF page 895: At Least One Selected Shape is Degenerate / If you get this warning message, it means at least one of the shapes you're trying to nest is / degenerate, or invalid.
+- PDF page 896: Related Topics / SVGNest (External) / Docking
+- PDF page 897: SVGNest (External) / Nesting helps you arrange objects to use material more e0·ciently. LightBurn o0–ers three options for / nesting. This page is about LightBurn's integration with an external tool called SVGNest. Light
+- PDF page 898: Your default web browser will automatically open to SVGnest.com, and a dialog window will open / in LightBurn, informing you that an SVG has been created and its 0†le name (LightBurnNest.svg, / along with a 0†le path), h
+- PDF page 899: Pages Window / LightBurn's Pages feature allows you to create multiple pages within the same 0†le. This can help / with creating layouts that go across multiple physical sheets of material, or working with multiple
+- PDF page 900: Add Page / Click this button to add a new blank page to your project. / Duplicate Page
+- PDF page 901: Change Draw Order / The draw order is an internal list of objects in your Workspace. By default, all objects are ordered / according to when they were created or added to your project '÷ the last object added to your
+- PDF page 902: Using the Push Tools / Select an object and one of the Push options to move the selected object in the draw order. / If you have more than one object selected, they'll each move in the draw order, but maintain their
+- PDF page 903: Related Topics / View Style / Cuts / Layers Window
+- PDF page 904: Lock Shapes / The Lock Shapes tool locks selected objects in your design, preventing any form of editing / (including moving, resizing, deleting, and more).
+- PDF page 905: Snapping / LightBurn's automatic Snapping tools help align objects to other shapes in your Workspace, or ..to / the Workspace grid itself '÷ when you move objects close to a valid location, they will snap to that
+- PDF page 906: Note / You can adjust how close your cursor must be to a point before Snapping behavior is activated in / the Units and Grids tab of the Settings window. This value is set in pixels '÷ when your cursor
+- PDF page 907: T o move objects from a center point when using a Wireframe View Style, you'll need to select / them before hovering your cursor over the center of the selection. / The center of objects that are already selected is indi
+- PDF page 908: Creating From Snapping Points / When creating new objects using the Draw Lines tool or any of the Primary Shapes tools, your cursor / will change to indicate when it is over a Snapping point.
+- PDF page 909: Note / Grid Snapping points are determined by the Grid Snap Distance setting in the Settings window, / and not the Visual Grid Spacing distance.
+- PDF page 910: If you're moving an object or creating a shape, this will also enable Alignment Guides '÷ / temporary visual indicators that show when an object's edge or center is aligned to an edge / or center of another object in you
+- PDF page 911: Automatic Guidelines / LightBurn features two types of automatic guidelines to help you align objects relative to one / another, or along vertical or horizontal planes.
+- PDF page 912: Dragging from the top creates a perfectly horizontal guideline, and dragging from the left creates a / perfectly vertical guideline. / These guidelines are set to the T1 T ool layer, and are treated like any other object
+- PDF page 913: Image Tools / Reference Image T ools / LightBurn User Guide 913
+- PDF page 914: Adjust Image / The Adjust Image tool streamlines the process of tweaking Image Settings such as Contrast, / Brightness, and Gamma while also changing Layer Settings, allowing you to adjust all of these
+- PDF page 915: Adjust Image Window / The original source image is displayed in the top left of the Adjust Image window. The result of your / chosen settings is displayed as a processed image in the top right.
+- PDF page 916: Layer Settings / The Layer Settings group on the left contains settings that correspond to those found in the Cut / Settings Editor, as highlighted below:
+- PDF page 917: For more information on these settings, see Cut Settings '÷ Image Mode. / After adjusting settings, click OK to con0†rm and automatically apply changes to the Layer Settings / for the image you are adjusting, or Cancel t
+- PDF page 918: As with Layer Settings, click OK to con0†rm changes, or Cancel to discard them. / Invert Display / Turn on the Invert Display option to show the processed image with black for the background and
+- PDF page 919: Save Image Preset / The 0†rst button next to the Presets' dropdown allows you to save your current settings as an image / Preset.
+- PDF page 920: Shape Properties / Apply Mask to Image / Save Processed Bitmap
+- PDF page 921: Apply Mask to Image / + Watch the video on YouT ube: https://www.youtube.com/watch?v=1q4WyVMfhXg / Use Apply Mask to Image to hide portions of images that you do not want to engrave, or to divide
+- PDF page 922: T o Mask an Image, select the image and vector, then go to T ools ): Apply Mask to Image, or right- / click the selection and choose Apply Mask to Image from the context menu. / T o immediately Flatten the mask in the pr
+- PDF page 923: Crop Image deletes the parts of the image that are removed, leaving only an image in the shape / of the masking shape. / See the video here for more information.
+- PDF page 924: Combining Tracing and Image Masks / Using LightBurn's Trace tool on images with clearly de0†ned edges can be a quick way to produce a / mask to remove an unwanted background. In the example below, the donut is traced wit
+- PDF page 925: Removing a Mask (Restoring an Image) / You can fully restore the original image in two ways: / Select the vector object you used for the mask and press Backspace /delete  on your keyboard to
+- PDF page 926: Editing a Mask / T o change which parts of the image are revealed and hidden, you can edit the existing mask as you / would any other vector object, for example with the Select, Edit Nodes, and Boolean tools.
+- PDF page 927: Flattening (Baking-In) a Mask / The downside of preserving the hidden parts of the image is that it can make masked images harder / to align to other objects, but it is possible to permanently remove the hidden areas of
+- PDF page 928: Related Topics / Cut Settings '÷ Image Mode / Adjust Image
+- PDF page 929: Convert to Bitmap / Convert to Bitmap turns selected vector graphics into bitmap images. / Vector graphics are made up of lines, curves, and nodes that de0†ne the contours of shapes, while
+- PDF page 930: Note / In order to Render a vector graphic as a solid, 0†lled bitmap it must be a closed shape. See / Open vs. Closed Shapes for more information.
+- PDF page 931: Save Processed Bitmap / Use Save Processed Bitmap to save an image you have edited in LightBurn, including any / changes made using Adjust Image, or any dithering mode applied to the image.
+- PDF page 932: Related Topics / Adjust Image / Image Mode
+- PDF page 933: Trace Image / + Watch the video on YouT ube: https://www.youtube.com/watch?v=ZDZ3QqTfdIk / Use the Trace Image tool to convert imported images into vector graphics.
+- PDF page 934: Fade Image / Click Fade Image to dim the image, increasing the visibility of the vectors (purple lines) in the / preview.
+- PDF page 935: The comparison image below shows a standard trace result next to Center Line Trace for the same / image. / Reference Trace Image
+- PDF page 936: Sketch Trace / Turn on Sketch Trace for photographs of pages with uneven lighting '÷ for example handwriting, / sketches, and documents. LightBurn will look for edges in the image with this setting enabled, based
+- PDF page 937: Editing the Trace / After hitting OK, you will be presented with a Group containing the resulting vectors. T o edit the / shapes individually, you must 0†rst Ungroup them.
+- PDF page 938: Multi-File Trace Image / Labs Feature / Labs features are new tools in development that we couldn'üt wait to get into the hands of our
+- PDF page 939: Go to the folder containing the source images to 0†nd your traced SVG 0†les. 5. / Reference Multi-File Trace Image / LightBurn User Guide 939
+- PDF page 940: Image Options / The three commands under Edit ): Image Options '÷ Refresh Image, Replace Image, and / Replace Image to Fit '÷ provide ways to refresh or replace images in your project. This is most
+- PDF page 941: Import 3D Model / Starting with LightBurn 2.2, you can import 3D models directly into LightBurn to create depth maps / for 3D engravings. LightBurn can import models in .stl , .3mf , .amf , .obj , .off , and .ply
+- PDF page 942: Resize Model to Fit Workspace / Click to resize the model so that the depth map will 0†t fully into your laser's Workspace. / Reset Model Size and Orientation
+- PDF page 943: Setting Description / Size The total size of the image based on the size of the model and the Depth Map Resolution / setting.
+- PDF page 944: Laser Control / Reference Laser Control / LightBurn User Guide 944
+- PDF page 945: Cut Settings / Reference Cut Settings / LightBurn User Guide 945
+- PDF page 946: Cuts / Layers Window / The Cuts / Layers Window shows the list of layers in your project. From the Cuts / Layers Window, / you can assign di0–erent operations to speci0†c layers, control the order the laser processes the
+- PDF page 947: Columns / # (Layer Name) / Shows the layer name. You can adjust a layer's name in the Cuts Settings Editor.
+- PDF page 948: Output / Tip / Use Preview to verify that only intended layers are set to output.
+- PDF page 949: Air / Note / Available for Gantry lasers only.
+- PDF page 950: Option Action / Enable all layers T urn on the Output switch for all layers / Disable all layers T urn o0– the Output switch for all layers
+- PDF page 951: Flash to Highlight Layer / You can also hold down Shift  and right-click a layer to 0‡ash the layer's contents. / Option Action
+- PDF page 952: Power Min / Adjust the minimum power output level of the laser for this layer. / Note
+- PDF page 953: Sort Cuts Last / You can also automatically sort all layers, based on how likely they are to cut through the material '÷ / with the least likely being performed 0†rst.
+- PDF page 954: Copy Layer Settings / T o copy settings between layers, 0†rst select a layer in the list and click Copy button to copy its / settings. Next, select the layer you want to copy to, and click the Paste button.
+- PDF page 955: Delete Layers / Click the Delete button to delete a layer and all objects assigned to it in your Workspace. / By default, you'll see a warning message asking if you're sure '÷ hold Shift  while clicking the Delete
+- PDF page 956: Related Topics / Cut Settings Editor / Color Palette
+- PDF page 957: Cut Settings Editor / The Cut Settings Editor is where you adjust all settings for the layers in your project. / The settings presented in the Cut Settings Editor vary depending on the type of laser you're working
+- PDF page 958: You can adjust a narrower set of critical settings directly in the Cuts / Layers Window, instead of / opening the Cut Settings Editor. / The settings presented in the Cut Settings Editor depend on the selected Layer Mode
+- PDF page 959: Galvo-Speci0ﬁc Settings / Special settings that are available for users with Galvo style lasers only. / Read More
+- PDF page 960: Line Mode / Line Mode tells your laser to trace a path around the contours of vector graphics. / If you command the laser to move quickly, or with low Power, it will likely just etch the surface
+- PDF page 961: Many of the settings presented in the images below are available for users with DSP lasers only, but / most are shared between all types of lasers. / Left: Common Line Mode settings tab
+- PDF page 962: Z Step per Pass / When doing more than a single pass over a shape, the Z step per pass setting allows you to tell / LightBurn to raise or lower the laser with each pass by the same amount.
+- PDF page 963: This can also help when using delicate materials with a powerful laser. With very low cut and / skip values, the beam is rapidly switched on and o0–, reducing the e0–ective power output. Try / starting with cut and skip
+- PDF page 964: Note / This setting is not available for lasers with T opWisdom controllers. Dwelling without Cut Through / enabled is not available for lasers with Trocen controllers.
+- PDF page 965: Lead-In / Lead-Out / Lead-In and Lead-Out are optional lines or curves added to the start or end of a cut. You can toggle / each on or o0– individually, and specify their Angle, Length, and Style.
+- PDF page 966: The Angle value controls the placement of the lead line '÷ a positive number tells LightBurn to put / the lead line outside the shape, and a negative number means to put it inside. You can choose to / make the lead a str
+- PDF page 967: Rectangle Created With Create Shapes T ool | No Visible Nodes / With the desired shape selected, click on the Edit Nodes tool in the Creation toolbar and / either:
+- PDF page 968: No Visible Nodes / Convert to Path / Objects created with the Draw Shapes tool may need to be converted to a Path object in
+- PDF page 969: Visible and Editable Nodes / a. With the object selected, click on the Edit menu and select Convert to Path, or on your / keyboard press Ctrl /Cmd  + Shift  + C .
+- PDF page 970: Visible and Editable Nodes / b. Continue to the next step. / Add an new node along the edge/face of the desired Lead-In/Out location. Curved shapes may be
+- PDF page 971: Select the Set Start Point tool and click on the new node to set that node as the shape's Lead-In/ / Out location. / 4.
+- PDF page 972: Activate Lead-In/Out at Start Points / Shapes with active Lead-In and Lead-Out points will share the same angle, length, and style settings / on that layer. Assign shapes to di0–erent layers to use di0–erent Lead-In/Out
+- PDF page 973: In the Advanced T ab, activate the Lead-In and/or Lead-Out toggle and set your / Desired angle, with positive angles for Lead-In/Outs external to that object, or negative angles / for internal Lead-In/Outs. Lead-In/Outs
+- PDF page 974: Assign additional Lead-In/Out points to any remaining shapes as desired and repeat the process / for each additional layer as needed. / 4.
+- PDF page 975: Click on the Preview Icon in the main toolbar to view the updated Lead-In/Outs for each assigned / shape and start the job when ready through the Laser window. / Reducing Travel Moves
+- PDF page 976: Set Cut Order Priority / Reduce the travel moves your laser cutter makes by manually setting the Cut Order Priority of / each shape to align the Set Start Point assigned to one shape to the Start Point location on
+- PDF page 977: Additional Options / The settings presented in the Cut Settings Editor depend on the selected Layer Mode and the type of / laser you're working with. Select an option below to learn more about di0–erent groups of setting
+- PDF page 978: Galvo-Speci0ﬁc Settings / Special settings that are available for users with Galvo style lasers only. / Read More
+- PDF page 979: Fill Mode / Closed Shapes Only / This feature only works with shapes that are closed. A shape is closed when it is a complete,
+- PDF page 980: If those same two shapes are set to different layers, the entirety of the outer shape and the entirety / of the inner shape will both be engraved, meaning the area within the inner shape will be engraved / twice.
+- PDF page 981: The same logic holds true when shapes only partially overlap '÷ if the shapes are assigned to the / same Fill Mode layer, the area where they overlap will not be engraved. If they are set to different Fill / Mode layers,
+- PDF page 982: Partially overlapping shapes set to di0–erent layers / Fill Mode Settings / There are several specialized options available in the Cut Settings Editor for layers set to Fill Mode,
+- PDF page 983: Left: Common Fill Mode settings tab / Right: Advanced Fill Mode settings tab / Common Settings
+- PDF page 984: Bi-directional 0†ll / Uni-directional 0†ll / Cross-Hatch
+- PDF page 985: Cross-Hatch Demonstration / Overscanning / Note
+- PDF page 986: If Overscanning is enabled on a GCode laser and there isn't enough room at the edge of the job / to accommodate the extra travel distance, you may see LightBurn's Cut may be out of / bounds due to overscan settings error
+- PDF page 987: Line Interval / Controls the spacing between scanned lines, and indirectly controls Lines per Inch. / Optimizing Line Interval
+- PDF page 988: Z moves have the potential to physically damage your laser by crashing the head into the / material. / If your system uses auto-focus, you may not be able to push the focus point lower, because
+- PDF page 989: Ramp Length / Use this setting to slope the sides of an engraving by varying the laser power. The ramp length / controls how far from the design the slope will extend.
+- PDF page 990: Flood Fill sometimes separates individual shapes into segments, engraving a portion of one, then a / portion of another, before returning to the 0†rst shape (it may also jump within individual shapes to / engrave disconn
+- PDF page 991: Additional Options / The settings presented in the Cut Settings Editor depend on the selected Layer Mode and the type of / laser you're working with. Select an option below to learn more about di0–erent groups of setting
+- PDF page 992: Galvo-Speci0ﬁc Settings / Special settings that are available for users with Galvo style lasers only. / Read More
+- PDF page 993: Image Mode / Several additional settings that a0–ect the quality of the engraving are applied on a per-image basis, / using the Adjust Image tool or Shape Properties Window.
+- PDF page 994: Image Mode settings for a GCode-based laser / Bi-directional Scanning / When enabled, the laser will engrave in a side-to-side sweeping motion with the laser on and
+- PDF page 995: Uni-directional scanning / Negative Image / This will invert your image during engraving. Light becomes dark, and dark becomes light. This is
+- PDF page 996: LightBurn can compensate for this by running the laser head outside the boundaries of the / engraving, but with the laser o0–. This maintains an even speed on the engraving itself to provide a / consistent engrave. You n
+- PDF page 997: The extra Overscanning movements are indicated in red. T oggle on Show traversal moves in the Preview window / to see these movements. / Line Interval
+- PDF page 998: The number should always be smaller than whatever you'üre using as your interval setting. The valid / range is from 0 to your Line Interval value. / Scan Angle
+- PDF page 999: The Angle Increment setting will determine how much the Scan Angle rotates between passes. / With the default setting of 0, all passes will be engraved in the same direction. Setting a non-zero / number will tell LightBu
+- PDF page 1000: On a DSP controller, the Ramp varies the laser power from Min Power to Max Power, so you must / set these di0–erently to get a ramped side. T ypically, you should set Min Power to be just above / the 0†ring threshold of
+- PDF page 1001: Threshold / A simple on / o0– switch if the image is dark / bright at a given location. This should only be used / for images that are two-color black/white to begin with, such as an image you dithered outside of
+- PDF page 1002: Ordered / Also called ordered dithering, this is a step above threshold for grayscale images, and uses / densely packed on/o0– dots to approximate shading, using an ordered/regular grid pattern. This is
+- PDF page 1003: Atkinson / A good "in between" mode for solid color or smooth shaded images. It resembles Jarvis but / preserves detail better, though struggles to show detail in very light and dark areas.
+- PDF page 1004: Dither / Also called error di0–usion dithering, this is the best choice for smoothly shaded images, like / photos. This also approximates shading with simple dots, but does so without evident patterning,
+- PDF page 1005: Stucki / A good choice for smooth-shaded or photo images, with slightly faster processing than Jarvis. / Stucki works somewhat similarly to Dither mode to produce smooth shading, and likewise
+- PDF page 1006: Jarvis / Generally the best choice for smooth-shaded or photo images, with slightly slower but better / processing than Stucki. Jarvis works somewhat similarly to Dither mode to produce smooth
+- PDF page 1007: Newsprint / A decorative pattern that imitates newsprint halftoning by generating a grid of spots that are / larger in darker areas. It has good tonal range, but is visibly patterned. Smoothest shading is
+- PDF page 1008: Halftone / Good quality shading for high DPI images. It is similar to Newsprint but can have variable cell / size and pattern angle.
+- PDF page 1009: Sketch / Useful for line drawings or handwriting, as it tries to detect hard edges. Sketch engraves only at / the areas where light and dark values meet at hard edges (highpass 0†ltering).
+- PDF page 1010: Grayscale / Varies power output as a percentage between Min and Max Power, using Min Power for the / lightest shades and Max Power for the darkest. With a diode laser this can provide great shading
+- PDF page 1011: If you are engraving slowly, your laser accelerates fast, or the design contains a lot of blank space, it / can be more e0·cient to 0†ll clusters of close shapes, or to 0†ll the shapes one by one. / + Watch the video on
+- PDF page 1012: Fill Mode / T ells your laser to etch or engrave parallel lines inside the bounds of closed shapes in your / project.
+- PDF page 1013: Default Layer Settings / Built-in or custom-created settings stored on a per-layer basis, that you can reset to at any time. / Read More
+- PDF page 1014: O0›set Fill Mode / Closed Shapes Only / This feature only works with shapes that are closed. A shape is closed when it is a complete,
+- PDF page 1015: Some settings, such as Angle Increment and Auto-Rotate are only available for Galvo lasers. See / Galvo-Speci0†c Cut Settings for more information about these settings. / O0›set Fill Mode Settings
+- PDF page 1016: Left: Common O0–set Fill Mode settings tab / Right: Advanced O0–set Fill Mode settings tab / Common Settings
+- PDF page 1017: Focusing deeper into the material can sometimes help to cut thicker material, and lifting the laser / away from the material can produce a thicker line. / Warning for Z Moves
+- PDF page 1018: This setting is only available for lasers with Ruida controllers. / Enable PPI / The PPI setting (Pulses Per Inch) lets you tell the laser to send an exact number of pulses per inch of
+- PDF page 1019: Fill Mode / T ells your laser to etch or engrave parallel lines inside the bounds of closed shapes in your / project.
+- PDF page 1020: Default Layer Settings / Built-in or custom-created settings stored on a per-layer basis, that you can reset to at any time. / Read More
+- PDF page 1021: Main / Shared Settings / Several settings in the Cut Settings Editor are shared among nearly all laser types and Layer Modes. / Note
+- PDF page 1022: Depending on your laser, its 0†rmware settings, and the design you tell it to cut or engrave, the / laser may not actually reach the speed you set. Consult your laser's manufacturer for guidance / on the maximum speed yo
+- PDF page 1023: Some DSP controllers refer to this as the Corner Power for this reason. / The laser's controller will automatically ramp power between Min and Max Power as it accelerates to / the maximum Speed you've set.
+- PDF page 1024: Additional Options / The settings presented in the Cut Settings Editor depend on the selected Layer Mode and the type of / laser you're working with. Select an option below to learn more about di0–erent groups of setting
+- PDF page 1025: Galvo-Speci0ﬁc Settings / Special settings that are available for users with Galvo style lasers only. / Read More
+- PDF page 1026: Galvo-Speci0ﬁc Cut Settings / Several settings are only available in the Cut Settings Editor when working with Galvo lasers with / EZCAD2, EZCAD3, or BSL control boards.
+- PDF page 1027: Frequency / The Frequency, in kHz, at which the laser will pulse during operation. Relatively low Frequencies / yield fewer pulses at greater power output with each pulse, while relatively high Frequencies yield
+- PDF page 1028: Use Laser 2 / If you've enabled a second laser source in your Device Settings, enable this toggle to use the second / laser source for this layer.
+- PDF page 1029: Angle Increment / For layers set to multiple Passes or Global Passes, adjusts the Scan Angle by this increment with / each successive pass.
+- PDF page 1030: 3D Sliced Image Mode / 3D Sliced is a special Image Mode for Galvo lasers only, which uses multiple passes to engrave a / design one layer at a time. This mode is intended for use with depth maps 'ö sometimes called heig
+- PDF page 1031: Cleanup passes are typically run with a tighter Line Interval, higher Frequency, and lower Max Power / than the main engraving passes, and are used to clear debris and produce a better 0†nish. / Clean after # of passes
+- PDF page 1032: Setting Description / Jump SpeedThe speed at which the galvo mirrors move between cuts. Higher values will make your job / run faster at the cost of increased vibration for the mirrors.
+- PDF page 1033: Line Mode / T ells your laser to trace a path along the outlines of geometry in your project. / Read More
+- PDF page 1034: Sub-Layers / A tool for setting up and applying multiple cut/engraving settings to the same geometry or / layers in your project.
+- PDF page 1035: Sub-Layers / Sub-Layers allow you to assign multiple cut or engraving settings to the same layer and geometry. / This can enable the use of single-setup etching and cleanup passes for Galvo lasers, as well as
+- PDF page 1036: Rearranging Sub-Layers / Click and drag a Sub-Layer's tab to change the order in which it will be output. Sub-Layers are / output in sequence, starting from left to right.
+- PDF page 1037: LightBurn will automatically convert pre-1.2 project 0†les with Fill+Line settings to Sub- / Layers in 1.2, including Fill+Line behavior. This produces two layers, one with your legacy / Fill settings, and a subsequent l
+- PDF page 1038: Image Mode / Works similarly to Fill Mode, but applies additional special settings to adjust output based on / the pixels in your image.
+- PDF page 1039: Default Layer Settings / + Watch the video on YouT ube: https://www.youtube.com/watch?v=86_obqHz7U4 / Cut settings are normally pre-0†lled with the last settings used for a given layer, but LightBurn has an
+- PDF page 1040: When entering Speed values recommended by your laser's manufacturer or other LightBurn / users, make sure to use the same units of distance and time as those from the recommendation, / or to convert the values to your pr
+- PDF page 1041: Additional Options / The settings presented in the Cut Settings Editor depend on the selected Layer Mode and the type of / laser you're working with. Select an option below to learn more about di0–erent groups of setting
+- PDF page 1042: Galvo-Speci0ﬁc Settings / Special settings that are available for users with Galvo style lasers only. / Read More
+- PDF page 1043: Output and Positioning / Reference Output and Positioning / LightBurn User Guide 1043
+- PDF page 1044: Laser Window / The Laser Window is the hub for setting up and selecting a laser, Framing and Starting jobs, / determining job positioning, and more.
+- PDF page 1045: Note / If you have a Galvo laser, you'll see the Framing window 0†rst, unless you turn o0– Require / framing before start in your Device Settings.
+- PDF page 1046: Frame Continuously / Enable Frame Continuously in the Basic Settings tab of Device Settings to command your laser / to run the Framing path repeatedly, until you tell it to stop. Framing Continuously is often helpful
+- PDF page 1047: Tip / Rubber Band Framing is useful for lining up jobs with irregular shapes where a box outline / doesn't 0†t well. For example, a long, thin diagonal shape, or a triangle.
+- PDF page 1048: Warning / Do not use this button if your laser does not have homing switches. If you are unsure, contact / your laser's manufacturer.
+- PDF page 1049: In order to see this switch in the Laser Window, you must turn on Show rotary enable in main / window in your Settings/Preferences. / Rotaries are used to turn cylindrical objects so that their surfaces can be marked by
+- PDF page 1050: Optimization Settings / This button opens the Optimization Settings window, where you can adjust various options that / control the order in which your graphics are cut or engraved by the laser.
+- PDF page 1051: Ready indicates that the laser is connected to LightBurn and ready to receive commands. / Busy indicates that the laser is connected to LightBurn and actively completing a process. / The progress bar indicates the percen
+- PDF page 1052: Coordinates and Job Origin / + Watch the video on YouT ube: https://www.youtube.com/watch?v=aphiLTUWcjE / There are three options for telling LightBurn where to output your project within the work area of
+- PDF page 1053: Absolute Coordinates / Absolute Coordinates is the most intuitive option. The grid in your LightBurn Workspace has a / coordinate system that matches the physical work area of your laser. The 0,0 position is always the
+- PDF page 1054: In this image, we're starting from the Current Position, with the Job Origin set to the lower left: / Notice that the green Job Origin indicator has moved. This represents the position of the laser when / you start the j
+- PDF page 1055: Now imagine that you want to etch this four hexagon pattern onto a coaster or a phone case. Lining / it up from the lower left is not easy. If you change the Job Origin setting to center, you get this / instead:
+- PDF page 1056: The job will be centered around the current position of the laser head. If you position the laser head / directly over the center of the item you want to etch, the output will be centered on the item. / Jogging Your Lase
+- PDF page 1057: User Origin / User Origin works almost exactly the same as Current Position, except that the starting location / is programmable. T o set a User Origin, you must 0†rst jog your laser to the location you want your job
+- PDF page 1058: After setting the origin, you are free to jog your laser around its work area. With User Origin selected / as the Start From mode, the laser will always move back to that programmed location and start the / project from
+- PDF page 1059: Reference Coordinates and Job Origin / LightBurn User Guide 1059
+- PDF page 1060: Move Window / The Move Window is used primarily for jogging, positioning, and homing the laser. / Accessing the Move Window
+- PDF page 1061: Move to Position / Selecting the Go button will move the laser to the X and Y Axis coordinates in the Move to Position / entry boxes.
+- PDF page 1062: The Speed settings also control the Framing speed and the movement speed of the Position / Laser tool. / If your laser has a motorized Z Axis, the dashed up and down arrows move the Z Axis up or down.
+- PDF page 1063: Each press will move your laser by amount entered in the Distance 0†eld, at the rate set in the / Speed 0†eld. If Continuous Jog is enabled, the laser will Jog until you release the key. / Arrange Menu ): Move Laser to S
+- PDF page 1064: Device-speci0ﬁc Buttons / Focus Z / Focuses the Z Axis of the laser. T o use this function, your laser must have a movable Z Axis and have
+- PDF page 1065: The buttons beneath Adjust Speed and Adjust Power each adjust those settings as a percentage / of the original values '÷ not by absolute values. / As you increase or decrease Speed, Power will automatically adjust to mat
+- PDF page 1066: Optimization Settings / + Watch the video on YouT ube: https://www.youtube.com/watch?v=w1hG1wv8tS4 / LightBurn's Cut Planner controls the order in which your laser cuts or engraves graphics in your
+- PDF page 1067: Enable Optimization and Output Re-ordering / T oggle this setting on to enable the Optimization Settings described below. T o disable / optimizations without losing your settings, turn the toggle o0–.
+- PDF page 1068: With the default settings shown in the screenshot above '÷ Order by Layer positioned 0†rst in / the list, and Order by Priority positioned second '÷ the Cut Planner will 0†rst split all objects in / your projects into li
+- PDF page 1069: Order by Group / Orders cuts by Group '÷ all objects in a given Group are cut together, then the next Group of objects, / and so on. Ungrouped objects will all be treated as a single group for the purposes of this settin
+- PDF page 1070: Remove / Select an Order by option from the list and click Remove to remove it from the list of ordering / parameters.
+- PDF page 1071: Reduce travel moves / Attempts to reduce non-cutting travel moves by ordering cuts based on proximity to other shapes. / Hide backlash
+- PDF page 1072: Each time you start a new project, your Optimization Settings revert to these defaults. / Reset to Defaults / Restores your current Optimization Settings to your default settings.
+- PDF page 1073: Cut Selected Graphics / Use Selection Origin / + Watch the video on YouT ube: https://www.youtube.com/watch?v=Om-6FRoy6Z0 / By default, LightBurn outputs all graphics in your Workspace when you Preview, Frame, Start, Se
+- PDF page 1074: Use Selection Origin / When used in combination with Cut Selected Graphics, the Use Selection Origin button tells / LightBurn to calculate the Job Origin from only the parts that are selected, not the whole design.
+- PDF page 1075: Troubleshooting / If Cut Selected Graphics is enabled, but you have nothing in your selection, and attempt to / Preview, Start, Send, or Save a project in machine-speci0†c format, you'll see a warning message,
+- PDF page 1076: Position Laser / The Position Laser tool is a quick way to jog your laser to a location in its physical work area, by / clicking in your LightBurn Workspace.
+- PDF page 1077: After enabling Position Laser, click anywhere in your Workspace, and LightBurn will issue a command / to send your laser to the corresponding location in its physical work area. / The speed at which the laser travels whe
+- PDF page 1078: Set Start Point / Use the Set Start Point tool to control where your laser begins cutting a shape, and in which / direction.
+- PDF page 1079: Additional Notes / Use the Edit Nodes tool to add a custom node to use as a Start Point, if one does not already exist / at the point you'd like a cut to begin.
+- PDF page 1080: Galvo Framing / Framing is a function of Galvo lasers that outlines projects in your laser's work area using a red dot / light, allowing you to see where your design will output on a physical object.
+- PDF page 1081: Press F1  while framing to cycle through the Bounds, Hull, and Contour framing modes. / Bounds / Commands the red dot light to trace a path de0†ned as the smallest possible rectangle that will fully
+- PDF page 1082: Contour / Commands the red dot light to trace a path that follows the exact contours of your shapes '÷ it takes / the longest to draw, but it's the most accurate.
+- PDF page 1083: Additional Options / Frame Individually / Determines whether to trace a single Bounds or Hull frame around everything in your project, or
+- PDF page 1084: Tool Layers Only / T ells LightBurn to only frame shapes that are on one of the T ool layers. / Job Control
+- PDF page 1085: Tip / T o run multiple passes of speci0†c layers, sub-layers, or combined sequences of sub-layers, see / the Number of Passes and Global Passes settings in the Cut Settings Editor.
+- PDF page 1086: For information on framing behavior when using a rotary, see Rotary Mode (Galvo). (" / Reference Galvo Framing / LightBurn User Guide 1086
+- PDF page 1087: Move Laser to Selection / The Move Laser to Selection tools move your laser in its physical work area to a location that / corresponds to a position on your current selection in your LightBurn Workspace.
+- PDF page 1088: Move Laser to Selection in the Arrange Toolbar / Move Laser to Selection in the Arrange (long) Toolbar / Hold Ctrl /Cmd  while clicking the Move Selected Objects buttons in the Arrange (long) T oolbar
+- PDF page 1089: Options and Icons / All below options move the laser to the location in its physical work area that corresponds with the / location of the chosen point on your current selection in your LightBurn Workspace.
+- PDF page 1090: Laser Coordinates / You can read your laser's current cooridinates in the Move Window, by clicking the Get Position / button.
+- PDF page 1091: Position Laser / Selection T ools / Coordinates and Origin
+- PDF page 1092: Quality Optimization / Reference Quality Optimization / LightBurn User Guide 1092
+- PDF page 1093: Material Test / + Watch the video on YouT ube: https://www.youtube.com/watch?v=pTx0RG_4Wbs / LightBurn has a built-in test pattern generator to help you 0†nd the best settings for your laser and
+- PDF page 1094: Using The Material Test Generator / The Material T est dialog as it appears for a DSP laser / After opening the Material Test Generator, you'll be able to con0†gure your test pattern. By default,
+- PDF page 1095: Cut Settings / The three buttons at the bottom of the dialog box open the Cut Settings Editor, where you can adjust / the settings to use in your test. There are two switches to enable or disable the text labels and
+- PDF page 1096: Material Test Cutting and Engraving Order / The order in which test boxes are cut or engraved is determined according to an ascending list of / potential risk of burning or charring material.
+- PDF page 1097: Focus Test / Tip / You can also use the Focus T est to try out di0–erent amounts of defocusing. Defocusing your laser
+- PDF page 1098: Material / You'll be engraving a test pattern onto a piece of material placed in your laser's bed. It's best to have / the material loaded into your laser before opening the Focus Test, so you can set and check
+- PDF page 1099: Start Z determines the Z height of the 0†rst line in the Focus Test pattern. / End Z determines the height of the 0†nal line in the test pattern. / Note
+- PDF page 1100: Start Z determines the Z height of the 0†rst line in the Focus Test pattern. / End Z determines the height of the 0†nal line in the test pattern. / Note
+- PDF page 1101: Start commands your laser to begin engraving the Focus T est pattern. / Press OK to save your Focus T est settings '÷ saved settings will be present when you open / the Focus T est later.
+- PDF page 1102: Interval Test / + Watch the video on YouT ube: https://www.youtube.com/watch?v=kpMunzp2NM8 / The Interval Test provides a quick way to determine the optimal Line Interval for a given
+- PDF page 1103: Using the Line Interval Test / Preparation / Place a scrap piece of the material to be tested into the laser, and focus the laser as per your
+- PDF page 1104: Press OK to save your Interval T est settings '÷ saved settings will be present when you open the / Interval T est later. / Press Cancel to discard any changes you've made to the Interval T est settings '÷ settings will
+- PDF page 1105: Material Library / + Watch the video on YouT ube: https://www.youtube.com/watch?v=jt8M2cJlkH4 / LightBurn's Material Library provides a place to store, organize, and quickly re-apply preset Cut
+- PDF page 1106: Creating New Material Library Presets / Click Create new from layer to save settings from the active layer (including Sub-Layers) to a new / preset entry in the Library. Enter the below details and hit OK to save the mat
+- PDF page 1107: Description: Provide greater detail about these settings, for example "Cut '÷ Quick and Dirty". / Appears as the name of the entry in the list. / All saved presets are organized in collapsible folders on the left side of
+- PDF page 1108: Combined with Edit Description and Edit Cut, you can keep the same Material Name and / Thickness to create nested entries (e.g. 3 mm cut, scan, and image). Keeping just the Name / while changing the Thickness allows nest
+- PDF page 1109: Create New Library / Creates a blank Library. / Merge Library With
+- PDF page 1110: Art Library(" / Reference Material Library / LightBurn User Guide 1110
+- PDF page 1111: Modes and Advanced Control / Reference Modes and Advanced Control / LightBurn User Guide 1111
+- PDF page 1112: Print and Cut / + Watch the video on YouT ube: https://www.youtube.com/watch?v=ddRW12VKIwY / Print and Cut aligns a current project to existing Target Positions '÷ also called registration marks
+- PDF page 1113: The accuracy of Print and Cut depends on the reliability of your laser's motion system and the / precision of your laser's beam or red dot pointer's alignment to the T arget Positions. / If your laser slips, snags, or lo
+- PDF page 1114: The crosshairs cannot be images, or part of a larger image. They must be individually selectable / vector graphics. / Set the crosshairs to a T ool layer if you do not want them to be cut or engraved by your laser.
+- PDF page 1115: Warning / Make sure you are wearing properly rated safety glasses before 0†ring or pulsing your laser. / Consult your laser's manufacturer to make sure your safety glasses are properly rated for
+- PDF page 1116: The second crosshair mark in your Workspace will be highlighted in blue. / Select Scaled (Alt /Option +3 ) or No Scaling (Alt /Option +4 ) to align the current project in / your LightBurn Workspace to the T arget Positio
+- PDF page 1117: The Enabled Mode(s): Print and Cut indicator will appear at the bottom right corner of your / screen: / And green outlines will appear around both crosshair marks:
+- PDF page 1118: After verifying that your project will output correctly by Framing and viewing it in the Preview / window, Start the job. / Expected appearance of Print and Cut Preview
+- PDF page 1119: Need to Select a Di0›erent Target / After setting your 0†rst T arget Position, you did not select a di0–erent T arget Position graphic in your / LightBurn Workspace, before clicking to set the second position.
+- PDF page 1120: If a design has suitable sharp corners, you do not need to have special Target Positions in the / original design to use Print and Cut. / Using sharp corners in existing output allows you to align a project that was not
+- PDF page 1121: Be sure to divide the sections and position the crosshair marks such that each section and the / crosshairs from the previous section can 0†t in your laser's work area. / After a set of crosshairs of each section have be
+- PDF page 1122: Camera Print and Cut / Use the Camera Print & Cut window to line up a job with a printed sheet automatically using a / Head Camera. LightBurn moves the laser head to each registration mark on the sheet, 0†nds it, and
+- PDF page 1123: A laser with a Head Camera (one mounted on the laser head) that is calibrated, aligned, and / included in the Overlay. See Cameras / Overlays Window for more information. / Three or more registration marks in your design
+- PDF page 1124: Camera Print & Cut stays applied until you click Reset, choose Reset Print & Cut, or start a new / search. The two-point Print & Cut targets and Camera Print & Cut replace each other: setting either / one clears the othe
+- PDF page 1125: Hover a row to see where the camera found that mark. If a shape is not recognized, its row shows / Unknown: double-click its shape to choose one. / Select a row to highlight that mark in the Workspace.
+- PDF page 1126: Match the Job to the Sheet / Choose how the job may be adjusted to match the marks: / Option What it does
+- PDF page 1127: Message What to do / Needs a ready head camera that is / included in the overlay
+- PDF page 1128: Circle and Star with Circular Marks / S1 s1-circles.svg / Reference Camera Print and Cut
+- PDF page 1129: Circle and Star with Square Marks / S2 s2-squares.svg / Reference Camera Print and Cut
+- PDF page 1130: Circle and Star with Donut Marks / Related Topics / Print & Cut
+- PDF page 1131: Rotary Mode / Rotaries are used to turn cylindrical objects so that their surfaces can be marked by a laser. In order / to use your laser with a rotary, you must 0†rst establish several important parameters in the Rotary
+- PDF page 1132: Rotary Mode (DSP) / Note / The Rotary Setup window is not available for lasers with T opWisdom or Trocen controllers. See
+- PDF page 1133: Rotary Setup for Ruida Controllers (Roller) / Rotary Type / Select whether your rotary is a Chuck or Roller style rotary. Chuck rotaries have adjustable jaws
+- PDF page 1134: If your rotary is connected to a U Axis port, the controller will handle transferring the commands the / correct axis, provided the 0†rmware version running on the controller supports U Axis rotary output. In / some case
+- PDF page 1135: Tip / Object Circumference and Object Diameter are linked '÷ if you manually adjust the value for / one measurement, LightBurn will automatically calculate the other.
+- PDF page 1136: The options presented here are the same as those available in AutoLaser, the stock software for / the T opWisdom. For more information on these settings, refer to this manual, or contact your / machine's manufacturer.
+- PDF page 1137: In the above example, output will be centered around the starting position of the laser head. / Note / For some Trocen controllers, the Start From mode must always be selected through the
+- PDF page 1138: Going to Laser T ools ): Machine Settings and reducing the Acceleration value of your rotary / axis, in your machine's 0†rmware settings. / If you end up with a 0‡at part at the bottom of the engraving, it means your rot
+- PDF page 1139: Rotary Mode (GCode) / Rotaries are used to turn cylindrical objects so that their surfaces can be marked by a laser. In order / to use your laser with a rotary, you must 0†rst establish several important parameters in th
+- PDF page 1140: Rotary Setup for GCode (Roller) / Rotary Type / Select whether your rotary is a Chuck or Roller style rotary. Chuck rotaries have adjustable jaws
+- PDF page 1141: Select Y Axis if you are unplugging your Y Axis stepper motor wire and plugging it into the rotary / instead. Some lasers use the Y Axis with a dedicated port and switch. / Select Z Axis or A Axis if you are plugging you
+- PDF page 1142: Tip / Object Circumference and Object Diameter are linked '÷ if you manually adjust the value for / one measurement, LightBurn will automatically calculate the other.
+- PDF page 1143: Align the object under your laser head in the X dimension. Output will be positioned on the object in / the X dimension relative to the laser head and Job Origin selection. The Job Origin is indicated on / your graphics
+- PDF page 1144: This error is due to the amount of commanded travel on the rotary axis exceeding the Max / Travel limit for the Y Axis, as set in your laser's 0†rmware. During 0‡at engraving, this protects / the machine from attempting
+- PDF page 1145: Rotary Mode (Galvo) / + Watch the video on YouT ube: https://www.youtube.com/watch?v=St8PWtp17K0 / Rotaries are used to turn cylindrical objects so that their surfaces can be marked by a laser. In order
+- PDF page 1146: Rotary Setup for Galvo (Roller) / Rotary Type / Select whether your rotary is a Chuck or Roller style rotary. Chuck rotaries have adjustable jaws
+- PDF page 1147: Rotary Settings / Steps Per Rotation / Note
+- PDF page 1148: For Roller style rotaries, Object Diameter does not a0–ect output, but can be entered here to / calculate the Circumference of your object. / Tip
+- PDF page 1149: Rotary Axis / Tip / When rotating on the X Axis, you'll want to engrave along the Y Axis, with a Scan Angle of 90 or
+- PDF page 1150: Reverse Rotary Direction / Enable the Reverse Rotary Direction switch if output is backwards or sliced in the wrong order. / Return to Starting Point
+- PDF page 1151: Object Diameter (Rotary Marking Window) / Object Diameter is linked to the value set in the Rotary Setup window. Changing the value in / either window will automatically update it in both places.
+- PDF page 1152: If you select Run shapes in shape order, the rotary will run all splits containing the 0†rst layer, / rewind back to the beginning, and then run all splits containing the second layer. / If you select Run all shapes in e
+- PDF page 1153: Setup / Opens the Rotary Setup window. / Sanity Check
+- PDF page 1154: Troubleshooting / If output is stretched or there are gaps between slices, double check the steps per rotation and / Object Diameter values. If you are using a Roller style rotary, check Roller Diameter instead
+- PDF page 1155: If output to your rotary is backwards or sliced in the wrong order, enable Reverse Rotary / Direction. / Related Topics
+- PDF page 1156: Repeat Marking / The Repeat Marking tool enables the use of a Rotating or Linear axis table with Galvo lasers, to / move parts past a laser while running repetitions of identical jobs.
+- PDF page 1157: Motor # / If your laser has two motor outputs, select which is connected to your Rotating or Linear table. / Axis Type
+- PDF page 1158: For belt-driven tables, the value may vary based on gear ratio. / For Linear tables the unit of movement is mm. / This value should be set to match the amount of linear movement of your table that results
+- PDF page 1159: Homing / Home on Start / Enable Home on start to have LightBurn send a command to home a Linear table at the start of a
+- PDF page 1160: For Linear tables, the distance, in millimeters, to move the axis between repetitions. / Calculate / The Calculate button is only available if the axis type in External Axis Setup is set to Rotating,
+- PDF page 1161: Tip / The Rotating or Linear table will not jog to Frame each repetition '÷ to verify that your / Increment and Steps per rotation or Steps per mm values are correct before running a job,
+- PDF page 1162: Split Marking / Split Marking enables the ability to mark designs larger than a Galvo laser's work area using a / Rotating or Linear axis table.
+- PDF page 1163: Enable Split Marking / This switch controls whether Split Marking Mode is enabled. When enabled, you'll see a status / indication in the bottom right corner of your screen:
+- PDF page 1164: For Linear tables the unit of movement is mm. / This value should be set to match the amount of linear movement of your table that results / from one complete revolution of its stepper motor.
+- PDF page 1165: Note that homing may require special wiring '÷ do not enable this setting if you are not sure if your / table is wired for homing. / Speed
+- PDF page 1166: The size of each segment is determined by the Split size setting. A larger Split size will reduce the / time spent running the job, but it can be harder to dial in the settings such that there are no overlaps / or gaps.
+- PDF page 1167: Run shapes in shapes order vs. Run all shapes in each slice behavior comparison / Imagine your project has two layers, and you've selected Order by Layer in Optimization / Settings.
+- PDF page 1168: Framing slice size / The size of slices when framing is distinct from the user-speci0†ed Split size used during / engraving.
+- PDF page 1169: Feeder Setup / Auto-feeders are conveyers that feed materials such as fabric or leather into a laser in stepped / increments. The laser runs repetitions of the same engraving or cutting job between each increment.
+- PDF page 1170: Manual: the feeder will advance by the amount you specify in the 0†eld next to the drop- / down menu. / Distance Adjust o0–sets the feed distance by the amount entered. For example, with Job
+- PDF page 1171: Distance Adjust o0–sets the feed distance by the amount entered. For example, with Job / Height selected, and a project height of 50 mm, entering 5 mm in the Distance Adjust 0†eld / will command the feeder to advance 55
+- PDF page 1172: Center Finder / The Center Finder is a tool for 0†nding the center of circular stock, as well as de0†ning that stock in / your LightBurn Workspace.
+- PDF page 1173: Point 2 / Jog the laser head to the next position on the edge of your circle, as shown in the wizard, then click / Set Second Circle Point.
+- PDF page 1174: Point 3 / Jog the laser head to the last position on the edge of your circle, as shown in the wizard, then click / Set Third Circle Point.
+- PDF page 1175: Align to Center / Move to Center / The last step will show you the calculated center of your circle and allow you to jog to that point.
+- PDF page 1176: Create Guide Circle / T oggle on Add Guide Circle to Project to create a circle on the T1 T ool layer, that will provide a / representation of your stock in your LightBurn Workspace.
+- PDF page 1177: Set Origin / Absolute Coordinates / If you use Absolute Coordinates for your work0‡ow, move your design to the guide circle, and make
+- PDF page 1178: Equilateral Triangles / Hexagons / Error Messages
+- PDF page 1179: Unable to Calculate Center / LightBurn can't calculate center, or it would be outside your laser's work area. / This typically happens on machines without homing switches that were not manually homed
+- PDF page 1180: Cylinder Correction / Cylinder Correction warps the output of your design to correct for distortion caused by engraving / cylindrical objects, without using a rotary. This tool is currently only available for Galvo laser
+- PDF page 1181: From the setup window, you'll adjust the Mirror Distance, Object Diameter, axis to curve around, / and direction of the curve. / LightBurn will calculate the Cylinder Correction assuming the design to be output is center
+- PDF page 1182: Measure the vertical distance from this line to the bottom of the lens '÷ shown with a vertical line in / the image above '÷ and add this to your focus distance to 0†nd the mirror distance. We recommend / saving this mea
+- PDF page 1183: Show Valid Boundary / There are limits to where on a given object your laser can actually reach. The Show Valid / Boundary button will insert a rectangle on the T1 T ool layer into your design to show the area that
+- PDF page 1184: How It Works / Galvo lasers project the laser from a single point above your object. When marking a cylindrical / object, the increased travel distance for the laser as the surface of the object curves away causes
+- PDF page 1185: Troubleshooting / If the outer parts of your design are missing, make sure that it's fully within the valid boundaries. / If the placement of your engraving is wrong, check that the location of your design matches the
+- PDF page 1186: Taper Warp / The Taper Warp tool assists in rotary engravings on tapered objects by adjusting graphics to / compensate for the di0–erence in diameter between the top and the bottom of the object. Open the
+- PDF page 1187: Press OK to con0†rm settings and adjust the graphics, or Cancel to discard the changes. / When engraving your object, make sure that it's positioned so that the surface to engrave on is / parallel to the bed of the laser
+- PDF page 1188: Troubleshooting / Taper Warp corrects for the di0–erence in diameter between the top and bottom of the object. It / does not account for di0–erent focal lengths or distances from the laser. Make sure the object
+- PDF page 1189: Galvo Lens Calibration / All Galvo lenses have distortion which must be corrected in order for output from your laser to have / an appearance that's true to the design you see in your LightBurn Workspace.
+- PDF page 1190: Galvo Lens Calibration Wizard / Field Size and Test Area / Each of the 0†elds in this step will be automatically populated based on the Field setting in the
+- PDF page 1191: Laser Output Settings / Enter appropriate settings for your laser to mark the material you selected, with strong contrast. If / you are unsure what settings to use, try running a Material T est 0†rst, or consulting your
+- PDF page 1192: Orientation / Select the LightBurn Dragon that matches the orientation of the output from your laser. Only one / orientation will match exactly '÷ take care to select the correct one.
+- PDF page 1193: Horizontal Measurements / Measure and enter the horizontal distances between lines, as indicated in the graphic. T ake care to / measure the distances as accurately as possible '÷ the accuracy of the lens correction depe
+- PDF page 1194: Vertical Measurements / Measure and enter the vertical distances between lines, as indicated in the graphic. T ake care to / measure the distances as accurately as possible '÷ the accuracy of the lens correction depends
+- PDF page 1195: Results / The 0†nal page displays the resulting corrections that will be applied to each Galvo. / T oggle on Maximize working area to increase your laser's Field to the maximum size possible, if a
+- PDF page 1196: Reference Galvo Lens Calibration / LightBurn User Guide 1196
+- PDF page 1197: Open the Galvo Device Settings window again and in the Galvo 1 section select the ... button to / open the Calibrate Axis window. Depending on which galvo is set as the X Axis, you'll see either / Calibrate Galvo 1 (X ax
+- PDF page 1198: Measure the marked material along the appropriate axis, and update the Calibrate Axis / Requested size and Measured size values. / Select OK to apply the new scaling values to the 0†rst axis.
+- PDF page 1199: Select OK to apply the new scaling values to the second axis. / If needed, rerun the Calibrate Axis process another time to further re0†ne or verify your scaling / as needed.
+- PDF page 1200: Dual Laser Control / LightBurn provides special setup options for machines with two laser tubes. These settings will only / be available when using DSP devices.
+- PDF page 1201: Individual Laser Controls / The switches in the Cuts / Layers Window and Cut Settings Editor are used to enable one or both / lasers on a per-layer basis. Each laser's Max Power and Min Power settings can be managed
+- PDF page 1202: Make sure your laser heads are physically spaced far enough apart from one another that each has / room to cut or engrave the entire graphic, without overlapping or running into the side of your / machine. This means tha
+- PDF page 1203: Machine Management / Reference Machine Management / LightBurn User Guide 1203
+- PDF page 1204: Device Settings / The Device Settings window contains device-speci0†c settings for your laser. The settings available / change based on the device selected '÷ not all settings described below will necessarily be shown in
+- PDF page 1205: The Device Settings window is split into several tabs, not all of which will be available for all / machines. / Dimensions / Units
+- PDF page 1206: Galvo and Basic Settings / The most commonly used device settings for Galvo lasers. / Read More
+- PDF page 1207: Basic Settings / The Basic Settings tab of Device Settings contains the most commonly used settings, and is / available regardless of device type.
+- PDF page 1208: The Basic Settings tab of Device Settings on a GCode laser / General Options / Tab Pulse Width
+- PDF page 1209: Continuous Framing is often useful for adjusting material placement within the laser. / Overwrite Files on Device by Default / When enabled, LightBurn will automatically overwrite pre-existing 0†les of the same name when
+- PDF page 1210: Other Options / GCode Devices / These settings are only available for GCode-based lasers.
+- PDF page 1211: Fast Whitespace Scan / This setting boosts your laser's travel speed through blank areas of an engraving, if the speed you / set here is faster than your laser's engraving speed.
+- PDF page 1212: This setting should only be used for diode lasers, which generally don't have a red dot pointer for / Framing. This should never be used for a CO2 laser, which has an invisible beam that could blind you / or start a 0†re
+- PDF page 1213: Network Port / The network port a device uses to connect. The default value is 23, but some devices use a di0–erent / port, such as 8080.
+- PDF page 1214: In other words, when you enable Laser 1, LightBurn will automatically disable Laser 2, and vice / versa. / Enable Laser 2 O0›set
+- PDF page 1215: Devices / Dimensions / Units / Per-device unit and dimension settings.
+- PDF page 1216: Galvo and Basic Settings / The most commonly used device settings for Galvo lasers. / Read More
+- PDF page 1217: Dimensions / Units / The Dimensions / Units tab of Device Settings contains settings related to units and / measurement and is available regardless of device type.
+- PDF page 1218: Origin / The location of your laser's Origin, or home. If this is set incorrectly, the orientation of your laser's / output will be mirrored or inverted.
+- PDF page 1219: Warning / Enabling this setting means that LightBurn will always emit Z values for a running job. If using / this setting, you must either enable Relative Z moves only or set a Material height value in
+- PDF page 1220: Devices / Dimensions / Units / Per-device unit and dimension settings.
+- PDF page 1221: Galvo and Basic Settings / The most commonly used device settings for Galvo lasers. / Read More
+- PDF page 1222: GCode / The GCode tab of Device Settings allows for modi0†cation of the GCode output for GCode devices. / Please see Device Settings: Custom GCode if you are using a Custom GCode device.
+- PDF page 1223: Emit S Value With Every G1 Command / Enable this setting to have LightBurn specify the output power of the laser with every move / command, rather than only when the power level changes. Enable this setting if your laser
+- PDF page 1224: Basic Settings / The most commonly used device settings. / Read More
+- PDF page 1225: Ports and Laser Settings / Con0†gure a Galvo laser's ports and laser source. / Read More
+- PDF page 1226: Custom GCode / The Custom GCode tab of Device Settings allows for advanced GCode customization when using / the Custom GCode device type.
+- PDF page 1227: Name Description / Verbose Output Enabling this output will include additional detail in the generated GCode / that can help with debugging
+- PDF page 1228: Custom GCode Variables / These variables can be used in your GCode templates. Some variables are only available for / MillMage.
+- PDF page 1229: Template Description / Air O0– T urn o0– air assist. / Layer Start Commands to run before the start of each layer.
+- PDF page 1230: G1 [X]{x} [Y]{y} [Z]{z}  will skip any values that have not changed. / M106 S{*power}  this will output the M106  command only if it has been changed. / Reserved / Prohibited Characters
+- PDF page 1231: Basic Settings / The most commonly used device settings. / Read More
+- PDF page 1232: Ports and Laser Settings / Con0†gure a Galvo laser's ports and laser source. / Read More
+- PDF page 1233: Additional Settings / + Watch the video on YouT ube: https://www.youtube.com/watch?v=s1jCqB233N0 / The Additional Settings tab of Device Settings controls the settings used in Preview for
+- PDF page 1234: Setting Description / Cut Acceleration / X/Y
+- PDF page 1235: GCode / Modify GCode output for GCode Devices. / Read More
+- PDF page 1236: External Axes Settings / Con0†gure motorized X, Y, and Z axes for EZCad3 lasers. / Read More
+- PDF page 1237: Galvo Basic Settings / The Galvo and Basic Settings tab of Device Settings is the Galvo laser version of Basic Settings / and contains the most commonly used settings for Galvo lasers.
+- PDF page 1238: Setting Description / Width/ / Height
+- PDF page 1239: Per Galvo Settings (Galvo 1/Galvo 2) / Each Galvo head is responsible for an axis and can be 0†ne-tuned individually. / Setting Description
+- PDF page 1240: Delay Defaults / Delay settings control the delay between starting (or stopping) mirror movement and 0†ring the / laser. Laser On/O0› TC and End TC control the delays for the start and end points of a path.
+- PDF page 1241: Galvo Lens Calibration / Dimensions / Units / Per-device unit and dimension settings.
+- PDF page 1242: Galvo and Basic Settings / The most commonly used device settings for Galvo lasers. / Read More
+- PDF page 1243: Ports and Laser Settings (Galvo) / The Ports and Laser Settings tab of Device Settings allows you to con0†gure your laser's Input and / Output (IO) ports and laser source.
+- PDF page 1244: Use the dropdowns to select a port to assign to a feature, and use the High/Low button to set the / trigger type. If the port is set to None, the feature is disabled or unavailable. / Setting Description
+- PDF page 1245: Setting Description / Fiber TypeFor Fiber lasers, the speci0†c manufacturer or type of Fiber laser. Certain options enable / additional settings.
+- PDF page 1246: Devices / Dimensions / Units / Per-device unit and dimension settings.
+- PDF page 1247: Galvo and Basic Settings / The most commonly used device settings for Galvo lasers. / Read More
+- PDF page 1248: External Axes Settings (EZCad3 / BSLFiber) / The External Axes Settings tab of Device Settings allows you to enable and con0†gure motors / controlling your laser's X, Y, and/or Z axes. This tab is currently only availabl
+- PDF page 1249: Z Axis Control / X Axis Control / Y Axis Control / Enable Z Axis Control / T oggle this on to allow LightBurn to control your Z axis (or other selected axis). If the axis isn't
+- PDF page 1250: The Z axis needs to be enabled with Z Axis Height set to something other than 0 for the EZCad3 / Move Window to be available. / Origin X / Origin Y
+- PDF page 1251: Homing Limit Active / Use the Homing Limit Active setting to tell LightBurn whether to look for a high or low signal when / the limit switch is reached. If this is set wrong, LightBurn will see the axis as always being i
+- PDF page 1252: Basic Settings / The most commonly used device settings. / Read More
+- PDF page 1253: Ports and Laser Settings / Con0†gure a Galvo laser's ports and laser source. / Read More
+- PDF page 1254: Additional EzCAD3 Galvo Settings / The Additional EzCad3 Settings tab of LightBurn's Device Settings allows you to manually / con0†gure your EzCad3 Device if a MarkCfg0  0†le is unavailable.
+- PDF page 1255: Basic Settings / The most commonly used device settings. / Read More
+- PDF page 1256: Ports and Laser Settings / Con0†gure a Galvo laser's ports and laser source. / Read More
+- PDF page 1257: Devices / The Devices window shows all the devices you've added to LightBurn. Use this window to add new / devices, Import and Export devices, and manage existing devices.
+- PDF page 1258: Managing Devices / Device List / The main section of the Devices window lists all the devices you've added to LightBurn. Click a
+- PDF page 1259: Make Default / Sets the currently selected device as the default. If you have multiple devices, use this to set which / device is active when LightBurn launches. The current default device has an asterisk before the
+- PDF page 1260: Troubleshooting / If the button you want is disabled, make sure you have a device selected. / If you haven't added any lasers yet and try to close the window, LightBurn will open a window
+- PDF page 1261: LightBurn Device Types / While we can't support every device, LightBurn supports a large and growing number of device / types, including Ruida, GCode, xT ool, Epilog, and more. Whether you're using Find My Laser or
+- PDF page 1262: Device Type Supported / Connection / Types
+- PDF page 1263: ACCELaser / ACCELaser HD1 Series machines are 0‡ying-galvo style lasers that come with special cut/engrave / parameters and additional features like LiDAR depth scanning.
+- PDF page 1264: In the New Device Wizard, scroll down and select ACCELaser from the list of device types. / Click Next to continue. / 5.
+- PDF page 1265: Select your HD1 model from the list and click Next to continue. / Click Find via USB to automatically detect your machine's IP address and enter it in the 0†eld. / Alternatively, you can 0†nd identify your device's IP ad
+- PDF page 1266: Your device's working dimensions are entered automtically. You can choose to rename your / device from the default model name, and set your Device Units to either Metric or Imperial. / You can adjust units at any time la
+- PDF page 1267: The device origin is automatically set to the front left. Click Next to continue. / Make sure the summary on the 0†nal screen seems correct '÷ since most parameters were entered / automtically, you'll only need to verify
+- PDF page 1268: Cameras / ACCELaser HD1 series machines include two cameras: / Overhead Camera. Mounted to the top of the laser's lid, capable of capturing the entire work
+- PDF page 1269: Adding the Cameras / Go to Laser T ools ): Manage Cameras. / Click Add New.
+- PDF page 1270: Choose Load from Preset. / Select ACCELaser Head Mounted or ACCELaser Overhead. / Repeat steps 1-3 process, then select the preset for the second camera.
+- PDF page 1271: Using the Cameras / Overhead Camera / Place your material on the bed.
+- PDF page 1272: Depth Scanning / Use Depth Scanning to create a height map of the surface of your object or material. After capturing / this data, the laser can dynamically adjust its focal distance and stay in focus across curved or
+- PDF page 1273: Include LiDAR Data / Enable Include LiDAR Data to have the laser dynamically adjust focal height to follow the height / map created by a Depth Scan. Use this option for curved or uneven objects, or for large-area jobs
+- PDF page 1274: This option is only available if your layer is set to Fill Mode '÷ utilizing the gantry motion system only / is an uncommon use case. In general, you should select Hybrid Motion or Galvo for Fill operations / instead.
+- PDF page 1275: Multi Line e0–ective speed limit is equal to 400 mm/sec (maximum gantry speed) times the / number lines. / 2 lines = 400 mm/sec x 2 = 800 mm/sec
+- PDF page 1276: Your engraving is divided into multiple panels, each small enough to 0†t within the 40 x 40 mm / galvo 0†eld. The galvo engraves each panel at full speed, then the gantry moves to the next / panel.
+- PDF page 1277: Wobble / Enable Wobble to tell the laser to trace small circles along the path of each line, rather than / following the line directly. This creates a thicker line and forces the beam to spend longer in each
+- PDF page 1278: Galvo / Galvo is limited to a 40x40 mm working area, but allows the galvo mirrors to move at their full / speed of up to 4000 mm/sec. Use it for any job that 0†ts entirely within this area, like small metal tags
+- PDF page 1279: Laser Defocus / Adjusts the focal height of this layer by the amount entered in the 0†eld. Negative values move the / focal point lower, into the material, while positive values move it higher, above the surface.
+- PDF page 1280: EZCad3 / Labs Feature / Labs features are new tools in development that we couldn'üt wait to get into the hands of our
+- PDF page 1281: External Axes Settings tab in Device Settings / Additional EZCad3 Settings tab in Device Settings / New EZCad 3 Move Window
+- PDF page 1282: Move to Z / Enter a number into the Move to Z section and click Go to command your laser to move the Z axis / to the position you've set. You can use this to go to an exact height without needing to jog precisely.
+- PDF page 1283: Epilog / Labs Feature / Labs features are new tools in development that we couldn'üt wait to get into the hands of our
+- PDF page 1284: In the Devices window, click the Find My Laser button under the device list to open Find My / Laser. / Make sure your device is connected to the network. Click the Search Network button.
+- PDF page 1285: Completing Setup / Find My Laser Worked / Great! You can jump ahead to naming your device and continue with the rest of setup.
+- PDF page 1286: In the New Device Wizard, select Epilog from the list of device types. Click Next to Continue. / Select your speci0†c Epilog model from the list. / 3.
+- PDF page 1287: Enter your IP address to tell LightBurn where to 0†nd your laser on your network. Click Next to / continue. / 5.
+- PDF page 1288: Name your device something recognizable. The dimensions should be set automatically. Leave / the Device Units in millimeters - if you prefer to design in inches, you can set that separately / later. Click Next to continu
+- PDF page 1289: LightBurn UI/Behavior Changes for Epilog / When using an Epilog device, you'll see the following changes: / Custom Laser Window for Epilog Devices
+- PDF page 1290: Cut Selected Graphics / This toggle switch tells LightBurn to only send the portion of your design that is currently selected / when you click Start, Send, or Save Machine File.
+- PDF page 1291: Save Epilog Print File / Go to File ): Save Epilog Print File to create a print 0†le with a .prn  extension to send to your / Epilog laser manually.
+- PDF page 1292: Legend EXT 36 (" / Reference Epilog / LightBurn User Guide 1292
+- PDF page 1293: xTool / Labs Feature / Labs features are new tools in development that we couldn'üt wait to get into the hands of our
+- PDF page 1294: In the Devices window, click the Find My Laser button under the device list to open Find My / Laser. / Make sure your device is connected to the network or directly to the computer with a USB cable.
+- PDF page 1295: Find My Laser Worked / Great! You can jump ahead to naming your device and continue with the rest of setup. / Find My Laser Didn't Work
+- PDF page 1296: Copy the IP address or write it down. / Head over to LightBurn to add your device. / Part 2: Add your xTool Device in LightBurn.
+- PDF page 1297: In the New Device Wizard, scroll down and select xTool from the list of device types. Click Next / to continue. / 3.
+- PDF page 1298: Select Serial/USB if you're connecting an xT ool S1, D1, or D1 Pro with a USB cable. Select / Ethernet or WiFi/TCP for all other devices or connection types. Click Next to continue. / Enter the IP address you found in Pa
+- PDF page 1299: Name your device something recognizable and set the dimensions of the work area to match / your laser. Leave the Device Units in millimeters - if you prefer to design in inches, you can set / that separately later. Click
+- PDF page 1300: Make sure the summary on the 0†nal screen seems correct. Click Back to go back and make / changes, or Finish to save your changes. / Check Your Device Settings
+- PDF page 1301: Open Device Settings by going to Laser T ools ): Device Settings or clicking the wrench icon in / the toolbar. / In the Dimensions / Units tab, 0†nd the Device Classi0ﬁcation section. When you add your laser,
+- PDF page 1302: Selecting the Laser Source for xTool Lasers in LightBurn / Some xT ool lasers, like the F1 and F2, are dual-source lasers and can output two di0–erent / wavelengths of light to work with di0–erent materials. LightBurn 2.
+- PDF page 1303: Why does the 0ﬁrmware version matter? / Without going into too much detail, the newer 0†rmware changes the laser's communication / method. The newer 0†rmware listed below is compatible with LightBurn and with xT ool Stud
+- PDF page 1304: Device Supported Notes / P2S Yes Some more recent 0†rmware for the xT ool P2S does not currently support / camera use in LightBurn.
+- PDF page 1305: Machine Settings / The Machine Settings window allows you to view and edit 0†rmware settings on lasers with Ruida, / T opWisdom, or GRBL-based controllers.
+- PDF page 1306: Outputs Setup / Vendor Settings / This section will display di0–erently depending on whether you are connected to a DSP or GRBL laser. / All settings in this section are hidden by default, and you'll see a warning messag
+- PDF page 1307: Read / Reload the settings from the controller. Any changes that haven't been written to the controller will / be lost.
+- PDF page 1308: The Calibrate Axis tool is a shortcut to help you calculate the Steps/mm or Step Length value for / each axis, if they need adjustment '÷ if the current values are inaccurate, output may be stretched / or squished.
+- PDF page 1309: Get Controller Info / The Controller Status Info window provides information about your connected laser's controller. It / primarily shows usage statistics, but also contains information about the controller's 0†rmware
+- PDF page 1310: Machine Settings / Devices / ("
+- PDF page 1311: Console Window / The Console Window displays messages from your laser's controller and commands sent to it by / LightBurn. You can also input direct commands to your laser through this window.
+- PDF page 1312: The startup response message displays the type and speci0†c version of 0†rmware your laser's / controller is running. Most GCode-based lasers run GRBL 0†rmware, version 1.1f or later. / If you do not see a similar messag
+- PDF page 1313: $$ : display GRBL settings. See the o0·cial GRBL documentation for more information on each / setting. / $# : display stored o0–sets in the machine's coordinate systems.
+- PDF page 1314: Related Topics / Identify Your Laser / Troubleshooting: Connection Problems
+- PDF page 1315: Macros Window / The Macros Window allows you to create buttons to store frequently used commands for GCode- / based lasers. These functions will only work when LightBurn is directly connected to a GCode-based
+- PDF page 1316: Add a Macro / Click Add to open the New Macro dialog. / Enter a name for the button under Button Label.
+- PDF page 1317: Troubleshooting / If you're unable to use or manage macros, make sure you've selected a GCode device pro0†le. / If your macros don't work as expected, please check that you've entered them correctly. We
+- PDF page 1318: File List Window / Use the File List Window to browse and manage 0†les stored on your laser's controller. This window / is only available for users with DSP controllers that allow saving 0†les to the controller.
+- PDF page 1319: Refresh / Queries the DSP controller to update the list of 0†les stored on the laser 0†le system. / Start
+- PDF page 1320: File Menu / Laser Window / Identify Your Laser
+- PDF page 1321: LightBurn Bridge / The LightBurn Bridge was created by LightBurn to simplify Ethernet connections to Ruida controllers, / especially for computers without Ethernet ports or where running a cable between the laser and
+- PDF page 1322: Add Device to LightBurn / In LightBurn's Devices window, click LightBurn Bridge to open up the Bridge Discovery Wizard, / which will walk you through connecting LightBurn to the Bridge. If you need to go back later, you
+- PDF page 1323: Camera Overview / Signi0ﬁcant Changes in LightBurn 2.2 / LightBurn 2.2 includes signi0†cant UI improvements to the camera interface as well as updates to
+- PDF page 1324: Add Your camera to LightBurn. / Calibrate your camera lens to correct for the camera's distortion. We have presets for the / LightBurn cameras , so if you've purchased your camera directly from us, you can use the
+- PDF page 1325: You can get an overlay of the entire workspace with a Head Camera by having LightBurn stitch / together captures of the entire workspace, but this is slower and less e0–ective than with an / Overhead Camera.
+- PDF page 1326: Cameras / Overlays Window / About The Cameras / Overlays Window / Info
+- PDF page 1327: Using the Cameras / Overlays Window / Each camera you've added for your currently selected laser will show up in the Cameras / Overlays / window, with the following sections:
+- PDF page 1328: Single / The Single capture option focuses the Z axis and captures a single image at the laser head's current / location.
+- PDF page 1329: Name Description / Camera Connection / Indicator
+- PDF page 1330: Adjust Overlay / Overlay Width / Height / Adjust the size of the camera overlay.
+- PDF page 1331: If your camera seems to be slowing down your computer, try lowering the framerate. On the other / hand, if you've got a powerful computer and want a more responsive preview, you can try increasing / the framerate.
+- PDF page 1332: Context Menu / Clicking anywhere in the Cameras / Overlays Window other than inside a camera preview will / open a context/right-click menu.
+- PDF page 1333: Camera Installation & Focusing / If your laser didn't come with a camera and you're installing one yourself, you'll need to make sure / you mount it correctly. If you don't have a camera yet, see Camera Selection for hel
+- PDF page 1334: Mounting tips: / The camera should be focused as well as possible. Most LightBurn cameras are manually focused / by gently twisting the lens.
+- PDF page 1335: Mounting Head Cameras / Mounting a camera to the head of the laser can be as simple as using zip ties or a hose clamp to / hold the camera in place, or you can use a 3D printer or the laser cutter you already have to cre
+- PDF page 1336: Camera Selection / New Camera Options / LightBurn 2.1 and newer allow for a wider range of cameras to be used, including some web-
+- PDF page 1337: Selecting a Head Camera / With growing interest in Head Cameras for compatibility with our new Camera Print & Cut feature, / we've had more people asking for guidance on what to purchase.
+- PDF page 1338: Selecting an Overhead Camera / T o select a camera, you'll need to know two things: / The size of your laser's work area, in millimeters.
+- PDF page 1339: Info / We are phasing out sales of o0·cial LightBurn cameras. If the camera suggested by our built-in / helper is no longer available, try searching for a third party camera with the same lens angle, or
+- PDF page 1340: If you cannot source a camera with the exact speci0†cations listed in row labeled "Best 0†t", try / sourcing a similar camera, then using the Verify Camera tab to make sure it will work with your / laser. Enter a camera'
+- PDF page 1341: Troubleshooting / Some computers may have di0·culty connecting with older or less expensive USB cameras because / of incompatibilities between newer USB 3.0 ports and older USB 2.0 cameras. This is more common
+- PDF page 1342: Add a Camera / Before you can use a camera with LightBurn, you'll need to add it. If you've already con0†gured your / camera on an older version or a di0–erent computer, you can export a LightBurn Camera File (.lbcm )
+- PDF page 1343: Create a New Camera / Click the Add Camera button in the Cameras / Overlays window to start the process of adding a / new camera to LightBurn.
+- PDF page 1344: If you're loading a preset, the process is similar but looks a little di0–erent - after selecting camera / type you'll go to the Edit Camera screen, which shows you the camera name, type, source, / calibration, and align
+- PDF page 1345: T o connect to your network camera, type the URL for the camera feed into the box under / Network URL and set the framerate you want to use. Higher framerates will give you more / responsive previews, but at the cost of
+- PDF page 1346: 3. Calibrate and Align Camera Lens / After selecting your camera type and 0†nding your camera source, LightBurn will walk you through / the steps to calibrate your camera lens and align your camera to your workspace.
+- PDF page 1347: After adding a USB or Network camera, LightBurn takes you to the Calibrate Camera Lens screen. / Reference Add a Camera / LightBurn User Guide 1347
+- PDF page 1348: After loading a Camera Preset, LightBurn takes you to the Edit Camera screen, where you can manage lens / calibration and workspace alignment. / There are a few paths you can take for lens calibration.
+- PDF page 1349: Are you importing a camera from an older version of LightBurn? / If you're importing a camera into LightBurn 2.1 from LightBurn 1.7 or older, you'll see the / following Older Camera Settings File warning.
+- PDF page 1350: Because you've imported your existing camera data, Lens Calibration and Workspace Alignment / should both have green checkmarks and show the imported calibration data. If you got the Old / Camera Settings File warning de
+- PDF page 1351: Edit Camera / After adding a camera to LightBurn, you can manage individual cameras from the Edit Camera / window. While the Cameras / Overlays Window gives you an overview of all of your connected
+- PDF page 1352: Edit Camera Settings and Options / Camera Overview / The 0†rst section on the left has an overview of the camera name, type, and mounting method
+- PDF page 1353: Lens Calibration Dropdown / Use this dropdown to choose between your current lens calibration model and an uncalibrated / version of your camera feed.
+- PDF page 1354: Alignment Info / The Alignment Info box can be expanded by clicking on it, and will summarize: / Alignment Name
+- PDF page 1355: Camera Lens Calibration / Signi0ﬁcant Changes in LightBurn 2.2 / LightBurn 2.2 includes signi0†cant UI improvements to the camera interface as well as updates to
+- PDF page 1356: Before You Begin / Make sure you have the AprilT ag calibration pattern ready. You can download and print it, engrave / it onto a 0‡at, rigid sheet of material, or load it in full screen on a phone or tablet (set the scr
+- PDF page 1357: T o quickly display the calibration pattern on a tablet or other device, you can scan this QR code to go / straight to the PDF version of the calibration pattern. Otherwise, you can open the pattern as a PDF / or downloa
+- PDF page 1358: The Camera Calibration Wizard has on-screen directions to walk you through the process. Here's a / quick overview if you want to just jump in and get started. / Prepare the calibration pattern as described above.
+- PDF page 1359: 2. Open the Camera Lens Calibration Wizard / There are a few ways to open the Camera Lens Calibration Wizard outside of creating a new camera: / Click the Calibration button for the camera you want to align in the Camera
+- PDF page 1360: 3. Capture Calibration Frames / The next screen will walk you through capturing Calibration Frames, which are images showing the / calibration pattern in di0–erent parts of your camera's view. This is the information Lig
+- PDF page 1361: If you can't achieve one of the calibration frames LightBurn requests, you can choose Skip and / LightBurn will recommend a di0–erent placement. / As LightBurn gets closer to being ready to capture a frame, the highlight
+- PDF page 1362: At this point, the view of the calibration tags should be more accurate than at the beginning, but will / likely not look entirely correct. You can keep going to take more calibration frames, or click Next to / continue
+- PDF page 1363: The percentage score shown for each calibration model can be a helpful indicator, but a higher / score doesn't guarantee a better calibration. Pick the model that looks most correct, even if it / doesn't have the highest
+- PDF page 1364: Import Existing Calibration / If you've already calibrated your camera and exported a LightBurn Camera File, you can import / and reuse that calibration. Camera Lens Calibration only depends on the camera, not the mounti
+- PDF page 1365: The Camera Lens Calibration process is required so that LightBurn can 0†gure out the distortion / pattern of your particular camera and correct for it in the software. The AprilT ag calibration pattern / you use for this
+- PDF page 1366: Camera Alignment / Signi0ﬁcant Changes in LightBurn 2.2 / LightBurn 2.2 includes signi0†cant UI improvements to the camera interface as well as updates to
+- PDF page 1367: Make sure your Start From is set to Absolute Coords / If you have Material Height and/or Support Height available in the Cut Settings Editor or the / Cuts / Layers Window, make sure they're set correctly for the material
+- PDF page 1368: 1. Prepare Material / As described above, you'll need to have a suitable large piece of material, appropriate cut settings / for a crisp, dark mark, and your camera securely mounted in the location you want to use it fro
+- PDF page 1369: Overview screen for manual alignment. / 4. Set Up Your Alignment Pattern / Next, you'll set up your alignment pattern. The screenshot below is from the Automatic Alignment
+- PDF page 1370: Place and Scale Pattern / When creating the pattern, it should be: / Roughly centered in the camera view.
+- PDF page 1371: Use the camera preview to make sure the material is near the center of the image and clearly / visible. Use Frame to make sure the pattern 0†ts the material, and use Preview to see what will / actually be burned. Use the
+- PDF page 1372: Getting good results with automatic alignment / Because LightBurn is attempting to read the alignment pattern for you, it's important that you / have good lighting and clean, high contrast engravings. See the screenshot
+- PDF page 1373: If LightBurn Can't Automatically Detect the Tags / If LightBurn can't detect the alignment tags automatically, you can use the Revert to Manual / Alignment button to switch over to the Manual Alignment process. You don't
+- PDF page 1374: Manual Alignment / If you're unable to use Automatic Alignment, or just don't want to, you can also use the Manual / Alignment process. Manual Alignment does the same calculations as Automatic Alignment, but
+- PDF page 1375: Tip / Trying to do this looking at the entire camera image will be both di0·cult and inaccurate. Use the / scroll wheel to zoom in and out on the camera preview so you can see and select the center of
+- PDF page 1376: Reference Camera Alignment / LightBurn User Guide 1376
+- PDF page 1377: When you're done selecting all four manual targets, you should see something similar to the / screenshot above, with red marks at the center of each crosshair, and red lines connecting each / corner. Click Next to contin
+- PDF page 1378: Multiple Alignments for Di0›erent Material Heights / If have Material Height and/or Support Height available in the Cuts / Layers Window, each / alignment you do will have the material thickness included in the name of t
+- PDF page 1379: Head Mounted Camera / Signi0ﬁcant Changes in LightBurn 2.2 / LightBurn 2.2 includes signi0†cant UI improvements to the camera interface as well as updates to
+- PDF page 1380: Example image of the type of endoscope camera to look for. This one has a semi-rigid cable, but you should look for / one with a 0‡exible cable. / If you want to explore other options, any small, light camera you can mou
+- PDF page 1381: Calibrate your camera or import an existing Camera Lens Calibration from a LightBurn Camera / File. / Make sure your camera is mounted appropriately and wires are out of the way.
+- PDF page 1382: 1. Select Camera Alignment Method / You can use automatic or manual Camera Alignment. The automatic method is quicker and easier, / but requires good lighting and high contrast between the marked pattern and the backgrou
+- PDF page 1383: Overview screen for manual alignment. / 2. Alignment Pattern Setup / The automatic alignment process and the manual alignment process use di0–erent patterns, but the
+- PDF page 1384: Manual Alignment Pattern / The manual alignment pattern engraves a set of markers for you to identify, and uses them to guide / you through aligning the camera to the workspace yourself.
+- PDF page 1385: 3. Burn Alignment Pattern / This step is the same between automatic and manual alignment, even though the actual pattern is / di0–erent. Place your material in the laser cutter, make sure it's focused, and get ready to b
+- PDF page 1386: Use the camera preview to make sure the material is near the center of the image and clearly / visible. Use Frame to make sure the pattern 0†ts the material, and use Preview to see what will / actually be burned. Use the
+- PDF page 1387: Start by using the arrow buttons to jog until the target pattern is roughly in the middle of the camera / preview, then click Next. / 2. Detect Tags
+- PDF page 1388: 3. Validate Detection / Make sure the alignment appears correct in the projected camera preview. Click Next to continue, or / Discard to try again.
+- PDF page 1389: 4. De0ﬁne Usable Region / Click and drag to draw a rectangle over the portion of the image that appears sharp and well- / focused. Leave out edges where the image is blurred or warped by lens distortion. You can redraw a
+- PDF page 1390: Manual Target Alignment / Manual T arget Alignment will walk you through identifying the centers of the targets you've engraved / and identifying the portion of the camera's view that's clear and well-focused.
+- PDF page 1391: 2. Click Alignment Markers / Click precisely on the center of each numbered alignment marker in order, as directed in the / instructions. Double-click a placed marker to nudge it if you're slightly o0–, or click Discard
+- PDF page 1392: 3. Validate Alignment / Make sure the alignment appears correct in the projected camera preview. Click Next to continue, or / Discard to try again.
+- PDF page 1393: 4. De0ﬁne Usable Region / Click and drag to draw a rectangle over the portion of the image that appears sharp and well- / focused. Leave out edges where the image is blurred or warped by lens distortion. You can redraw a
+- PDF page 1394: Capturing an Overlay / LightBurn 2.2's new [Cameras / Overlays] window has three options for capturing overlays with your / Head Camera.
+- PDF page 1395: Troubleshooting / If the Overlay is misaligned, try rerunning the entire process, taking care to mark the points in the / pattern as precisely as possible, and to not move the pattern at all from its original, engraved
+- PDF page 1396: Lidar Cameras / Supported Lasers / LightBurn currently supports LiDAR ranging for ACCELaser HD1 series lasers only. If you have a
+- PDF page 1397: Depth Sensor Overlay / T oggle this switch to show or hide the height map overlay in your Workspace. / Scan Selected Area
+- PDF page 1398: X Shift / Y Shift / Shift the overlay image in the X and/or Y directions, if the entire overlay is shifted over from where it / should be.
+- PDF page 1399: Save Background Capture / Use Save Background Capture to save a bitmap image of a camera overlay produced by a camera / mounted over your laser's work area.
+- PDF page 1400: Related Topics / Cameras / Overlays Window / Calibrate Camera Lens
+- PDF page 1401: Settings and Preferences / Reference Settings and Preferences / LightBurn User Guide 1401
+- PDF page 1402: Beginner Mode / + Watch the video on YouT ube: https://www.youtube.com/watch?v=QatjALP3QIk / Beginner Mode simpli0†es the LightBurn interface by removing several options that new users are
+- PDF page 1403: Laser Window / The following buttons and options are hidden in the Laser Window: / Save Machine File
+- PDF page 1404: Arrange Toolbar / The simpli0†ed version of the Arrange T oolbar is automatically selected. / The Move Selected Objects tools appear in a dropdown menu.
+- PDF page 1405: Cut Settings Editor / All advanced setting are hidden in the Cut Settings Editor. Advanced settings are ignored in cases / where enabling them is optional, and defaults are applied in cases where a selection is required.
+- PDF page 1406: Tabs / The Tabs / Bridges section of the Cut Settings Editor for Line layers is hidden. / The Add T abs tool is removed from the Creation T oolbar.
+- PDF page 1407: Set Start Point / The Set Start Point tool is hidden in the Modi0†ers T oolbar. / Related Topics
+- PDF page 1408: Settings / Preferences / The Settings window contains global user preferences for LightBurn '÷ these settings apply / regardless of what lasers you have set up, and which one you currently have selected.
+- PDF page 1409: Editor Settings / Automatically check for updates / Permits (or denies) LightBurn the ability to automatically check for updates, and inform you of them.
+- PDF page 1410: Auto-launch 0ﬁles in running copy of LightBurn / When opening projects through your system's 0†le explorer, automatically open any LightBurn project / 0†les on your computer within a running copy of LightBurn, rather tha
+- PDF page 1411: Load / Save dialogs / These settings permit you to use non-native system dialogs to perform Save/Open/Import/Export / operations with LightBurn.
+- PDF page 1412: Units and Grids / Click Selection Tolerance (pixels) / Determines how close your cursor must be to a line or vertex, in screen pixels, to click it.
+- PDF page 1413: Grid Contrast o0– / Reference Settings / Preferences / LightBurn User Guide 1413
+- PDF page 1414: Low contrast grid / Reference Settings / Preferences / LightBurn User Guide 1414
+- PDF page 1415: Medium contrast grid / Reference Settings / Preferences / LightBurn User Guide 1415
+- PDF page 1416: High contrast grid / Grid Snap Distance / Determines how close lines and other primitives must be to a grid line to snap to it.
+- PDF page 1417: Snapping / LightBurn has two snapping behaviors which you can enable or disable here. / Snap to Objects will snap your pointer location to the nearest object center or vertex when creating
+- PDF page 1418: Display / Application Theme / Use this dropdown to switch between LightBurn's light and dark themes. The default System
+- PDF page 1419: Normal nodes / Reference Settings / Preferences / LightBurn User Guide 1419
+- PDF page 1420: Large nodes / Reference Settings / Preferences / LightBurn User Guide 1420
+- PDF page 1421: Largest nodes / Curve Quality / Controls the precision LightBurn uses in displaying curves on the screen. All curves are displayed as
+- PDF page 1422: If you notice your computer lagging, especially on older computers or when working with very / complex designs, try disabling this setting. / Antialiasing comparison
+- PDF page 1423: Font Size / Increases or decreases the font size for LightBurn window text anywhere in the program. This allows / for manual overrides for high DPI screens, UI scaling, and visually impaired users. Not all UI elements
+- PDF page 1424: Perform Startup Display Size Checks / On small or low resolution screens, LightBurn's default display settings can cause parts of the / interface to be cut o0–. If this setting is enabled, LightBurn will do a check each
+- PDF page 1425: Warning / Setting this slider too high may result in clipping of UI elements. If you scale icons up or down / such that you cannot reach the menu items to re-open the Settings window and shrink them,
+- PDF page 1426: Import / Export / General Import Settings / Group Imported Shapes
+- PDF page 1427: Select the appropriate unit of measurement for your DXF if the units are not contained in the 0†le, or / the DXF may import at an incorrect scale. / Auto-close tolerance (mm) determines how close together imported nodes
+- PDF page 1428: Most people will probably never need to change this '÷ the default is 0.05 mm, which is about ½ / the width of a typical beam. Note that this is the maximum error value allowed, typical output / will be better than this,
+- PDF page 1429: Default Overlay Image / Select whether to show overlay captures from your camera in Full Color or Black and White. / Preview Settings
+- PDF page 1430: Managing Preferences / The Preferences submenu provides several tools to manage your LightBurn Preferences. Access the / Preferences submenu by going to File ): Preferences. For information about adjusting Preferences
+- PDF page 1431: Edit Hotkeys / Opens the Hotkey Editor window, where you can customize keyboard shortcuts. / Related Topics
+- PDF page 1432: User Bundles / + Watch the video on YouT ube: https://www.youtube.com/watch?v=S0QrokNepCQ / User Bundles simplify the process of migrating LightBurn between computers. Go to File ):
+- PDF page 1433: Working With Bundles / Export Bundle / In an existing and already con0†gured LightBurn installation, go to File ): Bundles ): Export
+- PDF page 1434: Import Bundle / Move the .lbzip  0†le created by Export Bundle to the new computer. / Open LightBurn on the new computer. Go to File ): Bundles ): Import Bundle and select the 0†le.
+- PDF page 1435: Edit Hotkeys / Use the Hotkey Editor to customize LightBurn's hotkeys. From this window, you can add new / keyboard shortcuts and edit or delete existing ones. Access the Hotkey Editor by going to File ):
+- PDF page 1436: + Watch the video on YouT ube: https://www.youtube.com/watch?v=UNj3y0aJ_w8 / Related Topics / Settings/Preferences
+- PDF page 1437: Reset to Default Layout / Reset to Default Layout restores the layout of the full LightBurn window to the same format it was / in when you 0†rst installed and opened LightBurn. If you've made lots of changes to your layo
+- PDF page 1438: Help and Software Features / Reference Help and Software Features / LightBurn User Guide 1438
+- PDF page 1439: License Management / If your LightBurn installation has not been activated, you'll see the License Page as soon as you / open LightBurn. From this page, you can:
+- PDF page 1440: The License Page after activation. / You can manage your license from our License Portal. / License Portal
+- PDF page 1441: Use Proxy Server / See System Locked and Floating Licenses: Network Restrictions for information on connecting to / LightBurn's licensing server through a proxy.
+- PDF page 1442: Check for Updates / Check for Updates checks whether there is a more recent version of LightBurn available than the / version currently running, and whether it was released within your license's valid update period. If a
+- PDF page 1443: Related Topics / How the License Works / Install LightBurn
+- PDF page 1444: Help and Notes / Open the Help and Notes window by going to Help ): About, Help ): Quick Help and Notes, or / pressing F1 .
+- PDF page 1445: REST API / LightBurn's REST API provides a way to communicate between LightBurn and other applications. The / API is intended to allow users and developers to create integrations and improve interoperability with
+- PDF page 1446: Removing Authorizations / You can use the Manage API Authorizations button in Settings / Preferences ): Extensions to / open the Manage API Authorizations window to view and, if needed, remove API authorizations.
+- PDF page 1447: Each API authorization currently registered in LightBurn on your computer will be listed, showing: / Name / Date and time of authorization
+- PDF page 1448: Advanced API Access With Multiple Instances of LightBurn / While the default for the REST API is for the most recently opened window to be the one listening, / you can set and enable device-speci0†c listening ports. This
+- PDF page 1449: Inkscape Extension / Inkscape extensions to draw the machine workspace in Inkscape and send your design from / Inkscape back into LightBurn.
+- PDF page 1450: FreeCAD Sample Workbench / A FreeCAD workbench that generates 2D gear pro0†les and sends them directly to LightBurn or / MillMage for laser cutting or CNC milling.
+- PDF page 1451: 2. Copy or Symlink the necessary 0ﬁles / Copy the folder / You can also just copy the folder into Mod\SpurLine . Run the following from the repository root:
+- PDF page 1452: Project structure / The REST API spec lives at the repo root in docs/openapi.yaml . / examples/spurline/
+- PDF page 1453: Set copies per object and optional bore/keyway overrides / Click Preview in FreeCAD or Send to LightBurn / MillMage / Multi-slice export
+- PDF page 1454: Inkscape Sample Extension / Warning / This is an early demo, installed manually and not through an addon manager. More features are
+- PDF page 1455: 1. Find your user extensions directory / You can also 0†nd your user extensions directory in Inkscape under Edit ): Preferences ): System ): / User extensions.
+- PDF page 1456: The 0†rst send triggers a consent dialog in the app '÷ approve it. The shared secret is stored under / …/lightburn-rest/inkscape-secrets.json  and reused on later sends (LightBurn and MillMage each / get their own).
+- PDF page 1457: Workspace frame / Run Draw LightBurn workspace frame to fetch the machine's workspace size and drop a dotted, / brand-coloured rectangle (LightBurn red, MillMage purple) at the back of the canvas It's a guide '÷
+- PDF page 1458: Requirements & testing / Inkscape 1.0+ (uses the bundled inkex  Python module). No extra packages. Veri0†ed against / Inkscape 1.4 / inkex 1.4.
+- PDF page 1459: View Usage Data / LightBurn's anonymous usage data collection is entirely opt-in for full release versions of the / software. If you don't chooose to share this information with us, it won't be sent.
+- PDF page 1460: You can manage data reporting and view the collected data by going to Help ): View Usage Data. / Send Anonymous Usage Data / If enabled, anonymous usage data will be reported to LightBurn to help with improvements to the
+- PDF page 1461: Data Collected / What We Don't Collect / We do not collect Personally Identifing Information (PII), including but not limited to:
+- PDF page 1462: Enable Debug Log / Use Enable Debug Log to begin recording a log saved in the My Documents folder on Windows or / Documents on Mac. You can send a Debug Log to LightBurn Support to aid in troubleshooting or bug
+- PDF page 1463: T ype the following into the command prompt and press Enter : / cd "C:\Program Files\LightBurn” / Next, type the following into the command prompt and press Enter  to launch LightBurn with the
+- PDF page 1464: Troubleshooting(" / Reference Enable Debug Log / LightBurn User Guide 1464
+- PDF page 1465: Debug Drawing / Debug Drawing shows the bounds of shapes being drawn in your Workspace. It is mostly intended / for use by LightBurn developers as a debugging tool.
+- PDF page 1466: Explainers / Our explainers go into more detail about advanced topics to help you use LightBurn more e0–ectively. / Laser Types
+- PDF page 1467: Open vs. Closed Shapes / Read more about the di0–erences between open and closed shapes, why the di0–erence matters, / and how to 0†x them.
+- PDF page 1468: About Galvos / Read more about Galvo lasers and how they work. / Read More
+- PDF page 1469: Laser Types / There is a diverse array of laser cutting and engraving machines, de0†ned by various characteristics. / These characteristics '÷ and how they interact with each other '÷ dictate the qualities of results,
+- PDF page 1470: The controller '÷ and the 0†rmware it runs '÷ determines whether or not a machine is compatible with / LightBurn, and what type of license you need. / A controller is essentially a computer within your laser, and the 0†r
+- PDF page 1471: Note / Many tools in LightBurn are only available for machines with a particular type of motion system. / There are two common motion systems:
+- PDF page 1472: Fiber: combines several beams into one using 0†ber optics, to generate more power output. / Wavelength / The wavelength of the light generated by the source dictates what materials the beam can interact
+- PDF page 1473: Accessories / There are various accesories and non-critical or optional features available from manufacturers for / machines. Some are explored below.
+- PDF page 1474: Layer Modes / In LightBurn, there are four Layer Modes that determine how your laser will cut or engrave graphics / in your design. Below, we'll explain the e0–ect and purpose of each type of Layer Mode.
+- PDF page 1475: This feature only works with shapes that are closed. A shape is closed when it is a complete, / continuous loop whose start and end points are the same. When a shape's start and end points / are di0–erent, it is open.
+- PDF page 1476: If those same two shapes are set to different layers, the entirety of the outer shape and the / entirety of the inner shape will both be engraved, meaning the area within the inner shape will / be engraved twice.
+- PDF page 1477: The same logic holds true when shapes only partially overlap '÷ if the shapes are assigned to / the same Fill Mode layer, the area where they overlap will not be engraved. If they are set to / different Fill Mode layers,
+- PDF page 1478: See Cut Settings Editor '÷ Fill Mode for information on additional settings speci0†c to Line Mode. / O0›set Fill Mode / Closed Shapes Only
+- PDF page 1479: See Cut Settings Editor '÷ O0–set Fill Mode for information on additional settings speci0†c to Line / Mode. / Image Mode
+- PDF page 1480: See Cut Settings Editor '÷ Image Mode for information on additional settings speci0†c to Image Mode. / Explainers Layer Modes / LightBurn User Guide 1480
+- PDF page 1481: Speed vs. Power / Understanding the relationship between power and speed is an essential part of being able to / produce high quality cuts and engravings, as well as optimizing your settings to 0†nish jobs faster.
+- PDF page 1482: You might also have noticed that the bottom right corner isn't noticeably darker than the circled / mark. Beyond a certain point, increasing power or decreasing speed has limited usefulness. In this / example, the circle
+- PDF page 1483: Optimizing Cut Settings / The best power and speed combination will depend heavily on not only your laser and material, but / what you're aiming to achieve.
+- PDF page 1484: Images vs. Vectors / Understanding the di0–erence between images and vectors is essential for creating and editing / custom projects. It in0‡uences the tools and methods used in LightBurn, as well as the settings,
+- PDF page 1485: Images / Image Uses and Laser Behavior / Images can only be used for engraving, not cutting. When a laser produces an image, it does so by
+- PDF page 1486: Vectors used to engrave an area must be closed shapes and assigned to a layer set to either Fill or / O0–set Fill. Engravings are produced in a similar fashion to images '÷ with many lines next to each / other '÷ however
+- PDF page 1487: Wireframe vs Filled View / By default, Fill Mode layers will appear as outlines, which makes it easier to spot and select / vectors that are behind other vectors.
+- PDF page 1488: Creating and Editing Di0›erent Types of Vectors / The most simple form of vectors in LightBurn are paths, created using Draw Lines and edited using / Edit Nodes. These paths can be open or closed.
+- PDF page 1489: Open vs. Closed Shapes / + Watch the video on YouT ube: https://www.youtube.com/watch?v=lQ-qhpQypCk / All shapes in LightBurn are made up of lines, curves, and nodes. Sometimes those nodes are
+- PDF page 1490: The most commonly used function that requires closed shapes is Fill Mode, which commands your / laser to engrave or mark an area that falls within the outline of a single speci0†ed shape, or between / the outlines of two
+- PDF page 1491: Resize Slots / Kerf O0–set / Cut Inner Shapes First
+- PDF page 1492: Measure Tool / Select the Measure tool from the Creation T oolbar (or press Alt /Option +M ) and hover over a / segment of any shape to see a readout of its attributes. In the bottom right, you'll see the Closed/
+- PDF page 1493: Select Open Shapes / From the Edit Menu, you can click the Select open shapes option to automatically select any open / shapes in your Workspace.
+- PDF page 1494: Correcting Open Shapes / Change Layer or Mode / Before attempting to close an open shape, it's important to decide whether that is the best step to
+- PDF page 1495: Because this option requires you to close open shapes manually, in cases where you have many / shapes to close it is often easier to use a tool that does so automatically. / Close Path
+- PDF page 1496: Click OK to con0†rm the changes and close the selected shapes, or Cancel to discard them and leave / the shapes open. / Auto-Join Selected Shapes
+- PDF page 1497: How to Invert a Vector Engraving / + Watch the video on YouT ube: https://www.youtube.com/watch?v=EAlw371Ey0M / A common question we're asked is how to change which part of a design is engraving, swapping
+- PDF page 1498: The 0†rst is the outline of the letter O. Because this is just a single outline, LightBurn will tell your / laser to engrave the entire area inside the outline. / The second is the letter O with a center ring. Now, becau
+- PDF page 1499: Adding Outlines / There are several options for adding outlines to graphics. / The O0–set tool can create outlines at a speci0†ed distance around your shapes.
+- PDF page 1500: Template Files / LightBurn 2.1 introduces T emplate Files, which we demonstrated in our Laser Engraved Pencil / Project.
+- PDF page 1501: window, you'll see that this creates a new, 0†le, so it's impossible to accidentally save over the / template. / Make your changes to the base design. Layer 00 already has the image settings I want to use for
+- PDF page 1502: Ovescanning / + Watch the video on YouT ube: https://www.youtube.com/watch?v=oNW8lTxuul4 / When your laser engraves graphics set to Fill or Image Mode, the line-by-line, back-and-forth
+- PDF page 1503: The longer your laser spends passing over any part of an engraving, the more e0–ective power it will / output over that area. That means that the same Power setting will burn more at a slower Speed / than a faster one.
+- PDF page 1504: The Overscanning setting for a GCode-based laser / Speed, Overscanning Distance, and Job Time / Although you can't control the percentage through LightBurn, Overscanning distance varies based on
+- PDF page 1505: Set to 100 mm/second (6000 mm/minute), this graphic will take 26:39 to engrave. / Explainers Ovescanning / LightBurn User Guide 1505
+- PDF page 1506: The same graphic, now set to engrave at 400 mm/second (24,000 mm/minute), will take nearly 3 minutes longer to / engrave, due to the high amount of Overscanning required. / Troubleshooting
+- PDF page 1507: Because Overscanning requires your laser to travel extra distance outside the exact boundaries of / your graphics, if your graphics aren't positioned properly, or you are too close to the edge of your / machine when usin
+- PDF page 1508: Overscanning crossing a single side of the green outline '÷ this will be a problem if the Start From mode is set to / Absolute Coordinates, or if the custom User Origin or Current Position is too close to the edge. / Exp
+- PDF page 1509: Overscanning crossing two sides of the green outline '÷ this will be a problem no matter what Start From mode is / selected. / Explainers Ovescanning
+- PDF page 1510: Overscanning crossing neither side. This is a normal amount of Overscanning, and will work well with Absolute / Coordinates positioning, but you still need to make sure that any custom User Origin or Current Position isn
+- PDF page 1511: Steps per MM / If the output from your laser looks like it's squished or stretched in one or both directions, it may be / because your steps/mm settings are con0†gured incorrectly.
+- PDF page 1512: You would needs 5 steps per mm of movement. This is because a 20 tooth pulley represents 40 mm / of movement for one full rotation (20 teeth * 2 mm per tooth) and there are 200 steps per full / rotation. So 200 / 40 = 5
+- PDF page 1513: As you can see now, the steps/mm value jumped from 5 to 80 and now has a resolution of 12.5 / micron or 0.0125 mm. / What settings does your machine use?
+- PDF page 1514: You will then typically be able to 0†nd specs or a datasheet on that speci0†c motor model which will tell / you the step angle. / Belts
+- PDF page 1515: Motor Driver Microstepping / Finally, you need to determine what microstepping value is con0†gured for your drivers. This is either / something that cannot be changed on your particular controller (in which case you need
+- PDF page 1516: About Galvos / Sources / Supported Types of Galvo Lasers
+- PDF page 1517: EO / QUANTEL_M20EG / QUANTEL_M30EG
+- PDF page 1518: Master Oscillator Power Ampli0†er (MOPA) lasers allow more timing adjustment than Q-Switched / lasers. MOPA lasers allow for separate control of pulse duration and pulse frequency to produce / highly accurate and control
+- PDF page 1519: Explainers About Galvos / LightBurn User Guide 1519
+- PDF page 1520: Galvo Glossary / Below you'll 0†nd de0†nitions of many terms commonly used when working with a Galvo laser. / Galvo
+- PDF page 1521: Tower / This is the portion of Galvo lasers responsible for moving the galvo head up and down, vertically. The / tower connects the head to the 0†ber cable (that carries the beam from the source), and any other
+- PDF page 1522: Focal Point (Waist) / The thinnest part of the (focused) beam, the point at which it is the most in focus. See the Focusing / page for more info.
+- PDF page 1523: LightBurn Cut Settings and EZCAD Hatches / If you're coming from EZCAD2 and having trouble 0†nding hatch settings you're used to, follow this / guide to match your usual hatch settings to LightBurn's Fill settings.
+- PDF page 1524: Hatch Patterns and Settings / Unidirectional hatch & Bidirectional hatch / EZCAD2's bidirectional hatch and unidirectional hatch are the same as the default hatch in
+- PDF page 1525: Collections / Lasers are versatile machines, and what you do with them is up to you. No matter your aim, it's likely / LightBurn has a tool to help you achieve it, as long you know where to look. We've assembled a
+- PDF page 1526: Tab Key Selection Cycling / Automatic Guidelines / Snapping
+- PDF page 1527: Material Utilization / No one likes it when unusable scraps pile up in their workshop, so the more you can get out of a / sheet of acrylic or piece of wood, the better. These tools will help you lay out and arrange graph
+- PDF page 1528: Rotary Mode / Design Tools / Looking to get creative? LightBurn contains a suite of tools for designing projects from scratch. If you
+- PDF page 1529: Close Path / Close Selected Paths With Tolerance / Auto-Join Selected Shapes
+- PDF page 1530: Galvo Device Pro0ﬁle Setup / Galvo Lens Correction / Changing a Galvo Laser Lens
+- PDF page 1531: Tips and Tricks / LightBurn is packed with tools that speed up the process of getting from idea to 0†nished product. / We've listed some of our most useful learning tools and work0‡ow optimization features below '÷
+- PDF page 1532: Visit Our Channel / Single-Key Align Tool Shortcuts / You can perform most of the Align commands with single-key shortcuts when the Edit Window
+- PDF page 1533: Align Option Icon Action Hotkey / Align T op Aligns selected objects along their top edges.T / Learn More
+- PDF page 1534: If a window other than the Edit Window is in focus, click anywhere in the Workspace to bring it / into focus. Selecting objects in the Workspace will also bring it into focus. / Action Windows macOS
+- PDF page 1535: Alignment Guides are temporary visual guides that indicate when an object's edge or center is / aligned to an edge or center of another object in your Workspace. / Draggable Guidelines are persistent lines set to the T1
+- PDF page 1536: Snapping Point Icon Description / Line The cursor is over a line, but not a node, midpoint, or intersection on that line. / Learn More
+- PDF page 1537: Learn More / Galvo Framing Mode Nudging, Rotating, and Rescaling / If you're using a Galvo laser, you can use your keyboard to nudge, rotate, and rescale graphics while
+- PDF page 1538: Key(s) Result / Shift +.  (period) Rotate graphics 1.5° clockwise / Shift +,  (comma) Rotate graphics 1.5° counter-clockwise
+- PDF page 1539: Automatic File Backups / LightBurn automatically saves backups of your projects as you work. Auto-saves are stored in the / same location as you saved the original 0†le, with _backup  appended to their name. If you'üve n
+- PDF page 1540: Learn More / Load Preferences Backup / The Load Prefs Backup command allows you to import preferences from a timestamped list of
+- PDF page 1541: Learn More / Reset to Default Settings / Follow these steps to restore LightBurn to the same settings as when you 0†rst installed '÷ be aware
+- PDF page 1542: Re-open LightBurn. All settings should be reset to default, and all devices will be removed. / That'üs it. When you re-run you'üll be asked to set up your laser again, and everything will be as new. / Setting Up a New Co
+- PDF page 1543: Job Optimization / The faster your laser 0†nishes one job, the sooner you can start another. These tools will help you / speed up your project runtimes, without any loss in quality of the 0†nished product, so you can spe
+- PDF page 1544: Line Interval / Line Interval is the distance between scan lines when raster engraving, making it one of the key / settings determining the quality of engravings on Image and Fill Layers. It is mathematically tied to
+- PDF page 1545: Fill Mode Ordering / The Fill Mode order-by options control which shapes are engraved at the same time by the laser. If / you run your laser fast, or your laser accelerates slowly, it is often most e0·cient to scan thing
+- PDF page 1546: Flood Fill / Flood Fill calculates an engraving path that attempts to reduce or eliminate travel moves across / blank space. It's useful for engraving designs with lots of empty space within graphics, where
+- PDF page 1547: Optimization Settings / LightBurn's Cut Planner controls the order in which your laser cuts or engraves graphics in your / project. The Cut Optimization Settings window is where you adjust the variables by which the Cut
+- PDF page 1548: Material Library / LightBurn's Material Library provides a place to store, organize, and quickly re-apply preset Cut / Settings for di0–erent operations and materials.
+- PDF page 1549: Material Utilization / No one likes it when unusable scraps pile up in their workshop, so the more you can get out of a / sheet of acrylic or piece of wood, the better. These tools will help you lay out and arrange graph
+- PDF page 1550: By default, the Align tools move objects in your selection to align them to an edge or center of the / last object you added to your selection. / Learn More
+- PDF page 1551: Quick Nest / Quick Nest o0–ers quick, simple nesting without leaving LightBurn. Quick Nest uses bounding box / nesting, which calculates nesting based on the smallest rectangle each shape 0†ts into. Quick Nest
+- PDF page 1552: Learn More / SVGNest (External) / If you need denser nesting than Quick Nest o0–ers and aren't using LightBurn Pro, you can use
+- PDF page 1553: Snapping / LightBurn's automatic Snapping tools help align objects to other shapes in your Workspace, or ..to / the Workspace grid itself '÷ when you move objects close to a valid location, they will snap to that
+- PDF page 1554: Snapping Point Icon Description / Node The cursor is over any node in a vector graphic, or the corner of an image. / Midpoint The cursor is over the exact halfway point between two nodes.
+- PDF page 1555: Learn More / Move Selected Objects / The Move Selected Objects tools move objects to a corner, midpoint, or center of your Workspace.
+- PDF page 1556: Remove Overlapping Lines / The Remove Overlapping Lines setting of the Optimization Settings window tells your laser to cut / lines that are shared by two graphics just once.
+- PDF page 1557: Batch Production / Once you've mastered the craft of making one thing really well, you're going to want to make many / more of that thing really well. Use these tools to lay out copies of your design, or set your laser u
+- PDF page 1558: Barcodes and QR Codes / Create Bar Code generates a Bar Code which stores data that's visible when the Code is scanned. / This tool o0–ers a wide range of common Bar Code formats, including QR Codes.
+- PDF page 1559: Print and Cut / Print and Cut aligns a current project to existing Target Positions '÷ also called registration marks / '÷ in a previously output design.
+- PDF page 1560: Info / If you're working with a tapered object, use the largest end of the taper for the object diameter. / T o open Rotary Setup, go to Laser T ools ): Rotary Setup (Ctrl /Cmd +Shift +R ), or click the rotary
+- PDF page 1561: Design Tools / Looking to get creative? LightBurn contains a suite of tools for designing projects from scratch. If you / have a background in other design software, many of these tools may be familiar to you '÷ instead
+- PDF page 1562: Shape Properties Window / The Shape Properties Window shows editable properties of selected shapes. Those properties / vary depending on the object, but include Power Scale and Cut Order Priority for all objects, as
+- PDF page 1563: Lock Shapes / The Lock Shapes tool locks selected objects in your design, preventing any form of editing / (including moving, resizing, deleting, and more).
+- PDF page 1564: Tool Layers / There are two colors/layers at the end of the palette labeled T1 and T2. These refer to Tool layers '÷ / special layers that have no cut parameters and will never be output to the laser.
+- PDF page 1565: Circular Array / Circular Array arranges multiple copies of an object '÷ or multiple objects '÷ in a radial pattern / around either a point in space, or a central object.
+- PDF page 1566: Learn More / Apply Path to Text / Apply Path to Text attaches text to a vector object, reshaping it to follow the contour of the chosen
+- PDF page 1567: Creative Uses for Advanced Cut Settings / You can use settings to achieve some neat and speedy e0–ects. We explore some of them in this / video!
+- PDF page 1568: Getting a Design Laser-Ready / So you've imported a design into LightBurn that wasn't made with laser engraving in mind, and it's / going to take some work to get it ready to go. Don't worry '÷ the tools below are up to
+- PDF page 1569: View Style / Changing the View Style alters the appearance of vector graphics in your Workspace, which can be / useful for spotting potential design issues and visualizing the 0†nal output from a project.
+- PDF page 1570: Boolean Tools / Use the Boolean tools to combine existing shapes (or Grouped shapes) into new or more complex / shapes. There are three Boolean options, along with one very similar option, Weld.
+- PDF page 1571: Trim Shapes / Use the Trim Shapes tool to cut line segments back to the next intersection with another line. / If a shape does not intersect with any other lines, Trim Shapes deletes the entire shape.
+- PDF page 1572: Close Paths and Auto-Join Shapes / Several functions in LightBurn, including Fill Mode, require shapes that are closed loops, with start / and end points that are the same. The following tools help to close shapes that a
+- PDF page 1573: Close selected paths with tolerance works similarly to Close Path to close shapes with start and / end points that are not the same, while providing greater control over how far apart they must be in / order to connect t
+- PDF page 1574: Optimize Selected Shapes / The Optimize Shapes tool simpli0†es and smooths selected shapes by reducing the node-count or / by 0†tting them to arcs or lines. This is often useful when importing art created in other softwa
+- PDF page 1575: Kerf O0›set compensates for the extra material removed by o0–setting the path of the laser to the / outside of closed shapes (for positive values) or the inside (for negative values). This doesn't modify / the underlying
+- PDF page 1576: Working With Images / Engraving images is one of the coolest things your laser can do, but it's also one of the hardest / processes to get just right. Check out the following pages to learn the basics of image engraving
+- PDF page 1577: Images Vectors / Images are made up of pixels '÷ tiny blocks of color in a grid. Sometimes called bitmaps or rasters, Images / include digital photographs, 0‡atbed scans, digital drawings, and computer-generated renders.
+- PDF page 1578: Line Interval / Line Interval is the distance between scan lines when raster engraving, making it one of the key / settings determining the quality of engravings on Image and Fill Layers. It is mathematically tied to
+- PDF page 1579: Adjust Image / The Adjust Image tool streamlines the process of tweaking Image Settings such as Contrast, / Brightness, and Gamma while also changing Layer Settings, allowing you to adjust all of these
+- PDF page 1580: Image Tracing / Use the Trace Image tool to convert imported images into vector graphics. / This is useful if you want to edit an image that has high contrast or well-de0†ned edges, including
+- PDF page 1581: Collections Working With Images / LightBurn User Guide 1581
+- PDF page 1582: LightBurn for Galvos / If you're new to using LightBurn with your Galvo laser, you might be feeling like there's a lot to learn / '÷ and there is! But don't let that worry you, we've got you covered with resources on get
+- PDF page 1583: If your laser uses di0–erent software, you may need to investigate further. Some lasers use a / rebranded version of one of the programs listed above, such as the GWeike G2 Pro, which uses / GLaser and is a BSL machine.
+- PDF page 1584: Changing a Lens / T o ensure optimal performance following a physical lens swap on a Galvo laser, there are several / changes and settings you'll need to con0†rm. Some manufacturers provide the calibration information
+- PDF page 1585: Click the Frame button in the Laser Window or press F1  to open the Live Framing window. / Note / You may need to hold the Fn  key while pressing F1  to open the Live Framing window.
+- PDF page 1586: Learn More / + Watch the video on YouT ube: https://www.youtube.com/watch?v=St8PWtp17K0 / Cylinder Correction
+- PDF page 1587: Terminology and Hardware Information / In many fundamental ways, Galvo lasers work di0–erently from other types of lasers LightBurn / supports. Below you'll 0†nd information on common terminology, as well as the nuts and
+- PDF page 1588: Anatomy of a Galvo / If you've ever wondered how a Galvo laser works, check out this page. / Learn More
+- PDF page 1589: Learn / Learn Learn / LightBurn User Guide 1589
+- PDF page 1590: LightBurn Learn: Volume 1 / Welcome to LightBurn Learn! We'll be featuring creators, LightBurn sta0–, projects, and other content / to inspire your projects and help you do more with LightBurn. With schools starting back
+- PDF page 1591: Maker Spotlight / Evan Brand is the Events Coordinator for Hive76, and he joined us to talk about his projects and his / involvement with his makerspace.
+- PDF page 1592: One thing to note - while we want to support educators of all sorts, and will happily provide / information and help you to the best of our ability, as a small company selling software for $99 or / $199, we're not equipp
+- PDF page 1593: Fire Safety / Fires can happen fast, and lasers should never be run without supervision. Click here to see the / aftermath of a laser 0†re and read some 0†re safety tips.
+- PDF page 1594: Template Files / LightBurn's T emplate Files are an easy way to provide a LightBurn 0†le as a starting point for a / project. T emplate 0†les can't be accidentally overwritten with an ordinary save, and they can
+- PDF page 1595: This is an older post, but a few years ago we had a good conversation on the forum with a / teacher using LightBurn and a Thunder Laser in his classroom. / Read more on our forum
+- PDF page 1596: Maker Spotlight 1 / For our 0†rst Maker Spotlight, we're happy to introduce Evan Brand. You may have seen him around at / a variety of maker events; he's hard to miss in his denim jacket with a light-up or spinning back
+- PDF page 1597: Yeah, and one of those situations where we had enough ideas about classes that I'd want to either / teach or have someone else teach or events that we should go to, the previous events organizer for / the space just kind
+- PDF page 1598: Nice. That's a good one, and I wasn't expecting it. We make heavy use of hot glue in combat robotics / too, they're great for securing connectors and protecting electronics. / Yeah, the amount of times that I've kept som
+- PDF page 1599: The second is actually a group community project that I started up this past year called The Repair / Zone. I'd been running cosplay repair and other repair stu0– at various events, but the last three / years at the conv
+- PDF page 1600: Outside of projects, a cool thing that I've made - I love playing those augmented reality game / situations where I can bring these resources in and help other people who make cool projects. I'm / pretty good at that pre
+- PDF page 1601: Do you have one repair that you'd love to share right now? / There's a wide variety of repairs that have been fun for me. We were able to 0†x two people's / wheelchairs at the event. We actually did data recovery for som
+- PDF page 1602: really useful. Especially since my favorite thing for using a laser cutter in 3D printers is to turn / something around in an an unrealistic amount of time. A joke is funny, and actualizing a joke in less / than a day an
+- PDF page 1603: using stu0– like WLED, or even just embedding some LEDs with coin cells and on/o0– switches and / di0–erent stu0–. I've been able to do fun things like spinning back jacket patches for a denim jacket or / actual exclamat
+- PDF page 1604: having to be a whole class, it's usually a 15-20 minute one-on-one convo with someone who's / already been trained and then running some demo project to make sure it sticks in their mind, and / people can always ask if t
+- PDF page 1605: I love that about makerspaces, and for me it's always been more about the community than the / actual tools. You can potentially access the tools elsewhere or buy your own, but without the / community to help the tools a
+- PDF page 1606: The less fun one that taught me more was years and year back, actually pre-pandemic. I 3D printed / a project on a CR10 mini and was clearing o0– the bed. I was being stupid and doing it with a razor, / and my hand slipp
+- PDF page 1607: This is both a useful tip and a warning for anyone who does join the community. Everyone knows / each other and that both means that it's excellent that if you're trying to get in contact with / someone or work on a cool
+- PDF page 1608: That's wonderful. What's coming up next for you? Do you have any plans for projects or things that / you're going to be working on in the next few months? / Yeah, a couple of them. I'm currently putting together an exhib
+- PDF page 1609: having them assemble a key 0†dget, which we've done at a local Comic Con for the makerspace, just / something that gets them hands-on with the di0–erent tools, gets ideas going, and reframing it from a / thing that exist
+- PDF page 1610: Sta0› Spotlight 1 / Who are you and what do you do at LightBurn? / I'm Jackie Gerstein. I've been writing documentation and other content to help our users learn to use
+- PDF page 1611: Some of my earliest memories around making involve sewing and going with my mom to meetups for online quilting / and other crafting communities. Even though I was a bit young to participate much, I'm glad to have been ex
+- PDF page 1612: A little trick that might be useful to you if you do have a ruler that slips around easily when you / try to use it as a straight-edge: Cut out some small pieces of a 0†ne grit sandpaper and stick / them to the bottom of
+- PDF page 1613: If I had to pick a project that I'd love to see get out there a little more, it would be the Big Orange / Truck I made for the Power Racing Series. This is a race series that started out with a bunch of adults / (chronol
+- PDF page 1614: Carving one of the side panels. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1614
+- PDF page 1615: Getting started on the 0†berglass. This was the worst part of the build. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1615
+- PDF page 1616: The entire body before painting and mounting it to the frame. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1616
+- PDF page 1617: After a few races. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1617
+- PDF page 1618: I used my laser cutter to make 0†xtures for welding, and some parts for the 0†nished build. / ,ö ,÷ / What are some of your favorite skills/techniques that you've picked up along the way?
+- PDF page 1619: I don't have any pictures of the weld that tried to kill me, but I learned a lot and made much better welds here. / Turns out it wasn't quite good enough, as I discovered coming around a curve, going full speed / downhil
+- PDF page 1620: If you haven't already been to a makerspace or something similar, I'd strongly encourage checking to / see if there's one near you. Even if you don't need the tools they might have, having community that / shares your in
+- PDF page 1621: What's next for you? What will you be focusing on in the next few months? / I'm going to be working on some more upgrades to my current combat robot, Wobbegong, and / getting ready for the next event in November. I've go
+- PDF page 1622: A genuine request for belly rubs. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1622
+- PDF page 1623: Helping prep for an Arduino workshop. Or at least being cute and distracting. / Learn Sta0– Spotlight 1 / LightBurn User Guide 1623
+- PDF page 1624: Learn Sta0– Spotlight 1 / LightBurn User Guide 1624
+- PDF page 1625: "Why do you bother with these other cats when you already have the prettiest, 0‡oo0†est boy right / here?" / Learn Sta0– Spotlight 1
+- PDF page 1626: Learn Sta0– Spotlight 1 / LightBurn User Guide 1626
+- PDF page 1627: I wasn't joking about the 0‡oof / Learn Sta0– Spotlight 1 / LightBurn User Guide 1627
+- PDF page 1628: Learn Sta0– Spotlight 1 / LightBurn User Guide 1628
+- PDF page 1629: T aking a break from stealing vegetables to enjoy the sunshine on a warm day. / ,ö ,÷ / Learn Sta0– Spotlight 1
+- PDF page 1630: Classroom Safety / Laser cutters are wonderful tools, and with proper supervision and precautions, they're well suited to / classrooms. As with any tool, there are some hazards to using lasers, and it's important to know
+- PDF page 1631: Class 4 lasers are the most dangerous and require strict safety controls to prevent harm. These are / high-powered lasers that can cause eye and skin damage from a direct beam, and possibly even / from a re0‡ection. Thes
+- PDF page 1632: and decomposition products/conditions. / PVC is a common material that you should never laser '÷ burning PVC or signi0†cantly heating / it releases hydrogen chloride gas, which is corrosive both to your laser and your lu
+- PDF page 1633: Never run your laser unsupervised! / T o reduce your risk: / Have spray bottles of water and appropriate 0†re extinguishers on hand near the laser, and make
+- PDF page 1634: Conclusion / While laser cutters do come with potential risks like any tool, those risks can be easily managed by / choosing an appropriate machine, avoiding unsafe materials, supervising your laser properly, and
+- PDF page 1635: Projects / We've been working on projects to share with our users. Each of these projects might introduce you / to features you might not be familiar with. You can use these projects just as they are, or as a
+- PDF page 1636: Graham Cracker House / Celebrate the holidays in style with LightBurn by making laser-cut graham cracker houses. / Go to Graham Cracker House
+- PDF page 1637: Image Engraving on Coasters / Make your own custom coasters in LightBurn to protect your favorite table. / Go to Image Engraving on Coasters
+- PDF page 1638: Laser Cut Fridge Magnets / Afraid to commit your stickers to something impermanent? We walk you through turning them / into fridge magnets using LightBurn.
+- PDF page 1639: Laser Etched Clock / Create an analog clock out of common materials using LightBurn. / Go to Laser Etched Clock
+- PDF page 1640: Laser Engraved Pencils / Use a custom jig to engrave pencils quickly and easily in LightBurn. / Go to Laser Engraved Pencils
+- PDF page 1641: Graham Cracker Houses / T o celebrate the holiday season, we designed and made these small, simple, and, in our not-so- / humbug opinion, utterly delightful graham cracker houses. We used graham crackers instead of
+- PDF page 1642: Materials / Graham crackers of any size / Cardboard to create a jig (optional)
+- PDF page 1643: 2. Add Guidelines for Tabs / Now we'll add some additional objects set to a T ool layer to serve as guidelines for snapping and / alignment.
+- PDF page 1644: Select the small rectangle, then click the Grid Array tool. Create 3 Y Rows, with Y Spacing set to / match the height of the small rectangle, and Padding between edges selected. You'll also need / to enable Reverse Direc
+- PDF page 1645: Select the Draw Lines tool ( Ctrl +L  / Cmd +L  ) and hover over the top center of the large / rectangle, moving your cursor over the line until you see the midpoint snap icon appear. When / you see the icon, click and e
+- PDF page 1646: 3. Front and Back Walls / So far, all of the objects we've made are set to T ool layers, meant to serve as guidelines. Now, we're / going to be creating some actual cut lines we'll be sending to the laser.
+- PDF page 1647: Select both reversed 'ÿC( shapes, then select the line we created earlier down the middle of the / large rectangle. You can hold Shift while clicking on additional graphics to add them to your / selection without losing
+- PDF page 1648: Duplicate everything and Group it ( Ctrl +G  / Cmd +G  ), then set it o0– to the side. You can snap / the center right side of the duplicate to the center left side of the original. We'll use these / templates to make th
+- PDF page 1649: Select the three new red lines, then the line down the center of the larger rectangle, and go to / Arrange > Mirror Across Line. / We want to divide this rectangle in two to create two sidewalls, so we're also going to a
+- PDF page 1650: Select the new rectangle, then the Grid Array tool. As before, create 3 Y Rows, set Y Spacing to / match the height of the rectangle, and select Padding between edges. / Use the Draw Lines tool to draw a line following t
+- PDF page 1651: 5. Roof Supports / Next up, we'll make two walls to support the roof, starting from our basic graham cracker sized / template.
+- PDF page 1652: Duplicate the new rectangle and, with the 9 dot control set to the middle center, set the / duplicate's width to 20 mm. / Select the cut layer and Draw Lines tool again and, starting from the bottom left of the smallest
+- PDF page 1653: T o 0†nish the roof supports, Duplicate that entire template and snap it to the bottom of the / original. / 6. Interior Ceiling
+- PDF page 1654: Use the arrow keys to nudge the rectangles in a bit toward the center. By default each nudge with / an arrow key moves an object 5 mm '÷ one nudge down for the top one and one nudge up for the / bottom one will do the tr
+- PDF page 1655: 7. Roof / And now, the roof. Start again with a basic graham cracker template. / Create a new rectangle, starting from the bottom right corner of the large rectangle. Set its
+- PDF page 1656: Nudge the rectangle twice to the left (10 mm). / 2. / Learn Graham Cracker Houses
+- PDF page 1657: 8. Decorate the Roof / Before we add cut lines and duplicate the above roof piece, it's time to start adding decorations. / Select the Ellipse ( Ctrl +E  / Cmd +E  ) tool and any layer you like to use for etching (make s
+- PDF page 1658: Create a rectangle to use as a cutting shape, starting from the oval's top center and extending to / its bottom center, and wide enough that it contains the entire half of the oval to the right. Select / the oval, then t
+- PDF page 1659: Select the remaining half and then click the Grid Array tool. Create enough X Columns to / duplicate the half-oval all the way to the other end of the large rectangle, and enough Y Rows to / duplicate them all the way to
+- PDF page 1660: Select both rectangles and Duplicate them. We're going to use them as cutting shapes, but we'll / still want the originals around afterward. / 5.
+- PDF page 1661: Select the arrayed tile graphics and then the large rectangle, and go to Tools ): Cut Shapes. / Delete the remainder that's outside the large rectangle. Re-select the tile array and then the / small rectangle, and use th
+- PDF page 1662: Now select the cut layer and draw lines around 3 sides of the smaller rectangle '÷ every side but / the one that's overlapping with the outer edge of the large rectangle. / Select everything, Duplicate it, and snap it to
+- PDF page 1663: 9. Create a Chimney Slot / There's one more thing we need to make before we're done with the roof '÷ a hole for a chimney on / one of the panels. T o make the hole the right size, 0†rst we'll need to decide how wide our
+- PDF page 1664: Once you've added the nodes, use the Measure tool ( Alt +M  / Option +M  ) to hover over the / line between the rectangle, and record the Segment Length. Write the measurement down / somewhere and delete these shapes.
+- PDF page 1665: On one of the roof panels, create another rectangle, on a cut layer, with its height set to twice the / thickness of the graham cracker (12 mm in our case), and width to the length you just recorded / (25.34 mm in our ca
+- PDF page 1666: 10. Chimney / Making the chimney will require another graham cracker, so make or Duplicate another graham / cracker sized rectangle.
+- PDF page 1667: Create another small rectangle, set to the etch layer, roughly the size of a 'ÿbrick( that's / proportional to the chimney we've made. / Select it, then use the Grid Array tool to array it in su0·cient columns and rows t
+- PDF page 1668: Select and group the arrayed bricks, then Duplicate the chimney outline. Finally, select the / arrayed bricks, then the duplicate chimney, and use Cut Shapes. Delete everything outside the / chimney.
+- PDF page 1669: Select everything you just made, chimney and bricks, Duplicate them together, and move the / duplicate to the side of the original. / 11. Christmas Tree
+- PDF page 1670: Then, select the Edit Nodes tool and the triangle. Hover over the lines on each side and press S / to turn them into curves. / You'll see four handles appear on either side, pull the bottom one on each side down so the l
+- PDF page 1671: Duplicate the triangle, then nudge it up one step, then Duplicate the duplicate and nudge it up, / and so on, until you have 5 triangles. / Select the second triangle from the bottom, and, in the Numeric Edits toolbar, s
+- PDF page 1672: Snap the bottom of the tree to the bottom of the large rectangle and then select the Edit Nodes / tool and hover over its bottom line and press D to delete that line. Since it's along the edge of the / graham cracker, we
+- PDF page 1673: 12. Add a Door and Windows / Now, we're going to add a few additional features '÷ our graham cracker residents need a way in and / out of their house, and a nice view of the neighborhood.
+- PDF page 1674: Now head over to one of the roof supports, and use the Ellipse tool while holding the Shift key to / create a circle shaped window. T o keep it centered, start it from the point at the top of the roo0‡ine / while holding
+- PDF page 1675: 13. Make a Cardboard Jig / We're going to make a quick jig out of cardboard that we'll align our output to. This step is optional, / but strongly recommended '÷ it will make squaring up your graham crackers and aligning
+- PDF page 1676: Place the resulting o0–set on a cut layer, with a speed and power setting su0·cient for your laser / to cut cardboard (or any other material you choose to use for your jig). / Enable Cut Selected Graphics and select the
+- PDF page 1677: Use whatever Start From mode you prefer to align this part of the job. Use Preview (Alt +P / / Option +P ) to make sure you have only the o0–set selected, and Frame (Alt +R /Option +R ) to / double check your positioning
+- PDF page 1678: Back in the LightBurn workspace, put the o0–set onto a T ool layer. / 14. It's Time to Laser the Graham Crackers! / The big moment is here.
+- PDF page 1679: Align your laser to an inner corner of the jig: top left, top right, or bottom left. If you're using a / diode laser, the Fire button can assist with alignment. / 3.
+- PDF page 1680: Set the Job Origin location to the same corner you've aligned your laser to on the jig, and set the / Start From mode to User Origin or Current Position. If you select User Origin, make sure to / set the origin in the Mo
+- PDF page 1681: Select everything in your workspace and Frame the project to make sure you've got your Start / From mode and Job Origin set correctly / 5.
+- PDF page 1682: This is it '÷ run the job! / Remove he pieces from your laser and assemble the house. It will stay together without any help, / but you can add frosting or melted chocolate along the joints to make it sturdier, and candy
+- PDF page 1683: Learn Graham Cracker Houses / LightBurn User Guide 1683
+- PDF page 1684: Image Engraving on Coasters / Coasters are a must have item in any wood-respecting household. If you or anyone you know has a / beloved end or co0–ee table they want to protect from scratches and condensation, but is tir
+- PDF page 1685: Materials / An image you want to immortalize in coaster form. You can select any image you like, but some / will work better than others - if you try to engrave a photo of your pet bunny in a snowstorm, you
+- PDF page 1686: Note: I removed the background from this photo using my iPhone's Lift feature, but you can also use / a free tool like Pixelcut or delphitools to do the same. / 2. Apply Layer Settings
+- PDF page 1687: If you're unsure what settings to apply, try running a Material T est. A test grid ranging from 10% / to 100% power, and 2000 mm/minute to 8000 mm/minute is a good place to start. Watch our full / video guide on setting
+- PDF page 1688: You may also be able to 0†nd some suggested settings on your laser manufacturer's website. / There is a lot of variability between lasers, and no one-size-0†ts-all settings, so be prepared to test / and experiment with y
+- PDF page 1689: Apply some standard starting point settings: / Stucki or Jarvis Image Mode / DPI: 254
+- PDF page 1690: As with the Layer settings, be prepared to test these settings, and adjust according to the results / you see. / 4. Create a Template of Your Coaster
+- PDF page 1691: 5. Apply Mask to Image / Select your image and the T ool layer, then right click and select Apply Mask to Image, or go to / Tools ): Apply Mask to Image.
+- PDF page 1692: You can move the Tool layer around after applying the mask, if you'd like to adjust the area of the / image that is masked. T o remove a mask, right-click and select Remove Mask from Image. / 2.
+- PDF page 1693: Masking can also be a great help in testing settings. You can mask o0– a small area of your image / and etch just that section to keep runtimes low as you test di0–erent settings. / 6. Select a Start From Mode and Job Or
+- PDF page 1694: Using the arrow keys in the Move window, Jog your laser to the same location on the coaster as / you selected for the Job Origin. T o re0†ne positioning, you can lower the increment in the / Distance 0†eld.
+- PDF page 1695: Frame your project to verify alignment. / Press Start to run the job! / 4.
+- PDF page 1696: Learn Image Engraving on Coasters / LightBurn User Guide 1696
+- PDF page 1697: Other Ideas / That's it, you've got a coaster! No one wants just one coaster, so you'll surely want to make more. / Here are some ideas for your next coaster project:
+- PDF page 1698: Laser Cut Dinosaur / Laser cut models are among the easiest and most enjoyable beginner laser projects. Ranging in / complexity from simple to intricate, their parts join together by use of well-placed slots and tabs, an
+- PDF page 1699: Hover over the segment of the slot or tab you want to adjust. We'll be adjusting slot width, so / that's the segment we'll hover over. / The length of the line is displayed as the Segment Length. Our design has a startin
+- PDF page 1700: 3. Resize Slots / Select the Adjust: Slot Width option / Set Old Material Thickness to the width you measured in the previous step (3 mm in our case),
+- PDF page 1701: Kerf O0›set / T o ensure a snug 0†t between parts, you'll also need to set an appropriate Kerf O0›set. Kerf is the / thickness of the material burned away as your laser cuts, and is determined by the width of the
+- PDF page 1702: 1. Cut the Test File / Open the test 0†le and set up the Cut and Score layers with your usual settings - if you're unsure / of what settings to use, you can use LightBurn's Material T est feature and some additional spar
+- PDF page 1703: 3. Set Kerf O0›set / Open the Cut Settings Editor by double-clicking the Line layer you've got your graphics set to in / the Cuts/Layers window.
+- PDF page 1704: Other Ideas / Using Resize Slots and Kerf O0–set Adjustment is great for multi-part designs that need to 0†t together. / Check out our list of external resources for some great tools to create multi-part designs, such as
+- PDF page 1705: Laser Cut Fridge Magnets / If you'üre anything like me, you'üve got a few stickers lying around that you don'üt know what to do / with. It'üs not that I don'üt like them '÷ quite the opposite, I'üm afraid to commit them
+- PDF page 1706: In the second, we'll: / T ake a photo of our stickers, laid out on black acrylic, with a digital camera or smartphone / Import the photo into LightBurn
+- PDF page 1707: T o test Camera Alignment, use the Draw Lines tool to create a crosshair mark set to a Line layer / in your LightBurn workspace. Set the Start From mode to Absolute Coords, and mark the / crosshair onto piece of material
+- PDF page 1708: 2. Stick the Stickers, and Load the Acrylic / Next we'll adhere the stickers to the acrylic. There's no turning back after this point - your stickers / are committed now!
+- PDF page 1709: The Cuto0– slider controls the lower end of the range of brightness values that LightBurn will / outline with vectors, and the Threshold slider sets the upper end. / 4. Edit Vectors
+- PDF page 1710: Then, Hold Ctrl  or Cmd  while clicking on each of the outlines of the stickers to Deselect them. / When all of the outlines are deselected, Delete the remaining selection. / 2.
+- PDF page 1711: 5. Cut Around the Stickers / This is the big moment, it's time to cut out the stickers. Reminder: make sure you're con0†dent in the / accuracy of your overlay alignment before running the job. If you're not, head back to
+- PDF page 1712: Method Two '÷ Cut & Stick / This method doesn't put your stickers in any danger of being accidentally lasered, but the stickers / may not end up as perfectly placed on the backing pieces as they are in the method one, an
+- PDF page 1713: 2. Import and Trace / Next we'll Import the photo into LightBurn and Trace it. / Import ( Ctrl +I  / Cmd +I  ) the photo into LightBurn.
+- PDF page 1714: 3. Edit Vectors / The resulting vectors will automatically be selected and grouped. In addition to the outlines, they'll / likely include some additional graphics you don't want.
+- PDF page 1715: When all of the outlines are deselected, Delete the remaining selection. / 3. / Learn Laser Cut Fridge Magnets
+- PDF page 1716: 4. Rescale Outlines / Here comes the math part '÷ don't worry, it's simple and will be over quickly. / T o get the outline of the reference object perfectly vertical or horizontal, 0†rst Select it and go to
+- PDF page 1717: Then, select the Edit Nodes tool, hover over one if its edges, and press A to align it to the nearest / vertical or horizontal angle. / 2.
+- PDF page 1718: Select the outline of the reference object you traced, and read its Width or Height / measurement in the Numeric Edits toolbar. / Divide the known Width or Height of the actual object by the Width or Height of the outlin
+- PDF page 1719: Select and Delete the outline of the reference object. / Note: it can be hard to get the stickers lined up perfectly to these backing pieces, so you can elect to / rescale the outlines to be just a touch larger than real
+- PDF page 1720: Both Methods / Stick on the Magnets / We're almost done, this part is easy!
+- PDF page 1721: Learn Laser Cut Fridge Magnets / LightBurn User Guide 1721
+- PDF page 1722: Laser Engraved Pencils / Custom engraved pencils can be a quick and easy way to make useful gifts, or alternatively, might / help keep your pencils from vanishing. We've made these pencils as giveaways at events, and I'v
+- PDF page 1723: What You'll Learn / How to select a Start From mode in LightBurn and use a 0†xture to position things in your laser's / workspace the same way every time.
+- PDF page 1724: 1. Open the Template File / Open the pencil 0†xture template 0†le you downloaded and take a look around. The pencil / placeholders are grouped together, the three rails are grouped together, and the baseplate and
+- PDF page 1725: 2. Adjust the Slot Width / If your material is 3 millimeters thick, you can skip this step. If you're using material sold / as (ï" thick, it's likely close enough to work without changes.
+- PDF page 1726: If the Resize Slots window has a message warning you that "Your selection contains the following / unsupported items: Grouped Shapes", you'll need to go back and ungroup your objects before you / can use this tool.
+- PDF page 1727: Load the material into your laser and focus the laser / Send the job to the laser and run it however you usually would. / 4. Assemble the Fixture
+- PDF page 1728: The edges of my laser's bed don't match up with the workspace / For some lasers, there isn't a convenient edge that lines up with the total travel area of the / laser. The laser I'm using for this project, for example, h
+- PDF page 1729: 4. Add Your Design / I'll be using text in my example, but you can use anything you want - just keep in mind that really / complex designs won't necessarily show up well when they're this small.
+- PDF page 1730: With your text selected, move it to a new layer by clicking on an unused layer number in the / Color Palette at the bottom of the window. If you're working with our template, Layers 02 and 03 / are already set up for eng
+- PDF page 1731: If you want to edit the text on individual pencils, you can ungroup the array object ( Ctrl +U  / / Cmd +U  ) and edit individual text objects. You may want to change the Align X setting to either / Left or Right so they
+- PDF page 1732: 6. Get Ready to Engrave / Focus your laser to the top surface of the pencils. If you need a larger 0‡at surface to focus to, lay / a thin sheet of material such as a business card across the top of the pencils.
+- PDF page 1733: Home your laser if needed. / What if my laser can't home? / It's not ideal, but if your laser doesn't have homing switches, you can move the laser to its
+- PDF page 1734: Success! / You've got custom engraved pencils! / Finishing tip
+- PDF page 1735: Using Variable Text / With LightBurn's Variable T ext feature, you can type out a list in a separate 0†le and automatically / insert the contents into your LightBurn project. That's not all Variable T ext can do, but it'
+- PDF page 1736: This is going to be pretty similar to making the Grid Array in Step 4: Add Your Design, but with just a / few extra steps. / 1. Prepare the List
+- PDF page 1737: 2. Adjust the Text Settings / Now that you've got a list, let's prepare the text in LightBurn. / With your text selected, 0†nd the dropdown in the T ext Options T oolbar for the text mode and
+- PDF page 1738: 4. Variable Text Formatting / Variable Text uses special formatting so LightBurn knows what text you want inserted into your / design. The formatting for the Merge/CSV mode is pretty simple.
+- PDF page 1739: Turn on Distance from Center to Center as the distance type / Enable Reverse Direction if needed / Make sure Auto-Increment Variable Text is enabled and set to 1.
+- PDF page 1740: Laser Etched Clock / Clocks and the ability to track time are among the most important inventions in the history of / mankind. Not only do they help us keep on schedule, for nearly 400 years they have also been
+- PDF page 1741: Materials / A chosen material to engrave a clock face onto. / We aren't going to cut this clock out on our laser, instead we are going to 0†nd a good item to
+- PDF page 1742: Create another circle. / Set its Width and Height to 2mm or .08". This small circle will make it easy for you to align the / point of your drill bit later.
+- PDF page 1743: 2. Set Up the First Clock Number / Now we'üll position and size the 0†rst clock number for our clock face, while using Variable T ext / formatting that will allow us to quickly create the rest of the numbers.
+- PDF page 1744: 3. Array the Variable Text Around the Clock Face / Using the Circular Array tool, we'll create the rest of the numbers for the clock face. / Select the text and then either of the circles.
+- PDF page 1745: 4. Test and Adjust the Variable Text / T o 0†nish o0– the clock face design, we need to make one small tweak to the Variable T ext. / In the Variable Text window, click Test. You should see the numbers 0-11, starting fro
+- PDF page 1746: 5. Assign Layer Settings / Before running the job, we need to apply appropriate settings to our Layers. / Set the Fill layer to a speed, power, and line interval that produces a good etch on your material.
+- PDF page 1747: 6. Position the Job / Next, we'll position our material, and select an appropriate Start From mode in LightBurn. / Jog the laser head to around the middle of your machine using the arrows in the Move window.
+- PDF page 1748: 7. Drilling / Now that we've engraved our material, we still need a hole for the clock module to come through. / Grab a hand drill and a drill bit that is the same size as the post of your clock module. A brad-
+- PDF page 1749: 8. Mount the Clock Module / T o 0†nish the project, we just need to mount the clock module. / Place the clock module's post through the hole and attach any nuts that came with it to keep it
+- PDF page 1750: After you've made your 0†rst clock, consider the ways you can modify the process and make another. / You could embellish the face by etching an Image or pattern onto it, or cut out custom-designed / hands for your clock
+- PDF page 1751: Purrfect Present: Pet Puzzle Postcards / Birthdays, holidays, illnesses, and engagements - no matter the occasion, people love seeing their / pets! And most of us don't mind a little puzzle either...
+- PDF page 1752: Materials / Your chosen material. Roughly 1 - 2mm ( )Ó (ï - ¼ in) thick + corresponding cut and engrave / settings: laser plywood is nice!
+- PDF page 1753: Go To The Puzzle Generator Website / 2. Import The Jigsaw Into LightBurn / Open LightBurn and click File ): Import (or Ctrl +I  / Cmd +I  on your keyboard).
+- PDF page 1754: Learn Purrfect Present: Pet Puzzle Postcards / LightBurn User Guide 1754
+- PDF page 1755: 3. Create A Border Using O0›set / Click the black outline around the puzzle to select it. / Click the O0–set T ool from the toolbar on the left.
+- PDF page 1756: 4. Add Fancy-Shaped Pieces / You can create new shapes using the Draw Lines tool, or 0†nd an existing vector online from / somewhere like The Noun Project  and import it. You also might want to get LightBurn to trace a
+- PDF page 1757: 5. Add The Pet Photo / Import the image using File ): Import (or Ctrl +I  / Cmd +I  on your keyboard)., navigate to / your pet photo 0†le, and click Open.
+- PDF page 1758: Set your cut settings appropriately for your material for each layer. If you haven't found settings / for your material, you can use the Material T est Generator. / Move your job into cut position as per your normal rout
+- PDF page 1759: Or you might like to use a printed color photo, in which case, our Print and Cut tool will come in / handy when you go to align your puzzle to the image in real life. / You could add a name, date or title to the puzzle,
+- PDF page 1760: EDU / Welcome to LightBurn's educational resources. This section is still growing, so check back soon. / Why Use LightBurn
+- PDF page 1761: System Locked Floating / Use CaseIdeal when you don't have a reason to / install LightBurn on extra computers, or
+- PDF page 1762: If you choose to use the Web Integration for Cuttle, an internet connection is used to connect / to Cuttle. LightBurn does not receive or send any additional information through the web / integration.
+- PDF page 1763: Does LightBurn back up the software con0ﬁguration? / Yes, LightBurn's preferences are automatically backed up regularly. All backups are saved to the / local computer. Read more in our documentation.
+- PDF page 1764: We are unable to accept Net30 or other similar payment terms. Your license key will be provided / after we receive payment. / T o pay by purchase order:
+- PDF page 1765: 5Q What's New / + Watch the video on YouT ube: https://www.youtube.com/watch?v=QxftdP83dww / LightBurn 2.2 is out now! We've got a lot to say about all the new features and improved hardware
+- PDF page 1766: Center Line Trace / We've added a new option to the Trace Image tool '÷ Center Line Trace. Unlike a standard trace, / this option produces lines running along the medial axis of shapes identi0†ed in your image. It's a
+- PDF page 1767: Camera Print and Cut (Labs) / Camera Print and Cut uses a head-mounted camera to identify registration marks on your / material, then aligns your output to cut around pre-printed graphics.
+- PDF page 1768: Multi Page Projects / We see you out there with your graphics all spread around the margins of your Workspace. Please / stop doing that, it makes us nervous. We've seen the devastation when a 0†le like that gets lost or
+- PDF page 1769: 3D Model Import / We've added a new way to source depth maps for your 3D engravings '÷ you can now import 3D / models in .stl, .3mf, .amf, .obj, .o0–, and .ply formats.
+- PDF page 1770: REST API (Labs) / We've added a REST API to LightBurn, providing a way to communicate between LightBurn and other / applications. The API is intended to allow users and developers to create integrations and improve
+- PDF page 1771: User Tools / You can now add custom entries to the Web Tools Menu. Click Manage User Tools then Add, and / enter a Name and URL. You can also specify a Category to keep things organized.
+- PDF page 1772: Learn More / ACCELaser Support / The 0†rst LightBurn-supported 0‡ying galvo lasers are here: the ACCELaser HD1 series.
+- PDF page 1773: Here's where we're at: in 2.2, LightBurn has the ability to create and export G-code compatible with / the R1. You'll need to use a special device con0†guration 0†le provided by Bambu to do so. / In 2.3 (coming in the no
+- PDF page 1774: As with previous integrations, My Laser T ools o0–ers both free and paid tiers. As a reminder, this isn't / a 0†nancial arrangement for us, and we don't take a cut of any subscription payments. / Our goal with all integr
+- PDF page 1775: Please limit usage to bug reports only. If you have a feature request, click Submit Feature / Request a little higher up in the same menu. / Other Notable Additions
+- PDF page 1776: Performance Improvements / Camera calibration preview image processing runs on the render thread / Bug Fixes
+- PDF page 1777: 2.2.00 / New Features / Added True Nest
+- PDF page 1778: External Axis Setup on EzCad3 lists every con0†gured axis with a tiling or 0†xed position role, / and refuses two rows that drive the same motor. / EzCad3 split marking starts tiling from the worktable origin set up in E
+- PDF page 1779: Equations in number entry 0†elds were parsed wrongly when using a comma vs a period. / The dogbone tool could fail in some cases; it now uses double-precision math. / T ext could change position after copy and paste beca
+- PDF page 1780: Preview could crash after importing or opening a MillMage 0†le. / EzCad3 0†ber marking was slow when Always Open MO was disabled. Every jump closed and / reopened the master oscillator and waited the Open MO Delay, which
+- PDF page 1781: The Galvo Move window appeared on gantry, JCZ and BSL devices, and once shown was / remembered for that device. Each Move window now decides from the device pro0†le whether / it applies, the galvo one defaults to hidden
+- PDF page 1782: SVG export wrote varying line weights and incorrect line attributes. / UI issues in connection request dialogs. / Under certain conditions the calculation of required resolution for current font and icon size
+- PDF page 1783: Ruida UDP 0†le retransmit support. / Better multi-mesh support for 3D import and depth map conversion. / New Device Wizard and Device Settings include Z axis height setup for galvo controllers.
+- PDF page 1784: Cameras and Registration docks merged into one. / Accelaser camera presets. / Focus T est and Interval T est are no longer shown for Accelaser devices.

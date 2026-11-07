@@ -1,0 +1,9 @@
+[mcp_servers.rea]
+command = 'C:\Users\thant\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe'
+args = ['D:\Development\REA\rea\scripts\rea.mjs', 'mcp']
+startup_timeout_sec = 60
+tool_timeout_sec = 180
+
+[mcp_servers.rea.env]
+GHIDRA_INSTALL_DIR = 'D:\AI\ghidra_12.1.4_PUBLIC'
+JAVA_HOME = 'C:\Program Files\Eclipse Adoptium\jdk-25.0.5.8-hotspot'
