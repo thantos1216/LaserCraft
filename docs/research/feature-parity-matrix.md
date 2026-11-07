@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.3
+# Feature parity matrix - working baseline 0.4
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -28,12 +28,12 @@
 | Native editable project | R | Partial v1, tested | Assets, recovery, migrations, previews |
 | SVG | D p63-67 | Export + basic rect/ellipse/circle import tested | Paths, transforms, styling, broad unit coverage |
 | DXF / PDF / AI / EPS | R | Planned | Codec/license review and malformed input tests |
-| PNG / JPEG / BMP / TIFF / WebP / GIF | R | Partial: PNG/JPEG/BMP embedding, rendering, transforms and dedicated layers | Raster paths, TIFF/WebP/GIF and orientation coverage |
+| PNG / JPEG / BMP / TIFF / WebP / GIF | R | Partial: PNG/JPEG/BMP embedding, rendering, transforms and dedicated layers | High-resolution optimization, TIFF/WebP/GIF and orientation coverage |
 | Vector-to-bitmap | D p929 | Planned | Outlines/fills rendering correctness |
-| Nondestructive raster adjustments | R | Planned | Preserve original, deterministic pipeline |
-| Threshold raster engraving | D p1001 | Planned | Binary output and intensity fixtures |
-| Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Planned | Algorithm fixtures + quality benchmarks |
-| DPI / scan interval / overscan | R | Planned | Unit conversion and bounded toolpaths |
+| Nondestructive raster adjustments | R | Partial: brightness/contrast/gamma/invert with original/processed view | Curves, sharpening, masks, calibrated materials, higher precision |
+| Threshold raster engraving | D p1001 | Implemented for simulator paths, tested | Physical output qualification |
+| Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
+| DPI / scan interval / overscan | R | Partial: interval/effective DPI, bidirectional scan and bounded off-power overscan | Scan angles, device acceleration and calibration |
 | Outline / centerline tracing | D p1705; R expanded tracing | Planned | Editable geometry with controlled error |
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |

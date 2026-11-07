@@ -62,7 +62,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.3", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.4", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -86,8 +86,8 @@ public sealed partial class MainWindow
         palette.Margin = new Thickness(42, 5, 0, 2); Grid.SetRow(palette, 4); root.Children.Add(palette); status.Margin = new Thickness(5, 2); Grid.SetRow(status, 5); root.Children.Add(status); Content = root;
         layer.SelectionChanged += (_, _) => { if (!updatingInspector && sessions.Count > 0 && layer.SelectedIndex >= 0) { Current.Canvas.ActiveLayer = layer.SelectedIndex; RefreshLayer(); RefreshWorkspace(); } };
         layerRows.SelectionChanged += (_, _) => { if (!updatingInspector && layerRows.SelectedItem is ListBoxItem row && row.Tag is int i) { Current.Canvas.ActiveLayer = i; Refresh(); } };
-        simulationTimer.Tick += (_, _) => { if (simulation is null) return; simulation.Advance(.5); var c = Current.Canvas; c.PreviewSeconds = simulation.Elapsed; c.InvalidateVisual(); UpdateSimulation(); if (simulation.State != SimulationState.Running) simulationTimer.Stop(); };
-        Closed += (_, _) => simulationTimer.Stop();
+        simulationTimer.Tick += (_, _) => { if (simulation is null) return; var now = playbackClock.Elapsed.TotalSeconds; simulation.Advance((now - lastPlaybackTick) * 10); lastPlaybackTick = now; var c = Current.Canvas; c.PreviewSeconds = simulation.Elapsed; c.InvalidateVisual(); UpdateSimulation(); if (simulation.State != SimulationState.Running) simulationTimer.Stop(); };
+        Closed += (_, _) => { workspaceClosed = true; previewCancellation?.Cancel(); simulationTimer.Stop(); };
         cutSelected.IsCheckedChanged += (_, _) => { if (sessions.Count > 0) RefreshWorkspace(); };
         void AddTool(string name, string geometry) { var b = IconButton(name, geometry, () => SetTool(name)); toolButtons[name] = b; drawingTools.Children.Add(b); }
     }
@@ -98,7 +98,7 @@ public sealed partial class MainWindow
         var names = new[] { "#", "Layer", "Mode", "Spd/Pwr", "Out", "Show", "Air" }; for (int i = 0; i < names.Length; i++) { var t = new TextBlock { Text = names[i], FontSize = 11 }; Grid.SetColumn(t, i); headers.Children.Add(t); }
         panel.Children.Add(headers);
         Grid.SetRow(layerRows, 1); panel.Children.Add(layerRows);
-        var settings = new StackPanel { Spacing = 3, Margin = new Thickness(3, 4) }; var layerActions = new WrapPanel(); layerActions.Children.Add(Button("+ Layer", () => _ = NewLayer())); layerActions.Children.Add(Button("↑", () => MoveLayer(-1))); layerActions.Children.Add(Button("↓", () => MoveLayer(1))); layerActions.Children.Add(Button("Delete empty", RemoveLayer)); layerActions.Children.Add(Button("Assign selected", () => AssignLayer(Current.Canvas.ActiveLayer))); settings.Children.Add(layerActions); settings.Children.Add(layer); var identity = new WrapPanel(); Inline(identity, "Layer name", layerName, 220); Inline(identity, "Color #RRGGBB", layerColor, 110); settings.Children.Add(identity);
+        var settings = new StackPanel { Spacing = 3, Margin = new Thickness(3, 4) }; var layerActions = new WrapPanel(); layerActions.Children.Add(Button("+ Layer", () => _ = NewLayer())); layerActions.Children.Add(Button("↑", () => MoveLayer(-1))); layerActions.Children.Add(Button("↓", () => MoveLayer(1))); layerActions.Children.Add(Button("Delete empty", RemoveLayer)); layerActions.Children.Add(Button("Assign selected", () => AssignLayer(Current.Canvas.ActiveLayer))); layerActions.Children.Add(Button("Image settings…", () => _ = EditImageSettings())); settings.Children.Add(layerActions); settings.Children.Add(layer); var identity = new WrapPanel(); Inline(identity, "Layer name", layerName, 220); Inline(identity, "Color #RRGGBB", layerColor, 110); settings.Children.Add(identity);
         var values = new WrapPanel(); Inline(values, "Speed mm/min", speed, 100); Inline(values, "Power %", power, 75); Inline(values, "Passes", passes, 65); Inline(values, "Interval mm", interval, 80); values.Children.Add(mode); settings.Children.Add(values);
         var switches = new WrapPanel(); switches.Children.Add(output); switches.Children.Add(visible); switches.Children.Add(air); switches.Children.Add(Button("Apply cut settings", ApplyLayer)); settings.Children.Add(switches);
         Grid.SetRow(settings, 2); panel.Children.Add(settings); return panel;
@@ -142,25 +142,54 @@ public sealed partial class MainWindow
         c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = s.X + (d.Width - b.Width) / 2 - b.X, Y = s.Y + (d.Height - b.Height) / 2 - b.Y }));
     }
     private void ShowHelp() => lowerPanels.SelectedIndex = 1;
-    private void ShowFeatureStatus() { ShowHelp(); status.Text = "Implemented: shapes, layers, SVG subset, editing, line/fill simulation. Disabled commands are planned; hardware execution is unavailable."; }
-    private void Preview()
+    private void ShowFeatureStatus() { ShowHelp(); status.Text = "Implemented: shapes, layers, SVG subset, image adjustments/dithering, raster/vector simulation. Disabled commands are planned; hardware execution is unavailable."; }
+    private CancellationTokenSource? previewCancellation;
+    private Session? previewOwner;
+    private string previewDocument = "", previewScope = "";
+    private readonly SemaphoreSlim previewGate = new(1);
+    private bool workspaceClosed;
+    private readonly System.Diagnostics.Stopwatch playbackClock = new();
+    private double lastPlaybackTick;
+    private void Preview() => _ = GeneratePreview(false);
+    private async Task GeneratePreview(bool startPlayback)
     {
-        try { StopSimulation(); simulation = null; var c = Current.Canvas; c.Plan = null; var plan = ToolpathPlanner.Build(c.History.Document, cutSelected.IsChecked == true ? c.Selection : null); simulation = new(plan); simulationOwner = Current; simulationDocument = Snapshot(Current); simulationScope = CurrentSimulationScope; c.Plan = plan; c.ShowPreview = true; c.PreviewSeconds = double.PositiveInfinity; c.InvalidateVisual(); estimate.Text = $"{plan.Segments.Count} segments · {plan.CutLength:0.0} mm cut · ideal {plan.Seconds:0.0} s"; Log("Preview generated."); }
-        catch (InvalidDataException ex) { status.Text = ex.Message; }
+        StopSimulation(); simulation = null; var session = Current; var c = session.Canvas; c.Plan = null;
+        var document = c.History.Document; var selected = cutSelected.IsChecked == true ? c.Selection.ToHashSet() : null;
+        var fingerprint = Snapshot(session); var scope = CurrentSimulationScope;
+        using var cancel = new CancellationTokenSource(); previewCancellation = cancel; previewOwner = session; previewDocument = fingerprint; previewScope = scope;
+        jobStatus.Text = "Preparing vector/raster preview…";
+        try
+        {
+            await previewGate.WaitAsync(cancel.Token);
+            ToolpathPlan plan;
+            try { plan = await Task.Run(() => ToolpathPlanner.Build(document, selected, RasterImages.EngravingGrid, cancel.Token), cancel.Token); }
+            finally { previewGate.Release(); }
+            if (workspaceClosed || cancel.IsCancellationRequested || Current != session || Snapshot(session) != fingerprint || CurrentSimulationScope != scope) return;
+            simulation = new(plan); simulationOwner = session; simulationDocument = fingerprint; simulationScope = scope;
+            c.Plan = plan; c.ShowPreview = true; c.PreviewSeconds = double.PositiveInfinity; c.InvalidateVisual();
+            estimate.Text = $"{plan.Segments.Count} segments · {plan.CutLength:0.0} mm cut · ideal {plan.Seconds:0.0} s";
+            if (plan.Segments.Count > 25000) estimate.Text += " · dense drawing sampled";
+            Log("Preview generated."); UpdateSimulation();
+            if (startPlayback) { simulation.Start(); c.PreviewSeconds = 0; playbackClock.Restart(); lastPlaybackTick = 0; simulationTimer.Start(); UpdateSimulation(); }
+        }
+        catch (OperationCanceledException) { if (!workspaceClosed && previewCancellation == cancel) jobStatus.Text = "Preview cancelled"; }
+        catch (Exception ex) when (ex is InvalidDataException or ArgumentException) { if (!workspaceClosed && previewCancellation == cancel) { jobStatus.Text = "Preview failed"; status.Text = ex.Message; } }
+        finally { if (previewCancellation == cancel) previewCancellation = null; }
     }
     private void StartSimulation()
     {
-        if (simulation?.State != SimulationState.Paused) Preview(); if (simulation is null) return;
-        simulation.Start(); Current.Canvas.PreviewSeconds = simulation.Elapsed; simulationTimer.Start(); UpdateSimulation(); Log("Simulation started.");
+        if (simulation?.State == SimulationState.Paused) { simulation.Start(); playbackClock.Restart(); lastPlaybackTick = 0; simulationTimer.Start(); UpdateSimulation(); }
+        else _ = GeneratePreview(true);
     }
-    private void PauseSimulation() { simulation?.Pause(); simulationTimer.Stop(); UpdateSimulation(); }
-    private void StopSimulation() { simulationTimer.Stop(); simulation?.Stop(); if (sessions.Count > 0) { Current.Canvas.ShowPreview = false; Current.Canvas.InvalidateVisual(); } UpdateSimulation(); }
+    private void PauseSimulation() { simulation?.Pause(); playbackClock.Stop(); simulationTimer.Stop(); UpdateSimulation(); }
+    private void StopSimulation() { previewCancellation?.Cancel(); playbackClock.Reset(); lastPlaybackTick = 0; simulationTimer.Stop(); simulation?.Stop(); if (sessions.Count > 0) { Current.Canvas.ShowPreview = false; Current.Canvas.InvalidateVisual(); } UpdateSimulation(); }
     private void UpdateSimulation() { jobStatus.Text = "SIMULATOR · " + (simulation?.State.ToString() ?? "Ready") + " · no machine execution"; jobProgress.Value = simulation is null || simulation.Plan.Seconds == 0 ? 0 : simulation.Elapsed / simulation.Plan.Seconds * 100; }
-    private void FramePreview() { Preview(); if (Current.Canvas.Plan is { } p && p.Segments.Count > 0) { Current.Canvas.Fit(); status.Text = "Output bounds checked against the bed. Frame preview only; no machine motion."; } }
+    private async void FramePreview() { await GeneratePreview(false); if (Current.Canvas.Plan is { } p && p.Segments.Count > 0) { Current.Canvas.Fit(); status.Text = "Output bounds checked against the bed. Frame preview only; no machine motion."; } }
     private void Log(string text) { console.Text += $"\n{DateTime.Now:HH:mm:ss}  {text}"; }
     private void RefreshWorkspace()
     {
         if (sessions.Count == 0) return; var c = Current.Canvas; var d = c.History.Document;
+        if (previewCancellation is not null && (previewOwner != Current || previewDocument != Snapshot(Current) || previewScope != CurrentSimulationScope)) previewCancellation.Cancel();
         if (simulation is not null && (simulationOwner != Current || simulationDocument != Snapshot(Current) || simulationScope != CurrentSimulationScope)) { StopSimulation(); if (simulationOwner is not null) { simulationOwner.Canvas.ShowPreview = false; simulationOwner.Canvas.Plan = null; } simulation = null; estimate.Text = "Design or selection changed · regenerate preview"; }
         Title = $"{d.Name}{(IsDirty(Current) ? " *" : "")} · LaserCraft"; selection.Text = c.Selection.Count == 0 ? "No selection" : $"{c.Selection.Count} selected";
         updatingInspector = true; snapControl.IsChecked = c.Snap; layerRows.Items.Clear(); palette.Children.Clear();

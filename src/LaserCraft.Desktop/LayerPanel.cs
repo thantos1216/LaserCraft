@@ -41,6 +41,6 @@ public sealed partial class MainWindow
     {
         var c = session.Canvas; var document = LayerEditing.Add(c.History.Document, name, LayerKind.Image); var index = document.Layers.Count - 1;
         var w = Math.Min(document.Width * .75, asset.PixelWidth * 25.4 / 96); var h = w * asset.PixelHeight / asset.PixelWidth; if (h > document.Height * .75) { w *= document.Height * .75 / h; h = document.Height * .75; }
-        var shape = new DesignShape(Guid.NewGuid(), ShapeKind.Image, (document.Width - w) / 2, (document.Height - h) / 2, w, h, index, asset); c.ActiveLayer = index; c.Selected = shape.Id; c.Apply(document with { Shapes = [.. document.Shapes, shape] }); status.Text = "Original image embedded on its own image layer. Raster engraving paths are pending.";
+        var shape = new DesignShape(Guid.NewGuid(), ShapeKind.Image, (document.Width - w) / 2, (document.Height - h) / 2, w, h, index, asset); c.ActiveLayer = index; c.Selected = shape.Id; c.Apply(document with { Shapes = [.. document.Shapes, shape] }); status.Text = "Original image embedded on its own image layer. Use Image settings to prepare the engraving and Preview to plan it.";
     }
 }

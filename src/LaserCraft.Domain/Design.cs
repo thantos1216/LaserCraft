@@ -16,7 +16,7 @@ public sealed record RasterAsset(Guid Id, string MimeType, string DataBase64, in
 public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0, RasterAsset? Image = null, bool FlipX = false, bool FlipY = false);
 public enum CutMode { Line, Fill, Image }
 public enum LayerKind { Vector, Image }
-public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector);
+public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector, RasterSettings? Raster = null);
 public sealed record DesignDocument(int Version, string Name, double Width, double Height, List<DesignShape> Shapes, List<CutLayer> Layers)
 {
     public static DesignDocument Empty(string name = "Untitled") => new(1, name, 400, 400, [], [new("Layer 1", "#4169E1")]);
@@ -40,6 +40,7 @@ public sealed record DesignDocument(int Version, string Name, double Width, doub
         foreach (var l in Layers)
             if (string.IsNullOrWhiteSpace(l.Name) || !System.Text.RegularExpressions.Regex.IsMatch(l.Color ?? "", "^#[0-9a-fA-F]{6}$") || !FinitePositive(l.Speed) || l.Speed > 100000 || !double.IsFinite(l.Power) || l.Power < 0 || l.Power > 100 || !Enum.IsDefined(l.Mode) || l.Passes < 1 || l.Passes > 100 || !FinitePositive(l.Interval) || l.Interval < .01 || l.Interval > 100) throw new InvalidDataException("Invalid cut settings.");
         foreach (var l in Layers) if (!Enum.IsDefined(l.Kind) || (l.Kind == LayerKind.Image) != (l.Mode == CutMode.Image)) throw new InvalidDataException("Image layers require Image mode; vector layers require Line or Fill mode.");
+        foreach (var l in Layers) l.Raster?.Validate();
     }
 
     private static bool FinitePositive(double v) => double.IsFinite(v) && v > 0;

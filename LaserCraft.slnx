@@ -5,6 +5,7 @@
     <Project Path="src/LaserCraft.Domain/LaserCraft.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/LaserCraft.IntegrationTests/LaserCraft.IntegrationTests.csproj" />
     <Project Path="tests/LaserCraft.UnitTests/LaserCraft.UnitTests.csproj" />
   </Folder>
 </Solution>

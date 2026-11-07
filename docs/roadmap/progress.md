@@ -54,3 +54,16 @@ Initial build and 44 tests pass. UI verified: image renders with original pixels
 Source is MIT-licensed. No proprietary code/assets were copied. Next: raster toolpaths and image adjustments, richer SVG paths, controller queue simulation and G-code generation, then separately authorized physical validation. Full LightBurn parity remains unfinished.
 
 Final 0.3 validation: build 0 warnings / 0 errors; 47 tests passed, 0 failed. Release output is artifacts/windows-x64-v0.3. Prior versioned builds are preserved.
+
+
+## Milestone 0.4 - raster preparation and mixed job planning
+
+Added nondestructive per-image-layer brightness, contrast, gamma, inversion, threshold, Floyd-Steinberg, 4x4 Bayer and grayscale settings. Image preparation shows original and processed samples side by side and reports effective DPI. Settings survive native saves and history; source bytes remain unchanged. Fully transparent pixels remain off in every mode.
+
+Raster scanlines now join vector layers in the existing ordered job plan. Equal-power cells form runs; zero-power spans and overscan are laser-off travel at scan speed; inter-row repositioning uses the ideal travel assumption. Supports grayscale power mapping, bidirectional/unidirectional rows, mirror placement, passes and cut-segment air requests. Overscan/geometry bounds and sample/work/segment budgets are checked explicitly.
+
+Preview planning runs on a background worker with cancellation, serialized worker admission and snapshot/scope validation before results are installed. Stop, edits and document/scope changes cancel or discard stale work. Playback uses elapsed wall time to target 10x ideal speed. Dense path drawings sample at most about 25000 segments per frame while the complete plan controls timing. High-resolution dense-photo planning remains limited by the 200000-segment/4-million-sample/8-million-job-cell budgets; tiled/native planning is future work.
+
+The original PNG sample decodes and generates paths in a headless native integration test. UI checked: original/processed Floyd-Steinberg view and a combined raster/vector plan of 13675 segments, 11509.0 mm cut length and 774.3 s ideal duration for samples/raster-engraving.lcraft. No physical output was performed. Controller connections remain read-only.
+
+Final 0.4 checks: build zero warnings/errors; 65 tests passed (63 domain/device tests plus 2 native decoder integration tests). Publish output: artifacts/windows-x64-v0.4. No controller execution or physical air operation was performed.

@@ -24,3 +24,12 @@ LaserCraft.Devices references Domain and owns profile persistence and read-only 
 LayerKind separates vector and image job steps. One image per image layer is enforced. Layer list order is execution order; move operations remap every object reference without changing identities or settings. New projects create one vector layer; older projects keep existing lists. Additional layer settings remain per-layer records and participate in history/native saves.
 
 RasterAsset embeds immutable original PNG/JPEG/BMP encoded data and metadata on an Image object. Desktop validates codec metadata and complete decode, then caches bounded-resolution previews by asset ID. Shared asset IDs must have identical data. Mirror flags preserve source bytes. Native saves enforce output size before replacement. JSON duplicates shared asset data on disk, so total encoded-data limits include repeated objects; asset-table deduplication/tiled storage remain future work. Raster path generation explicitly fails for enabled image layers.
+
+
+## Addendum: 0.4 raster boundary
+
+Domain owns validated RasterSettings, RGBA-to-darkness processing, immutable raster grids and spatial scanline/power mapping. Desktop owns Skia decoding/resampling and provides an explicit raster-sampling delegate to the planner. The domain does not depend on Skia/Avalonia. Processing is an independent deterministic C# reference implementation; native optimization requires representative benchmarks before replacing it.
+
+Samples use sRGB-weighted luminance, tone operations, white alpha compositing and optional binary/grayscale quantization. Image sample counts are ceil(physical size / interval), then uniformly cover the object. Mirroring belongs to geometric planning, not source mutation. Toolpath segments explicitly store power, air request, travel state, speed and endpoints. Whitespace/overscan moves retain scan speed; inter-path travel has a distinct speed. Controller execution is not connected to this path model yet.
+
+Preview workers are serialized and cancelable, with immutable document records/list snapshots and selected-ID copies. Result installation compares owner/document/scope against the current UI. Closing cancels outstanding work. Native decode/resize/PNG preview encoding are bounded but not interruptible internally; row processing and planning check cancellation regularly.

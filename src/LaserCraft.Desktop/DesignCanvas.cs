@@ -54,12 +54,13 @@ public sealed class DesignCanvas : Control
             if (ShowPreview && Plan is not null)
             {
                 double elapsed = 0;
+                var stride = Math.Max(1, (int)Math.Ceiling(Plan.Segments.Count / 25000.0)); var segmentIndex = 0;
                 foreach (var segment in Plan.Segments)
                 {
                     if (elapsed >= PreviewSeconds) break;
                     var t = segment.Seconds == 0 ? 1 : Math.Clamp((PreviewSeconds - elapsed) / segment.Seconds, 0, 1);
                     var end = new PointMm(segment.From.X + (segment.To.X - segment.From.X) * t, segment.From.Y + (segment.To.Y - segment.From.Y) * t);
-                    ctx.DrawLine(new Pen(segment.Travel ? Brush("#64748B") : Brush("#F9BB4A"), segment.Travel ? .8 : 1.4, segment.Travel ? DashStyle.Dash : null), new(o.X + segment.From.X * scale, o.Y + segment.From.Y * scale), new(o.X + end.X * scale, o.Y + end.Y * scale));
+                    if (segmentIndex++ % stride == 0) ctx.DrawLine(new Pen(segment.Travel ? Brush("#64748B") : new SolidColorBrush(Color.FromArgb((byte)(40 + 215 * Math.Clamp(segment.Power / 100, 0, 1)), 249, 187, 74)), segment.Travel ? .8 : 1.4, segment.Travel ? DashStyle.Dash : null), new(o.X + segment.From.X * scale, o.Y + segment.From.Y * scale), new(o.X + end.X * scale, o.Y + end.Y * scale));
                     elapsed += segment.Seconds;
                 }
             }

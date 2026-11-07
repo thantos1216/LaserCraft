@@ -1,31 +1,47 @@
 namespace LaserCraft.Domain;
 
 public readonly record struct PointMm(double X, double Y);
-public sealed record ToolpathSegment(PointMm From, PointMm To, int Layer, bool Travel, double Speed, bool AirAssist = false)
+public sealed record ToolpathSegment(PointMm From, PointMm To, int Layer, bool Travel, double Speed, bool AirAssist = false, double Power = 100)
 {
     public double Length => Math.Sqrt(Math.Pow(To.X - From.X, 2) + Math.Pow(To.Y - From.Y, 2));
     public double Seconds => Length / Speed * 60;
 }
-public sealed record ToolpathPlan(IReadOnlyList<ToolpathSegment> Segments)
+public sealed class ToolpathPlan(IReadOnlyList<ToolpathSegment> segments)
 {
-    public double Seconds => Segments.Sum(s => s.Seconds);
-    public double CutLength => Segments.Where(s => !s.Travel).Sum(s => s.Length);
+    public IReadOnlyList<ToolpathSegment> Segments { get; } = Array.AsReadOnly(segments.ToArray());
+    public double Seconds { get; } = segments.Sum(s => s.Seconds);
+    public double CutLength { get; } = segments.Where(s => !s.Travel).Sum(s => s.Length);
 }
 public static class ToolpathPlanner
 {
-    public static ToolpathPlan Build(DesignDocument d, IReadOnlySet<Guid>? selected = null)
+    public static ToolpathPlan Build(DesignDocument d, IReadOnlySet<Guid>? selected = null, Func<DesignShape, CutLayer, CancellationToken, RasterGrid>? rasterDecoder = null, CancellationToken cancellationToken = default)
     {
-        d.Validate(); var segments = new List<ToolpathSegment>(); var position = new PointMm(0, 0); long fillWork = 0;
+        d.Validate(); var segments = new List<ToolpathSegment>(); var position = new PointMm(0, 0); long fillWork = 0, rasterWork = 0;
         for (int layer = 0; layer < d.Layers.Count; layer++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var cut = d.Layers[layer]; if (!cut.Output) continue;
             var shapes = d.Shapes.Where(s => s.Layer == layer && (selected is null || selected.Contains(s.Id))).ToArray();
             foreach (var s in shapes) if (s.X < 0 || s.Y < 0 || s.X + s.Width > d.Width || s.Y + s.Height > d.Height) throw new InvalidDataException("Output geometry is outside the design bed.");
             if (shapes.Length == 0) continue;
-            if (shapes.Any(s => s.Kind == ShapeKind.Image)) throw new InvalidDataException("Raster engraving paths are not implemented yet. Disable image layer Output to preview vectors.");
+            RasterGrid? raster = null;
+            if (cut.Kind == LayerKind.Image)
+            {
+                if (rasterDecoder is null) throw new InvalidDataException("Raster image decoding is required for image toolpaths.");
+                var overscan = (cut.Raster ?? new()).Overscan;
+                if (shapes[0].X - overscan < 0 || shapes[0].X + shapes[0].Width + overscan > d.Width) throw new InvalidDataException("Raster overscan extends beyond the design bed.");
+                var columns = (int)Math.Ceiling(shapes[0].Width / cut.Interval); var rows = (int)Math.Ceiling(shapes[0].Height / cut.Interval);
+                if (columns > 16000 || rows > 16000 || (long)columns * rows > 4_000_000) throw new InvalidDataException("Raster exceeds axis/sample limits. Increase line interval.");
+                rasterWork += (long)columns * rows * cut.Passes;
+                if (rasterWork > 8_000_000) throw new InvalidDataException("Raster job exceeds the 8-million-cell planning budget. Increase line interval or reduce passes.");
+                raster = rasterDecoder(shapes[0], cut, cancellationToken); raster.Validate();
+                if (raster.Width != columns || raster.Height != rows) throw new InvalidDataException("Raster decoder returned a grid that does not match the image interval.");
+            }
             for (int pass = 0; pass < cut.Passes; pass++)
             {
-                if (cut.Mode == CutMode.Line)
+                cancellationToken.ThrowIfCancellationRequested();
+                if (raster is not null) AppendRaster(shapes[0], raster, cut.Raster ?? new());
+                else if (cut.Mode == CutMode.Line)
                     foreach (var s in shapes)
                     {
                         var points = s.Kind == ShapeKind.Rectangle
@@ -41,6 +57,7 @@ public static class ToolpathPlanner
                     if (fillWork > 3_000_000) throw new InvalidDataException("Fill preview is too complex for the current interactive planner. Reduce shapes, passes or scan density.");
                     for (int row = 0; row < rows; row++)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         var y = b.Y + (row + .5) * cut.Interval; var crossings = new List<double>();
                         foreach (var s in shapes)
                         {
@@ -56,9 +73,35 @@ public static class ToolpathPlanner
                 }
                 void Add(PointMm from, PointMm to)
                 {
-                    if (segments.Count + (position != from ? 2 : 1) > 200000) throw new InvalidDataException("Preview exceeds the 200000-segment limit.");
-                    if (position != from) segments.Add(new(position, from, layer, true, 6000));
-                    segments.Add(new(from, to, layer, false, cut.Speed, cut.AirAssist)); position = to;
+                    Emit(from, true, 6000, 0); Emit(to, false, cut.Speed, cut.Power);
+                }
+                void Emit(PointMm to, bool travel, double speed, double power)
+                {
+                    if (position == to) return;
+                    if (segments.Count >= 200000) throw new InvalidDataException("Preview exceeds the 200000-segment limit. Increase image interval or simplify artwork.");
+                    segments.Add(new(position, to, layer, travel, speed, !travel && cut.AirAssist, power)); position = to;
+                }
+                void AppendRaster(DesignShape image, RasterGrid grid, RasterSettings options)
+                {
+                    var dx = image.Width / grid.Width; var dy = image.Height / grid.Height;
+                    for (int row = 0; row < grid.Height; row++)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested(); var sourceRow = image.FlipY ? grid.Height - 1 - row : row;
+                        byte Darkness(int x) => grid.Darkness[sourceRow * grid.Width + (image.FlipX ? grid.Width - 1 - x : x)];
+                        if (cut.Power == 0 || !Enumerable.Range(0, grid.Width).Any(x => Darkness(x) > 0)) continue;
+                        var reverse = options.Bidirectional && row % 2 == 1; var y = image.Y + (row + .5) * dy;
+                        Emit(new(reverse ? image.X + image.Width + options.Overscan : image.X - options.Overscan, y), true, 6000, 0);
+                        var column = reverse ? grid.Width - 1 : 0;
+                        while (column >= 0 && column < grid.Width)
+                        {
+                            var value = Darkness(column); var first = column; var step = reverse ? -1 : 1;
+                            do { column += step; } while (column >= 0 && column < grid.Width && Darkness(column) == value);
+                            if (value == 0) continue;
+                            var startX = image.X + (reverse ? first + 1 : first) * dx; var endX = image.X + (reverse ? column + 1 : column) * dx;
+                            Emit(new(startX, y), true, cut.Speed, 0); Emit(new(endX, y), false, cut.Speed, cut.Power * value / 255);
+                        }
+                        Emit(new(reverse ? image.X - options.Overscan : image.X + image.Width + options.Overscan, y), true, cut.Speed, 0);
+                    }
                 }
             }
         }
