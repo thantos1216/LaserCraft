@@ -18,6 +18,6 @@ See [Help](docs/help/Help.md), [progress](docs/roadmap/progress.md), [architectu
 
 REA integration is project-scoped in `.codex/config.toml` and `scripts/rea.ps1`. It is not distributed with the application. See [REA findings](docs/research/rea-findings.md).
 
-Version 0.3 adds embedded PNG/JPEG/BMP artwork and independently configured ordered layers, plus device profiles and GRBL read-only monitoring via simulator/serial/TCP. See Help for support limits. Original source is [MIT-licensed](LICENSE). Nothing has been published to a remote repository.
+Version 0.3 adds embedded PNG/JPEG/BMP artwork and independently configured ordered layers, plus device profiles and GRBL read-only monitoring via simulator/serial/TCP. See Help for support limits. Original source is [MIT-licensed](LICENSE). Source and history are hosted at [thantos1216/LaserCraft](https://github.com/thantos1216/LaserCraft). GitHub Actions builds and tests Windows changes on main and pull requests.
 
 Version 0.4 adds image preparation (threshold, Floyd-Steinberg, Bayer, grayscale and tone controls), ordered raster/vector scanline planning and cancellable background previews. Use samples/raster-engraving.lcraft to try it; hardware execution remains unavailable.
