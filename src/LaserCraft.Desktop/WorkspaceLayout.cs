@@ -46,7 +46,7 @@ public sealed partial class MainWindow
             ItemsSource = new[]{
             MenuGroup("File",Item("New",()=>AddDocument(DesignDocument.Empty())),AsyncItem("Open…",Open),AsyncItem("Import SVG…",ImportSvg),AsyncItem("Import image…",ImportImage),AsyncItem("Save",()=>Save(false)),AsyncItem("Save as…",()=>Save(true)),AsyncItem("Export SVG…",Export),Item("Close project",()=>_=CloseDocument()),Item("Exit",Close)),
             MenuGroup("Edit",Item("Undo",Undo),Item("Redo",Redo),Item("Copy",Copy),Item("Cut",()=>{ Copy(); Current.Canvas.DeleteSelected(); }),Item("Paste",Paste),Item("Duplicate",Duplicate),Item("Delete",()=>Current.Canvas.DeleteSelected()),Item("Select all",()=>Current.Canvas.SelectAll())),
-            MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Bezier curves"),Unavailable("Text"),Unavailable("Trace image")),
+            MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Bezier curves"),Unavailable("Text"),AsyncItem("Trace image…",TraceImage)),
             MenuGroup("Arrange",Item("Flip horizontal",()=>Mirror(true)),Item("Flip vertical",()=>Mirror(false)),MenuGroup("Align",new[]{"Left","Right","Top","Bottom","Horizontal center","Vertical center"}.Select(a=>Item(a,()=>Align(a))).ToArray()),Item("Center on bed",CenterOnBed),Unavailable("Group / Ungroup"),Unavailable("Boolean operations"),Unavailable("Arrays / Nesting")),
             MenuGroup("Laser Tools",Item("Preview",Preview),Item("Devices…",()=>_=EditDevices()),Unavailable("Material test"),Unavailable("Rotary setup"),Unavailable("Camera calibration"),Unavailable("Print and cut")),
             MenuGroup("Web Tools",Unavailable("Online integrations")),
@@ -63,7 +63,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.6", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.7", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -76,7 +76,8 @@ public sealed partial class MainWindow
         drawingTools.Children.Add(IconButton("Duplicate", "M2,2 L12,2 L12,12 L2,12 Z M6,6 L16,6 L16,16 L6,16 Z", Duplicate));
         AddTool("Lines", "M2,15 L7,3 L16,12 M1,14 L3,14 L3,16 L1,16 Z M6,2 L8,2 L8,4 L6,4 Z M15,11 L17,11 L17,13 L15,13 Z");
         AddTool("Nodes", "M2,13 L8,4 L16,10 M1,11 L4,11 L4,14 L1,14 Z M6,2 L10,2 L10,6 L6,6 Z M14,8 L17,8 L17,11 L14,11 Z");
-        foreach (var text in new[] { "Text", "Trace" }) { var b = Button(text[..1], () => { }); b.IsEnabled = false; ToolTip.SetTip(b, text + " · not implemented yet"); drawingTools.Children.Add(b); }
+        var textTool = Button("T", () => { }); textTool.IsEnabled = false; ToolTip.SetTip(textTool, "Text · not implemented yet"); drawingTools.Children.Add(textTool);
+        drawingTools.Children.Add(IconButton("Trace image", "M2,14 L5,4 L10,2 L16,6 L14,16 Z M4,14 L7,7 L11,5 L14,8", () => _ = TraceImage()));
         workspace.Children.Add(drawingTools); Grid.SetColumn(tabs, 1); workspace.Children.Add(tabs);
         var splitter = new GridSplitter { ResizeDirection = GridResizeDirection.Columns, HorizontalAlignment = HorizontalAlignment.Stretch }; Grid.SetColumn(splitter, 2); workspace.Children.Add(splitter);
         var right = new Grid { RowDefinitions = new RowDefinitions("3*,5,2*"), Margin = new Thickness(5, 0, 0, 0) };

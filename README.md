@@ -25,3 +25,5 @@ Version 0.4 adds image preparation (threshold, Floyd-Steinberg, Bayer, grayscale
 Version 0.5 adds monochrome canvas artwork, Stucki/Jarvis/Atkinson dithering, a visual layer color picker, white-bed beam playback and offline GRBL 1.1 export. No physical job execution is implemented.
 
 Version 0.6 adds straight path drawing, vertex dragging, shape-to-path conversion, open/closed compound paths and SVG M/L/H/V/Z, polygon, polyline and line import. See samples/paths-and-nodes.lcraft. Bezier curves and image tracing remain planned.
+
+Version 0.7 adds image outline tracing with threshold/inversion, speckle filtering, faded contour preview and undoable creation of a separate vector layer. Try samples/trace-outlines.lcraft; curves, smoothing and centerline tracing remain planned.

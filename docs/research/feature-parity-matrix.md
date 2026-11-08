@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.6
+# Feature parity matrix - working baseline 0.7
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -34,7 +34,7 @@
 | Threshold raster engraving | D p1001 | Implemented for simulator paths, tested | Physical output qualification |
 | Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, Stucki, Jarvis, Atkinson, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
 | DPI / scan interval / overscan | R | Partial: interval/effective DPI, bidirectional scan and bounded off-power overscan | Scan angles, device acceleration and calibration |
-| Outline / centerline tracing | D p1705; R expanded tracing | Planned | Editable geometry with controlled error |
+| Outline / centerline tracing | D p1705; R expanded tracing | Partial: threshold pixel-edge outlines, holes, component filtering, preview and editable paths | Curve fitting, smoothing, centerlines, sketch and photographic qualification |
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Planned | Serializable presets and calibration evidence |

@@ -15,4 +15,17 @@ public sealed class RasterDecoderTests
         Assert.Contains("M4 S0", code); Assert.Contains("M8", code); Assert.EndsWith("M5\nM9\n", code);
     }
     [Fact] public void InvalidEncodedImageIsRejected() => Assert.Throws<InvalidDataException>(() => RasterImages.Import([0, 1, 2, 3]));
+    [Fact]
+    public void OriginalFixtureTracesIntoEditableOutputWithoutChangingItsEmbeddedPixels()
+    {
+        var bytes = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "samples", "trace-fixture.png")); var asset = RasterImages.Import(bytes);
+        var d = LayerEditing.Add(DesignDocument.Empty(), "Trace source", LayerKind.Image); var source = new DesignShape(Guid.NewGuid(), ShapeKind.Image, 100, 120, 160, 120, 1, asset); d.Shapes.Add(source);
+        var grid = RasterImages.EngravingGrid(source, d.Layers[1] with { Interval = .625, Raster = new(RasterMode.Threshold) }); var result = ImageTracing.Trace(grid, source);
+        Assert.Equal(4, result.Path!.Path!.Contours.Length); Assert.Equal(3, result.RemovedComponents);
+        var traced = ImageTracing.Apply(d, source.Id, result); Assert.False(traced.Layers[1].Output); Assert.Equal(bytes, Convert.FromBase64String(traced.Shapes[0].Image!.DataBase64));
+        var plan = ToolpathPlanner.Build(traced); Assert.True(plan.CutLength > 0); Assert.All(plan.Segments, s => Assert.Equal(2, s.Layer)); Assert.Contains("M4 S0", GrblExport.Write(plan, DeviceProfile.Simulator()));
+        var path = Path.GetTempFileName();
+        try { ProjectFile.Save(path, traced); var loaded = ProjectFile.Load(path); Assert.Equal(4, loaded.Shapes[^1].Path!.Contours.Length); Assert.Equal(bytes, Convert.FromBase64String(loaded.Shapes[0].Image!.DataBase64)); }
+        finally { File.Delete(path); }
+    }
 }

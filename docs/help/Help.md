@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.6 - editable straight paths and node movement
+Version 0.7 - image outline tracing into editable paths
 
 ## Create layers and control order
 
@@ -42,13 +42,25 @@ Apply device bed explicitly changes the document dimensions to the selected prof
 
 Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Cut-plan segments carry the requested state; travel segments do not. The device profile records whether its controller has a configured air-assist output. GRBL export emits M8/M9 for these requests and rejects enabled air requests when the profile does not support them. The app sends no air commands to a device.
 
-## Vector editing and navigation
+## Trace an image
+
+Select an image or its image layer, then choose Tools / Trace image… or the Trace image icon on the left. The dialog shows the adjusted grayscale source with pink vector contours. Threshold determines which eight-bit tone samples are foreground; Invert changes polarity. Existing image-layer brightness, contrast and gamma are used, but engraving dithering is ignored. The image layer's engraving settings and original embedded bytes are not changed by previewing a trace.
+
+Max samples / axis controls trace detail, from 32 to 512, with aspect ratio retained and samples spanning the physical image frame. This is independent of engraving DPI. Minimum area removes foreground components smaller than the given number of sampled pixels; diagonal-only contacts count as separate components. This area is not a distance in millimetres. Holes are preserved. Fade image and Show vertices change the preview only; vertex markers are limited to results with at most 5000 points. Change parameters, then Update trace. Create vector layer is disabled until a current nonempty result is available. Closing or Cancel leaves the project unchanged.
+
+Create vector layer adds one compound closed path to a new named vector layer, selects it in Nodes mode, and disables output on the original image layer to avoid engraving both automatically. The new layer uses default Line settings (1200 mm/min, 20% power); configure its speed, power, air and mode as needed. The source remains visible and embedded unless Remove source image is checked. That option removes only the project object, never the original file; an empty source layer is retained. Creation, optional source removal and source-output changes form one undo step. Move/reorder/configure the new layer like any other, and edit its vertices or mirror/copy its path. Line mode follows both outer and hole contours; Fill uses their even-odd interior.
+
+This is a pixel-edge outline tracer. It removes exactly collinear points but does not smooth stairs, fit curves, find centerlines, implement Sketch Trace, or match LightBurn's tracing algorithms. Higher sample resolution increases detail and node count. Limits are 200000 boundary edges, 100000 result vertices and 10000 contours; excessive detail fails explicitly. Trace work runs in the background, cancels when the dialog closes, rejects changed source documents and never contacts a laser.
+
+Try samples/trace-outlines.lcraft. At the default 256-sample resolution, threshold 128 and minimum area 2, the original generated fixture produces four contours (including a hole), 242 vertices and removes three single-pixel speckles. Its source PNG is samples/trace-fixture.png; scripts/make-trace-sample.py reproducibly generates both fixtures without external packages.
+
+## Draw and edit vectors
 
 Lines creates straight vector paths: click vertices, then Enter or double-click to finish an open path. C or clicking the first vertex closes a contour with at least three vertices. Backspace removes the last draft vertex; Escape cancels the draft. Switching tools cancels unfinished drawing. A draft has at most 10000 vertices. Drawing is restricted to the bed and commits as one undo step.
 
 Nodes selects a path near its outline. Its square vertices can be dragged; releasing commits one undo step. Tools / Convert selected to paths converts rectangles to four corners and ellipses to 128 straight segments. This conversion is undoable, retains layer/identity, and cannot convert images. Tools / Close selected paths closes every contour in selected paths; each needs at least three vertices. Curve handles and vertex insertion/deletion/join/split are not implemented yet. Select still moves whole objects; numerical resizing, copy, layer assignment and mirroring also apply to paths.
 
-Open and closed paths can be cut in Line mode. Fill requires every contour to be closed and uses the even-odd rule across shapes/contours, preserving holes independent of contour direction. Unconnected contours are separated by laser-off travel. Horizontal or vertical paths can have zero height or width; numeric scaling cannot create a missing extent, so move a vertex with Nodes to change their direction. Path files have limits of 100000 vertices per object, 200000 per project and 10000 contours per object. Dense fill checks an intersection-work budget before scanning. Bézier paths, arcs and automatic tracing remain planned.
+Open and closed paths can be cut in Line mode. Fill requires every contour to be closed and uses the even-odd rule across shapes/contours, preserving holes independent of contour direction. Unconnected contours are separated by laser-off travel. Horizontal or vertical paths can have zero height or width; numeric scaling cannot create a missing extent, so move a vertex with Nodes to change their direction. Path files have limits of 100000 vertices per object, 200000 per project and 10000 contours per object. Dense fill checks an intersection-work budget before scanning. Bézier paths and arcs remain planned.
 
 Try samples/paths-and-nodes.lcraft for compound fill, a polyline and a horizontal line. samples/linear-paths.svg exercises supported straight-path SVG import. Imported styles are not applied; layer settings govern output. SVG path imports use SVG user units and the root viewBox mapping. SVG exports straight contours with M/L/Z; native files retain open/closed topology and normalized immutable vertices.
 
@@ -80,4 +92,4 @@ Try samples/raster-engraving.lcraft for a working mixed raster/vector preview, s
 
 Window / Light / dark switches the persisted theme. Help is copied from docs/help/Help.md at build time. LaserCraft's original source is MIT-licensed; third-party packages retain their own licenses. No LightBurn source or protected assets are used.
 
-Full parity remains unfinished: Bezier curves, text, advanced node operations, tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console is currently a read-only log; arbitrary command entry and macros remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.
+Full parity remains unfinished: Bezier curves, text, advanced node operations, curve-fitted and centerline tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console is currently a read-only log; arbitrary command entry and macros remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.

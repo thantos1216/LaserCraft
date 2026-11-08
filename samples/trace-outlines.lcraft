@@ -1,0 +1,42 @@
+{
+  "Version": 1,
+  "Name": "Trace outlines demo",
+  "Width": 400,
+  "Height": 400,
+  "Shapes": [
+    {
+      "Id": "7b961018-f141-4d01-a981-6ec94e0739de",
+      "Kind": 2,
+      "X": 100,
+      "Y": 120,
+      "Width": 160,
+      "Height": 120,
+      "Layer": 1,
+      "Image": {
+        "Id": "59748aca-5eb6-4fae-a980-af194d57efbc",
+        "MimeType": "image/png",
+        "DataBase64": "iVBORw0KGgoAAAANSUhEUgAAAQAAAADACAAAAADOhuK6AAABtElEQVR42u3cwZWDMBAE0co/aZzC2pa8GlURAKj/4wBoaB75QQABBBBAAAEEEEAAAQQQQAABBBBAAAEE8LDtCCCAAAIIIIAAAggggFOe0E8FQA+AHgA9AHoA9ADoAX5AcDoAegBOAfjg1GsA0AOgB0APgB5gI8EUAPQA6AHQA6AHQA+AHmADwTQA9ADoAdADoAdAD4AeYCHBVAD0AOgB0AOgB0APgB5gAcF0APQA6AHQA6AHQA+AHuALglsA0AOgB0APgB4APQB6gA+WeRsAegD0AOgB0AOgB0AP8MZybwVAD4AegFt+mdl8sZsB0AOgB/jDBW8HQA+AHgA9AHoA9ABUoxNAAAEEEEAAAQQQQNXaAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAGYFz0N4Dc9QgPS722RmZJ/hQCT429rkRmUf0+LzKT8W1pkRuXf0SITwKj8G2p0huVfX6MTQACz8n8jEEAAAQRwuM8/tMl1BwQQQAAB9C4QQAB9EeqbYADtC7Qz1N5gu8PNBzQh0ozQY5gSQzkW1x0QQAABBBBAAAEEEEAAAQQQQAABBBBAAAGoAF7nNanLC7WxxwAAAABJRU5ErkJggg==",
+        "PixelWidth": 256,
+        "PixelHeight": 192
+      }
+    }
+  ],
+  "Layers": [
+    {
+      "Name": "Drawing",
+      "Color": "#4169E1",
+      "Output": false
+    },
+    {
+      "Name": "Trace source",
+      "Color": "#D946EF",
+      "Mode": 2,
+      "Kind": 1,
+      "Interval": 0.625,
+      "Raster": {
+        "Mode": 0,
+        "Threshold": 128
+      }
+    }
+  ]
+}
