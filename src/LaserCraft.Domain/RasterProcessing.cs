@@ -1,6 +1,6 @@
 namespace LaserCraft.Domain;
 
-public enum RasterMode { Threshold, FloydSteinberg, OrderedBayer, Grayscale }
+public enum RasterMode { Threshold, FloydSteinberg, OrderedBayer, Grayscale, Stucki, Jarvis, Atkinson }
 public sealed record RasterSettings(RasterMode Mode = RasterMode.FloydSteinberg, double Brightness = 0, double Contrast = 0, double Gamma = 1, bool Invert = false, int Threshold = 128, bool Bidirectional = true, double Overscan = 0)
 {
     public void Validate()
@@ -16,10 +16,15 @@ public sealed record RasterGrid(int Width, int Height, byte[] Darkness)
 public static class RasterProcessing
 {
     private static readonly int[] Bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+    private static readonly (int X, int Y, float Weight)[] Floyd = [(1, 0, 7f / 16), (-1, 1, 3f / 16), (0, 1, 5f / 16), (1, 1, 1f / 16)];
+    private static readonly (int X, int Y, float Weight)[] Stucki = [(1, 0, 8f / 42), (2, 0, 4f / 42), (-2, 1, 2f / 42), (-1, 1, 4f / 42), (0, 1, 8f / 42), (1, 1, 4f / 42), (2, 1, 2f / 42), (-2, 2, 1f / 42), (-1, 2, 2f / 42), (0, 2, 4f / 42), (1, 2, 2f / 42), (2, 2, 1f / 42)];
+    private static readonly (int X, int Y, float Weight)[] Jarvis = [(1, 0, 7f / 48), (2, 0, 5f / 48), (-2, 1, 3f / 48), (-1, 1, 5f / 48), (0, 1, 7f / 48), (1, 1, 5f / 48), (2, 1, 3f / 48), (-2, 2, 1f / 48), (-1, 2, 3f / 48), (0, 2, 5f / 48), (1, 2, 3f / 48), (2, 2, 1f / 48)];
+    private static readonly (int X, int Y, float Weight)[] Atkinson = [(1, 0, 1f / 8), (2, 0, 1f / 8), (-1, 1, 1f / 8), (0, 1, 1f / 8), (1, 1, 1f / 8), (0, 2, 1f / 8)];
     public static RasterGrid ProcessRgba(int width, int height, ReadOnlySpan<byte> rgba, RasterSettings settings, CancellationToken cancellationToken = default)
     {
         settings.Validate(); if (width < 1 || height < 1 || width > 16000 || height > 16000 || (long)width * height > 4_000_000 || rgba.Length != (long)width * height * 4) throw new InvalidDataException("Invalid RGBA image or raster sample limit exceeded.");
         var tones = new float[width * height]; var output = new byte[tones.Length];
+        var kernel = settings.Mode switch { RasterMode.FloydSteinberg => Floyd, RasterMode.Stucki => Stucki, RasterMode.Jarvis => Jarvis, RasterMode.Atkinson => Atkinson, _ => [] };
         for (int y = 0; y < height; y++)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -41,10 +46,8 @@ public static class RasterProcessing
                 if (settings.Mode == RasterMode.Grayscale) { output[i] = (byte)Math.Clamp((int)Math.Round((1 - tone) * 255), 0, 255); continue; }
                 var threshold = settings.Mode == RasterMode.OrderedBayer ? (Bayer[(y % 4) * 4 + x % 4] + .5) / 16 : settings.Mode == RasterMode.Threshold ? settings.Threshold / 255.0 : .5;
                 var value = tone >= threshold ? 1f : 0f; output[i] = value == 0 ? (byte)255 : (byte)0;
-                if (settings.Mode != RasterMode.FloydSteinberg) continue;
                 var error = tone - value;
-                if (x + 1 < width) tones[i + 1] += error * 7 / 16;
-                if (y + 1 < height) { if (x > 0) tones[i + width - 1] += error * 3 / 16; tones[i + width] += error * 5 / 16; if (x + 1 < width) tones[i + width + 1] += error / 16; }
+                foreach (var tap in kernel) { var tx = x + tap.X; var ty = y + tap.Y; if (tx >= 0 && tx < width && ty < height) tones[ty * width + tx] += error * tap.Weight; }
             }
         }
         return new(width, height, output);

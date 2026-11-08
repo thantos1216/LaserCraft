@@ -5,7 +5,9 @@ namespace LaserCraft.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly TextBox layerName = new(), layerColor = new();
+    private readonly TextBox layerName = new();
+    private readonly Button layerColor = new() { Content = "Choose color…" };
+    private string layerColorValue = "#FFFFFF";
     private async Task NewLayer()
     {
         var session = Current; var dialog = new Window { Title = "New layer", Width = 430, Height = 340, CanResize = false, WindowStartupLocation = WindowStartupLocation.CenterOwner };

@@ -8,7 +8,11 @@ namespace LaserCraft.Desktop;
 
 public sealed class DesignCanvas : Control
 {
-    private readonly Dictionary<Guid, Avalonia.Media.Imaging.Bitmap> bitmaps = [];
+    private sealed record ArtworkKey(Guid Asset, double Width, double Height, double Interval, RasterSettings Settings);
+    private sealed class Artwork(ArtworkKey key) { public ArtworkKey Key { get; } = key; public Avalonia.Media.Imaging.Bitmap? Bitmap { get; set; } }
+    private readonly Dictionary<Guid, Artwork> bitmaps = [];
+    private static readonly SemaphoreSlim imageWorkers = new(2);
+    public bool ShowTravel { get; set; } = true;
     public EditorHistory History { get; } = new();
     public HashSet<Guid> Selection { get; } = [];
     public Guid? Selected { get => Selection.Count == 1 ? Selection.First() : null; set { Selection.Clear(); if (value is Guid id) Selection.Add(id); } }
@@ -34,7 +38,20 @@ public sealed class DesignCanvas : Control
     public void Refresh() { InvalidateVisual(); Changed?.Invoke(); }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
     public void Apply(DesignDocument d) { History.Apply(d); Refresh(); }
-    public void ReleaseImages() { foreach (var bitmap in bitmaps.Values) bitmap.Dispose(); bitmaps.Clear(); }
+    public void ReleaseImages() { foreach (var artwork in bitmaps.Values) artwork.Bitmap?.Dispose(); bitmaps.Clear(); }
+    private async void PrepareArtwork(DesignShape shape, CutLayer layer, Artwork entry)
+    {
+        Avalonia.Media.Imaging.Bitmap? bitmap = null;
+        try
+        {
+            await imageWorkers.WaitAsync();
+            try { bitmap = await Task.Run(() => RasterImages.ProcessedPreview(RasterImages.EngravingGrid(shape, layer with { Interval = Math.Max(layer.Interval, Math.Max(shape.Width, shape.Height) / 800) }))); }
+            finally { imageWorkers.Release(); }
+            if (bitmaps.TryGetValue(shape.Id, out var current) && ReferenceEquals(current, entry)) { entry.Bitmap = bitmap; bitmap = null; InvalidateVisual(); }
+        }
+        catch (Exception ex) when (ex is InvalidDataException or ArgumentException) { /* Placeholder remains; image settings/Preview report detailed processing errors. */ }
+        finally { bitmap?.Dispose(); }
+    }
     public void DeleteSelected() { if (Selection.Count > 0) { Apply(History.Document with { Shapes = History.Document.Shapes.Where(s => !Selection.Contains(s.Id)).ToList() }); Selected = null; Refresh(); } }
     public void SelectAll() { Selection.Clear(); foreach (var s in History.Document.Shapes.Where(s => History.Document.Layers[s.Layer].Visible)) Selection.Add(s.Id); Refresh(); }
     public override void Render(DrawingContext ctx)
@@ -42,27 +59,33 @@ public sealed class DesignCanvas : Control
         base.Render(ctx); ctx.FillRectangle(Brush("#0A111B"), new Rect(Bounds.Size));
         var d = History.Document; var o = Origin; var scale = Scale;
         var bed = new Rect(o, new Size(d.Width * scale, d.Height * scale));
-        ctx.DrawRectangle(Brush("#101E2B"), new Pen(Brush("#3B5366"), 1), bed);
+        ctx.DrawRectangle(ShowPreview ? Brushes.White : Brush("#101E2B"), new Pen(Brush("#3B5366"), 1), bed);
         using (ctx.PushClip(bed))
         {
             var step = scale < .4 ? 50 : 10;
             var grid = new Pen(Brush("#203242"), .5);
-            for (double x = 0; x <= d.Width; x += step) ctx.DrawLine(grid, new(o.X + x * scale, o.Y), new(o.X + x * scale, bed.Bottom));
-            for (double y = 0; y <= d.Height; y += step) ctx.DrawLine(grid, new(o.X, o.Y + y * scale), new(bed.Right, o.Y + y * scale));
-            foreach (var stored in d.Shapes.Where(s => d.Layers[s.Layer].Visible)) Draw(original is not null && Selection.Contains(stored.Id) ? stored with { X = stored.X + moveDelta.X, Y = stored.Y + moveDelta.Y } : preview?.Id == stored.Id ? preview : stored);
-            if (preview is not null && !d.Shapes.Any(s => s.Id == preview.Id)) Draw(preview);
+            if (!ShowPreview)
+            {
+                for (double x = 0; x <= d.Width; x += step) ctx.DrawLine(grid, new(o.X + x * scale, o.Y), new(o.X + x * scale, bed.Bottom));
+                for (double y = 0; y <= d.Height; y += step) ctx.DrawLine(grid, new(o.X, o.Y + y * scale), new(bed.Right, o.Y + y * scale));
+                foreach (var removed in bitmaps.Keys.Where(id => !d.Shapes.Any(s => s.Id == id)).ToArray()) { bitmaps[removed].Bitmap?.Dispose(); bitmaps.Remove(removed); }
+                foreach (var stored in d.Shapes.Where(s => d.Layers[s.Layer].Visible)) Draw(original is not null && Selection.Contains(stored.Id) ? stored with { X = stored.X + moveDelta.X, Y = stored.Y + moveDelta.Y } : preview?.Id == stored.Id ? preview : stored);
+                if (preview is not null && !d.Shapes.Any(s => s.Id == preview.Id)) Draw(preview);
+            }
             if (ShowPreview && Plan is not null)
             {
-                double elapsed = 0;
+                double elapsed = 0; PointMm? head = null;
                 var stride = Math.Max(1, (int)Math.Ceiling(Plan.Segments.Count / 25000.0)); var segmentIndex = 0;
                 foreach (var segment in Plan.Segments)
                 {
                     if (elapsed >= PreviewSeconds) break;
                     var t = segment.Seconds == 0 ? 1 : Math.Clamp((PreviewSeconds - elapsed) / segment.Seconds, 0, 1);
                     var end = new PointMm(segment.From.X + (segment.To.X - segment.From.X) * t, segment.From.Y + (segment.To.Y - segment.From.Y) * t);
-                    if (segmentIndex++ % stride == 0) ctx.DrawLine(new Pen(segment.Travel ? Brush("#64748B") : new SolidColorBrush(Color.FromArgb((byte)(40 + 215 * Math.Clamp(segment.Power / 100, 0, 1)), 249, 187, 74)), segment.Travel ? .8 : 1.4, segment.Travel ? DashStyle.Dash : null), new(o.X + segment.From.X * scale, o.Y + segment.From.Y * scale), new(o.X + end.X * scale, o.Y + end.Y * scale));
+                    head = end;
+                    if (segmentIndex++ % stride == 0 && (!segment.Travel || ShowTravel)) ctx.DrawLine(new Pen(segment.Travel ? Brush("#CBD5E1") : new SolidColorBrush(Color.FromArgb((byte)Math.Round(255 * Math.Clamp(segment.Power / 100, 0, 1)), 0, 0, 0)), segment.Travel ? .8 : 1.4, segment.Travel ? DashStyle.Dash : null), new(o.X + segment.From.X * scale, o.Y + segment.From.Y * scale), new(o.X + end.X * scale, o.Y + end.Y * scale));
                     elapsed += segment.Seconds;
                 }
+                if (head is PointMm h && double.IsFinite(PreviewSeconds)) { var p = new Point(o.X + h.X * scale, o.Y + h.Y * scale); ctx.DrawEllipse(Brushes.OrangeRed, null, p, 4, 4); ctx.DrawLine(new Pen(Brushes.OrangeRed, 1), new(p.X - 9, p.Y), new(p.X + 9, p.Y)); ctx.DrawLine(new Pen(Brushes.OrangeRed, 1), new(p.X, p.Y - 9), new(p.X, p.Y + 9)); }
             }
         }
         var rulerBrush = Brush("#9EB3C7");
@@ -75,8 +98,10 @@ public sealed class DesignCanvas : Control
             var pen = new Pen(Brush(d.Layers[s.Layer].Color), 1.8);
             if (s.Kind == ShapeKind.Image)
             {
-                if (!bitmaps.TryGetValue(s.Image!.Id, out var bitmap)) { bitmap = RasterImages.Preview(s.Image); bitmaps.Add(s.Image.Id, bitmap); }
-                using (ctx.PushTransform(Matrix.CreateTranslation(-r.Center.X, -r.Center.Y) * Matrix.CreateScale(s.FlipX ? -1 : 1, s.FlipY ? -1 : 1) * Matrix.CreateTranslation(r.Center.X, r.Center.Y))) ctx.DrawImage(bitmap, new Rect(bitmap.Size), r);
+                var layer = d.Layers[s.Layer]; var key = new ArtworkKey(s.Image!.Id, s.Width, s.Height, layer.Interval, layer.Raster ?? new());
+                if (!bitmaps.TryGetValue(s.Id, out var entry) || entry.Key != key) { entry?.Bitmap?.Dispose(); entry = new(key); bitmaps[s.Id] = entry; PrepareArtwork(s, layer, entry); }
+                ctx.FillRectangle(Brushes.White, r);
+                if (entry.Bitmap is { } bitmap) using (ctx.PushTransform(Matrix.CreateTranslation(-r.Center.X, -r.Center.Y) * Matrix.CreateScale(s.FlipX ? -1 : 1, s.FlipY ? -1 : 1) * Matrix.CreateTranslation(r.Center.X, r.Center.Y))) ctx.DrawImage(bitmap, new Rect(bitmap.Size), r);
                 ctx.DrawRectangle(null, pen, r);
             }
             else if (s.Kind == ShapeKind.Rectangle) ctx.DrawRectangle(null, pen, r); else ctx.DrawEllipse(null, pen, r);

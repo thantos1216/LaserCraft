@@ -32,7 +32,7 @@
 | Vector-to-bitmap | D p929 | Planned | Outlines/fills rendering correctness |
 | Nondestructive raster adjustments | R | Partial: brightness/contrast/gamma/invert with original/processed view | Curves, sharpening, masks, calibrated materials, higher precision |
 | Threshold raster engraving | D p1001 | Implemented for simulator paths, tested | Physical output qualification |
-| Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
+| Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, Stucki, Jarvis, Atkinson, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
 | DPI / scan interval / overscan | R | Partial: interval/effective DPI, bidirectional scan and bounded off-power overscan | Scan angles, device acceleration and calibration |
 | Outline / centerline tracing | D p1705; R expanded tracing | Planned | Editable geometry with controlled error |
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
@@ -41,7 +41,7 @@
 | GRBL controller | R, Atezr priority | Partial: read-only serial/TCP monitor, simulated and loopback-tested | Hardware qualification and job queue |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
-| G-code generation | R | Planned | Bounds, units, power-off travel tests |
+| G-code generation | R | Partial: offline GRBL 1.1 export, bounds/units/power-off/origin/air tests | Physical qualification, other dialects |
 | Streaming / pause / resume / stop | R | Planned | Queue state machine and disconnect tests |
 | Device setup / machine profiles | R | Implemented profile configuration and persistence, read-only monitor | Device-specific origin/power/air validation |
 | Camera calibration / overlay | D p1705 | Planned | Measured calibration error |

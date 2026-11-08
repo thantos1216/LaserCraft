@@ -15,11 +15,27 @@ public sealed class RasterTests
     [InlineData(RasterMode.FloydSteinberg)]
     [InlineData(RasterMode.OrderedBayer)]
     [InlineData(RasterMode.Grayscale)]
+    [InlineData(RasterMode.Stucki)]
+    [InlineData(RasterMode.Jarvis)]
+    [InlineData(RasterMode.Atkinson)]
     public void TransparentPixelsStayOffEvenWhenInverted(RasterMode mode)
     {
         var grid = RasterProcessing.ProcessRgba(2, 1, [0, 0, 0, 0, 255, 255, 255, 255], new(mode, Invert: true)); Assert.Equal(new byte[] { 0, 255 }, grid.Darkness);
     }
     [Fact] public void FloydSteinbergHasDeterministicErrorDiffusion() => Assert.Equal(new byte[] { 255, 0, 255, 0 }, RasterProcessing.ProcessRgba(4, 1, Rgba(127, 127, 127, 127), new(RasterMode.FloydSteinberg)).Darkness);
+    [Theory]
+    [InlineData(RasterMode.Stucki)]
+    [InlineData(RasterMode.Jarvis)]
+    [InlineData(RasterMode.Atkinson)]
+    public void ExtendedDiffusionIsBinaryDeterministicAndPreservesUniformEndpoints(RasterMode mode)
+    {
+        var tones = Rgba(Enumerable.Repeat((byte)128, 256).ToArray());
+        var a = RasterProcessing.ProcessRgba(16, 16, tones, new(mode)); var b = RasterProcessing.ProcessRgba(16, 16, tones, new(mode));
+        Assert.Equal(a.Darkness, b.Darkness); Assert.All(a.Darkness, v => Assert.True(v is 0 or 255));
+        Assert.InRange(a.Darkness.Count(v => v == 255), 80, 170);
+        Assert.All(RasterProcessing.ProcessRgba(4, 4, Rgba(new byte[16]), new(mode)).Darkness, v => Assert.Equal(255, v));
+        Assert.All(RasterProcessing.ProcessRgba(4, 4, Rgba(Enumerable.Repeat((byte)255, 16).ToArray()), new(mode)).Darkness, v => Assert.Equal(0, v));
+    }
     [Fact]
     public void BayerHalfToneHasHalfOfItsCellsEnabled()
     {

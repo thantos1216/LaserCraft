@@ -23,6 +23,7 @@ public sealed partial class MainWindow
     private readonly ProgressBar jobProgress = new() { Minimum = 0, Maximum = 100, Height = 4, Margin = new Thickness(4, 8) };
     private readonly TextBox console = new() { IsReadOnly = true, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Text = "LaserCraft simulator ready. No serial or network transport is active.", FontSize = 12 };
     private readonly CheckBox cutSelected = new() { Content = "Cut selected graphics", MinHeight = 24 }, snapControl = new() { Content = "Snap · 1 mm", IsChecked = true, MinHeight = 24 };
+    private readonly NumericUpDown playbackSpeed = Number(1, 100);
     private JobSimulation? simulation;
     private Session? simulationOwner;
     private string simulationDocument = "";
@@ -62,7 +63,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.4", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.5", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -86,7 +87,7 @@ public sealed partial class MainWindow
         palette.Margin = new Thickness(42, 5, 0, 2); Grid.SetRow(palette, 4); root.Children.Add(palette); status.Margin = new Thickness(5, 2); Grid.SetRow(status, 5); root.Children.Add(status); Content = root;
         layer.SelectionChanged += (_, _) => { if (!updatingInspector && sessions.Count > 0 && layer.SelectedIndex >= 0) { Current.Canvas.ActiveLayer = layer.SelectedIndex; RefreshLayer(); RefreshWorkspace(); } };
         layerRows.SelectionChanged += (_, _) => { if (!updatingInspector && layerRows.SelectedItem is ListBoxItem row && row.Tag is int i) { Current.Canvas.ActiveLayer = i; Refresh(); } };
-        simulationTimer.Tick += (_, _) => { if (simulation is null) return; var now = playbackClock.Elapsed.TotalSeconds; simulation.Advance((now - lastPlaybackTick) * 10); lastPlaybackTick = now; var c = Current.Canvas; c.PreviewSeconds = simulation.Elapsed; c.InvalidateVisual(); UpdateSimulation(); if (simulation.State != SimulationState.Running) simulationTimer.Stop(); };
+        simulationTimer.Tick += (_, _) => { if (simulation is null) return; var now = playbackClock.Elapsed.TotalSeconds; simulation.Advance((now - lastPlaybackTick) * (double)(playbackSpeed.Value ?? 10)); lastPlaybackTick = now; var c = Current.Canvas; c.PreviewSeconds = simulation.Elapsed; c.InvalidateVisual(); UpdateSimulation(); if (simulation.State != SimulationState.Running) simulationTimer.Stop(); };
         Closed += (_, _) => { workspaceClosed = true; previewCancellation?.Cancel(); simulationTimer.Stop(); };
         cutSelected.IsCheckedChanged += (_, _) => { if (sessions.Count > 0) RefreshWorkspace(); };
         void AddTool(string name, string geometry) { var b = IconButton(name, geometry, () => SetTool(name)); toolButtons[name] = b; drawingTools.Children.Add(b); }
@@ -98,7 +99,7 @@ public sealed partial class MainWindow
         var names = new[] { "#", "Layer", "Mode", "Spd/Pwr", "Out", "Show", "Air" }; for (int i = 0; i < names.Length; i++) { var t = new TextBlock { Text = names[i], FontSize = 11 }; Grid.SetColumn(t, i); headers.Children.Add(t); }
         panel.Children.Add(headers);
         Grid.SetRow(layerRows, 1); panel.Children.Add(layerRows);
-        var settings = new StackPanel { Spacing = 3, Margin = new Thickness(3, 4) }; var layerActions = new WrapPanel(); layerActions.Children.Add(Button("+ Layer", () => _ = NewLayer())); layerActions.Children.Add(Button("↑", () => MoveLayer(-1))); layerActions.Children.Add(Button("↓", () => MoveLayer(1))); layerActions.Children.Add(Button("Delete empty", RemoveLayer)); layerActions.Children.Add(Button("Assign selected", () => AssignLayer(Current.Canvas.ActiveLayer))); layerActions.Children.Add(Button("Image settings…", () => _ = EditImageSettings())); settings.Children.Add(layerActions); settings.Children.Add(layer); var identity = new WrapPanel(); Inline(identity, "Layer name", layerName, 220); Inline(identity, "Color #RRGGBB", layerColor, 110); settings.Children.Add(identity);
+        var settings = new StackPanel { Spacing = 3, Margin = new Thickness(3, 4) }; var layerActions = new WrapPanel(); layerActions.Children.Add(Button("+ Layer", () => _ = NewLayer())); layerActions.Children.Add(Button("↑", () => MoveLayer(-1))); layerActions.Children.Add(Button("↓", () => MoveLayer(1))); layerActions.Children.Add(Button("Delete empty", RemoveLayer)); layerActions.Children.Add(Button("Assign selected", () => AssignLayer(Current.Canvas.ActiveLayer))); layerActions.Children.Add(Button("Image settings…", () => _ = EditImageSettings())); settings.Children.Add(layerActions); settings.Children.Add(layer); var identity = new WrapPanel(); Inline(identity, "Layer name", layerName, 220); Inline(identity, "Layer color", layerColor, 110); layerColor.Click += (_, _) => _ = PickLayerColor(); settings.Children.Add(identity);
         var values = new WrapPanel(); Inline(values, "Speed mm/min", speed, 100); Inline(values, "Power %", power, 75); Inline(values, "Passes", passes, 65); Inline(values, "Interval mm", interval, 80); values.Children.Add(mode); settings.Children.Add(values);
         var switches = new WrapPanel(); switches.Children.Add(output); switches.Children.Add(visible); switches.Children.Add(air); switches.Children.Add(Button("Apply cut settings", ApplyLayer)); settings.Children.Add(switches);
         Grid.SetRow(settings, 2); panel.Children.Add(settings); return panel;
@@ -108,9 +109,11 @@ public sealed partial class MainWindow
         var panel = new StackPanel { Spacing = 5, Margin = new Thickness(8) }; panel.Children.Add(jobStatus);
         var controls = new UniformGrid { Columns = 3 }; controls.Children.Add(Button("Ⅱ Pause", PauseSimulation)); controls.Children.Add(Button("■ Stop", StopSimulation)); controls.Children.Add(Button("▶ Start", StartSimulation)); panel.Children.Add(controls);
         var actions = new WrapPanel(); actions.Children.Add(Button("Preview", Preview)); actions.Children.Add(Button("Frame preview", FramePreview));
-        foreach (var name in new[] { "Save G-code", "Run G-code", "Home", "Go to origin" }) { var b = Button(name, () => { }); b.IsEnabled = false; ToolTip.SetTip(b, "Hardware and G-code support are not implemented yet."); actions.Children.Add(b); }
+        actions.Children.Add(AsyncButton("Save G-code", SaveGcode));
+        foreach (var name in new[] { "Run G-code", "Home", "Go to origin" }) { var b = Button(name, () => { }); b.IsEnabled = false; ToolTip.SetTip(b, "Machine execution is not implemented yet."); actions.Children.Add(b); }
         panel.Children.Add(actions); panel.Children.Add(BuildConnectionPanel());
-        panel.Children.Add(cutSelected); panel.Children.Add(estimate); panel.Children.Add(jobProgress); panel.Children.Add(Label("Playback runs at 10×. Design coordinates: top-left origin. Estimated time excludes acceleration, controller delays and material effects."));
+        var view = new WrapPanel(); playbackSpeed.Value = 10; Inline(view, "Playback speed ×", playbackSpeed, 85); var travel = new CheckBox { Content = "Show travel", IsChecked = true, Margin = new Thickness(8) }; travel.IsCheckedChanged += (_, _) => { Current.Canvas.ShowTravel = travel.IsChecked == true; Current.Canvas.InvalidateVisual(); }; view.Children.Add(travel); view.Children.Add(Button("Return to design", StopSimulation)); panel.Children.Add(view);
+        panel.Children.Add(cutSelected); panel.Children.Add(estimate); panel.Children.Add(jobProgress); panel.Children.Add(Label("Preview shows power-weighted black marks and the moving beam on a white bed. Design coordinates: top-left origin. Ideal timing excludes acceleration, controller delays and material effects."));
         return new ScrollViewer { Content = panel };
     }
     private static void Inline(Panel p, string name, Control control, double width) { var column = new StackPanel { Margin = new Thickness(3, 0), Spacing = 2 }; column.Children.Add(new TextBlock { Text = name, FontSize = 11 }); control.Width = width; control.MinHeight = 26; column.Children.Add(control); p.Children.Add(column); }

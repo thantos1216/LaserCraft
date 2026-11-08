@@ -1,0 +1,11 @@
+# Milestone 0.5 validation
+
+Scope: monochrome canvas preparation, Stucki/Jarvis/Atkinson, visual layer colors, white-bed playback with beam marker, and offline GRBL export. GitHub source/history and Windows build/test CI are public at https://github.com/thantos1216/LaserCraft. The initial CI run passed: https://github.com/thantos1216/LaserCraft/actions/runs/42427415012.
+
+Export tests cover units/modal initialization, dynamic laser mode, power scaling, off-power travel, feed retention, layer order, air transitions/capability, all four corner mappings, invariant decimals, continuity, invalid/empty/nonfinite/out-of-bed data and shutdown. Extended diffusion fixtures verify deterministic binary output, density and uniform black/white endpoints, plus transparent samples under inversion. Existing raster/vector/layer/device tests remain required.
+
+REA 6.8.0 inspect-desktop-application scanned the installed LightBurn folder (112 entries, 45 files probed, 15268 header bytes read). Evidence is retained only in ignored tmp/lightburn-runtime-05.json. It identified no supported runtime candidates; it does not validate raster semantics or feature parity. User-supplied screenshots provide behavioral requirements. No decompilation or proprietary implementation was used.
+
+Limits: the design thumbnail resamples to at most 800 samples per axis before processing; exact output-resolution dithering appears in Image settings and job planning. Burn marks are commanded power opacity, not a material model. Dense path display is sampled. File export does not qualify real machine operation, acceleration or air wiring. Tracing, editable paths/text/nodes, arbitrary console commands, camera, variable text and streaming remain incomplete.
+
+Final local build: zero warnings/errors; 79 passing tests (77 unit, 2 native integration). Release publish: artifacts/windows-x64-v0.5. UI verified monochrome canvas; complete color dialog with reachable actions; palette selection changes image border/layer swatch and Undo restores the clean original; Stucki selection and Update preview produce a distinct binary sample at 180 x 120; playback shows a moving beam on white and Paused retains marks. No source sample changes were saved. Save-file picker integration was not automated; the exact native decode-to-plan-to-export path is covered by the integration fixture.

@@ -1,0 +1,7 @@
+# Screenshot requirements and remaining comparisons
+
+User screenshots supplied 2026-11-07 show LightBurn 1.3.01: main workspace; console input with six macros; camera overlay controls; variable text counters/CSV; import shortcut; grayscale artwork; original/processed image comparison with mode, negative, interval/DPI, gamma/brightness/contrast and enhancement controls; zoomed Stucki detail; trace overlay with cutoff, threshold, minimum size, smoothing, optimization, fade, boundary, sketch and delete-source controls.
+
+0.5 covers monochrome canvas, visual layer picker, brightness/contrast/gamma/invert, seven raster modes and adjustable simulated playback. Existing copy/mirror operations have regression tests. Image comparison currently requires Update preview. GRBL offline export is additional independent work. No claim of exact LightBurn algorithm or parameter equivalence is made.
+
+Outstanding acceptance work: preview zoom/pan, enhancement radius/amount and presets; live adjustment debounce; additional halftone/newsprint/sketch modes and angular screening; editable paths before tracing; connected-component removal and fitted trace contours with hole/orientation tests; console command routing and macros with separate simulator/physical policies; camera calibration and variable text. Reference screenshots establish desired controls, not evidence of matching output. Each family must be implemented and verified before its UI is enabled.

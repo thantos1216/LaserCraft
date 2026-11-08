@@ -67,3 +67,9 @@ Preview planning runs on a background worker with cancellation, serialized worke
 The original PNG sample decodes and generates paths in a headless native integration test. UI checked: original/processed Floyd-Steinberg view and a combined raster/vector plan of 13675 segments, 11509.0 mm cut length and 774.3 s ideal duration for samples/raster-engraving.lcraft. No physical output was performed. Controller connections remain read-only.
 
 Final 0.4 checks: build zero warnings/errors; 65 tests passed (63 domain/device tests plus 2 native decoder integration tests). Publish output: artifacts/windows-x64-v0.4. No controller execution or physical air operation was performed.
+
+## Milestone 0.5 - visual engraving workflow and offline export
+
+Source/history uploaded to thantos1216/LaserCraft on GitHub. Main is the default branch. Windows CI builds and tests pushes/PRs; its initial run passed. Added visual RGB/palette layer picking, monochrome prepared canvas thumbnails, Stucki/Jarvis/Atkinson, power-weighted white-bed playback with beam marker and adjustable 1–100x speed. Added standalone GRBL 1.1 exporter with profile corner mapping, power scaling, explicit S0 off-feed spans, optional M8/M9 and final M5/M9. File generation only; no physical commands transmitted. Tracing and broader editor/controller parity remain unfinished. See milestone-05 validation and screenshot requirements for scope/limits.
+
+Final 0.5 local validation: zero build warnings/errors; 79 tests pass. Visual checks verify monochrome artwork, color Apply/Undo, Stucki preview and beam playback. Release is artifacts/windows-x64-v0.5. REA runtime inspection recorded 112 entries and no recognized supported runtime candidates; it does not certify parity.
