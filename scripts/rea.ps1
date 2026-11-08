@@ -1,7 +1,6 @@
 param([Parameter(ValueFromRemainingArguments=$true)][string[]]$ReaArguments)
 $ErrorActionPreference = 'Stop'
-$reaRoot = 'D:\Development\REA\rea'
-$nodePath = 'C:\Users\thant\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe'
-if (!(Test-Path -LiteralPath "$reaRoot\dist")) { throw 'REA is not built. See docs/research/rea-findings.md.' }
-& $nodePath "$reaRoot\scripts\rea.mjs" @ReaArguments
+# Paths passed to REA are container paths. See docs/research/rea-findings.md.
+$container = 'rea-rea-1'
+& docker exec -i $container node /workspace/scripts/rea.mjs @ReaArguments
 exit $LASTEXITCODE

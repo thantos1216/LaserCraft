@@ -1,5 +1,15 @@
 # Progress
 
+## Current milestone 0.8 - photograph tracing
+
+2026-11-08. Added live photograph-oriented tracing sliders for brightness range, component area, Gaussian noise reduction, polyline corner smoothing and node optimization, plus local-contrast sketch mode, a 1024-sample ceiling, threshold-mask view and zoom/pan controls. Trace refinement retains delicate contours or the entire original trace when its checks cannot complete. Source bytes stay unchanged; separate-layer creation/source-output suppression remains one undo step.
+
+Build succeeds with zero warnings/errors; 124 tests pass (120 unit, 4 integration), including a credited NASA photograph, uneven-illumination/noise fixtures and exhaustive small-mask refinement cases. UI checked live regeneration, sketch-mode controls, zoom, creation and undo. See [validation](../testing/milestone-08.md) and [reference distinctions](../research/photo-trace-reference.md).
+
+REA now runs through the user's existing Docker container from the project launcher/MCP configuration. CLI and a real MCP smoke client successfully inspect the installed LightBurn PE resource inventory. Static inventory is not behavioral parity; deep Ghidra/IDA/Kuna providers are not available in this Docker configuration. Earlier host Ghidra evidence is retained separately.
+
+Next: Bézier geometry/node workflows and wider SVG transforms/curves, then trace-region/curve fitting and further editing operations. Production work also requires bounded job streaming/recovery, physical controller qualification, camera/rotary/text/material features and packaging. Current physical machine execution remains unavailable. Historical milestone entries below describe their state at that time.
+
 Updated 2026-11-07.
 
 ## Completed and checked

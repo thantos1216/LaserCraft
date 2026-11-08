@@ -27,3 +27,5 @@ Version 0.5 adds monochrome canvas artwork, Stucki/Jarvis/Atkinson dithering, a 
 Version 0.6 adds straight path drawing, vertex dragging, shape-to-path conversion, open/closed compound paths and SVG M/L/H/V/Z, polygon, polyline and line import. See samples/paths-and-nodes.lcraft. Bezier curves and image tracing remain planned.
 
 Version 0.7 adds image outline tracing with threshold/inversion, speckle filtering, faded contour preview and undoable creation of a separate vector layer. Try samples/trace-outlines.lcraft; curves, smoothing and centerline tracing remain planned.
+
+Version 0.8 adds photograph-oriented trace sliders, Gaussian noise reduction, polyline smoothing and node reduction, local-contrast sketch mode, live updates, mask preview and detail zoom. Try samples/photo-tracing.lcraft; its NASA photograph has separate [credits](samples/PHOTO-CREDITS.md). Bézier fitting, centerlines and region cropping remain planned. The REA development launcher now uses the configured Docker container; see [connection details](docs/research/rea-findings.md#docker-integration-08).

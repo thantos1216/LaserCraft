@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\src\LaserCraft.Desktop\LaserCraft.Desktop.csproj" />
     <None Include="..\..\samples\layer-image.png" Link="samples\layer-image.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\trace-fixture.png" Link="samples\trace-fixture.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\nasa-blue-marble.jpg" Link="samples\nasa-blue-marble.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@ public static class ImageTracing
     public static TraceResult Trace(RasterGrid mask, DesignShape source, int minimumArea = 2, CancellationToken cancellationToken = default)
     {
         mask.Validate();
-        if (mask.Width > 512 || mask.Height > 512 || minimumArea < 1 || minimumArea > 262144) throw new InvalidDataException("Tracing supports at most 512 samples per axis and a positive minimum pixel area.");
+        if (mask.Width > 1024 || mask.Height > 1024 || minimumArea < 1 || minimumArea > 1048576) throw new InvalidDataException("Tracing supports at most 1024 samples per axis and a positive minimum pixel area.");
         if (source.Kind != ShapeKind.Image || !double.IsFinite(source.X) || !double.IsFinite(source.Y) || !double.IsFinite(source.Width) || !double.IsFinite(source.Height) || source.Width <= 0 || source.Height <= 0 || source.Width > 10000 || source.Height > 10000 || Math.Abs(source.X) > 10000 || Math.Abs(source.Y) > 10000) throw new InvalidDataException("Tracing requires a valid image frame.");
         var w = mask.Width; var h = mask.Height; var active = mask.Darkness.Select(p => p >= 128).ToArray();
         var visited = new bool[active.Length]; var queue = new int[active.Length]; var removed = 0; var retained = 0;

@@ -82,7 +82,7 @@ public sealed class ImageTracingTests
     public void ExcessiveWorkAndInvalidParametersFailExplicitly()
     {
         Assert.Throws<InvalidDataException>(() => ImageTracing.Trace(Mask("##"), Frame(2, 1), 0));
-        Assert.Throws<InvalidDataException>(() => ImageTracing.Trace(new(513, 1, new byte[513]), Frame(513, 1)));
+        Assert.Throws<InvalidDataException>(() => ImageTracing.Trace(new(1025, 1, new byte[1025]), Frame(1025, 1)));
         var dense = Enumerable.Range(0, 512 * 512).Select(i => (i % 512 + i / 512) % 2 == 0 ? (byte)255 : (byte)0).ToArray();
         Assert.Throws<InvalidDataException>(() => ImageTracing.Trace(new(512, 512, dense), Frame(512, 512), 1));
     }

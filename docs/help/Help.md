@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.7 - image outline tracing into editable paths
+Version 0.8 - photograph tracing with live tuning
 
 ## Create layers and control order
 
@@ -46,13 +46,24 @@ Each layer has an Air assist on/off checkbox. The state is saved and follows its
 
 Select an image or its image layer, then choose Tools / Trace image… or the Trace image icon on the left. The dialog shows the adjusted grayscale source with pink vector contours. Threshold determines which eight-bit tone samples are foreground; Invert changes polarity. Existing image-layer brightness, contrast and gamma are used, but engraving dithering is ignored. The image layer's engraving settings and original embedded bytes are not changed by previewing a trace.
 
-Max samples / axis controls trace detail, from 32 to 512, with aspect ratio retained and samples spanning the physical image frame. This is independent of engraving DPI. Minimum area removes foreground components smaller than the given number of sampled pixels; diagonal-only contacts count as separate components. This area is not a distance in millimetres. Holes are preserved. Fade image and Show vertices change the preview only; vertex markers are limited to results with at most 5000 points. Change parameters, then Update trace. Create vector layer is disabled until a current nonempty result is available. Closing or Cancel leaves the project unchanged.
+The controls are intended for photographs as well as clean artwork. Each slider has a numeric field. Start with a moderate resolution and adjust the following while watching the pink contours:
+
+- Cutoff excludes tones darker than its value; Threshold excludes tones at or above its value. Both use brightness from 0 (black) to 255 (white). The retained range is Cutoff inclusive, Threshold exclusive. Raising Cutoff can remove a black background; lowering Threshold keeps darker features.
+- Ignore less than removes foreground components smaller than the given sampled-pixel count. Diagonal-only contacts are separate components. This is an area in sampled pixels, not millimetres; holes are retained.
+- Noise smoothing applies a Gaussian blur before detecting foreground. Increase it to suppress photographic grain; excessive smoothing loses fine detail.
+- Outline smoothness rounds the resulting polygon corners using sampled straight segments. Optimize tolerance reduces vertices. These are independent operations, measured in sample pixels, and do not produce Bézier curves.
+- Sketch / local contrast finds tones darker than their local neighborhood and can help with uneven illumination. It uses Sketch contrast and Sketch radius; Cutoff and Threshold are disabled in this mode. Higher contrast retains stronger dark features. It traces the boundaries of those features, not their centerlines.
+- Max samples / axis ranges from 64 to 1024, retaining aspect ratio. Higher resolution increases detail, noise and work. It is independent of engraving DPI and changes the physical size represented by every sample-pixel setting.
+
+Live preview waits 300 ms after a parameter change, cancels obsolete work and automatically recalculates. Turn it off to use Update trace manually. Create vector layer remains disabled until a current nonempty result is available. The footer reports original/refined vertex counts, contours and removed components. Delicate contours are retained if refinement would collapse them or change detected crossings/nesting; if a work limit is reached, the entire original outline is retained with an explanation. Inspect the result before creating vectors.
+
+Wheel zoom inspects detail; middle drag pans; Fit preview or a middle double-click restores the view. Fade image, Show threshold mask and Show vertices affect only the preview. Vertex markers are limited to results with at most 5000 points. Closing or Cancel leaves the project unchanged. Tuning is temporary to this dialog; the created geometry is stored in the project.
 
 Create vector layer adds one compound closed path to a new named vector layer, selects it in Nodes mode, and disables output on the original image layer to avoid engraving both automatically. The new layer uses default Line settings (1200 mm/min, 20% power); configure its speed, power, air and mode as needed. The source remains visible and embedded unless Remove source image is checked. That option removes only the project object, never the original file; an empty source layer is retained. Creation, optional source removal and source-output changes form one undo step. Move/reorder/configure the new layer like any other, and edit its vertices or mirror/copy its path. Line mode follows both outer and hole contours; Fill uses their even-odd interior.
 
-This is a pixel-edge outline tracer. It removes exactly collinear points but does not smooth stairs, fit curves, find centerlines, implement Sketch Trace, or match LightBurn's tracing algorithms. Higher sample resolution increases detail and node count. Limits are 200000 boundary edges, 100000 result vertices and 10000 contours; excessive detail fails explicitly. Trace work runs in the background, cancels when the dialog closes, rejects changed source documents and never contacts a laser.
+This is an independent pixel-edge outline tracer with optional polyline refinement. It does not match LightBurn's algorithms or parameter scale, fit curves, find centerlines, or offer region cropping. Limits are 200000 boundary edges, 100000 result vertices and 10000 contours; excessive detail fails explicitly. Refinement uses a separate bounded work allowance and retains unrefined geometry when it cannot finish its checks. Trace work runs in the background, cancels when the dialog closes, rejects changed source documents and never contacts a laser.
 
-Try samples/trace-outlines.lcraft. At the default 256-sample resolution, threshold 128 and minimum area 2, the original generated fixture produces four contours (including a hole), 242 vertices and removes three single-pixel speckles. Its source PNG is samples/trace-fixture.png; scripts/make-trace-sample.py reproducibly generates both fixtures without external packages.
+Try samples/photo-tracing.lcraft for an actual photograph. The source is NASA's Apollo 17 Blue Marble; see samples/PHOTO-CREDITS.md for attribution and usage information. A useful starting point is Cutoff 20, Threshold 160, Ignore less than 8, Noise smoothing 0.8, Outline smoothness 0.5, Optimize 0.7 and 512 samples. These are a starting point for this photograph, not calibrated laser settings. Review composition, cleanup, layer power/speed and output preview for each job. samples/trace-outlines.lcraft remains a generated clean-shape fixture. For its original four-contour, 242-vertex result, use 256 samples, threshold 128, minimum area 2 and zero noise/smoothness/optimize.
 
 ## Draw and edit vectors
 
