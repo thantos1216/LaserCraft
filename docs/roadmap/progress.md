@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.9 - manual path cleanup
+## Current milestone 0.10 - GRBL diagnostics
+
+Added explicit read-only $$ settings retrieval with source-value preservation, report completion/duplicate/error/line-budget validation, and a desktop report showing $30/$32 alongside the profile S maximum. Added feed/spindle/buffer/pin/accessory status fields with explicit omission, serial-port refresh and a configurable 0–10000 ms serial startup delay (default 2000). Profile choice/editing is locked during connection; concurrent reads are disabled in the UI and serialized by the monitor. Serial write timeouts now surface as connection errors, and connection control changes refresh the footer state.
+
+149 tests pass (145 unit, 4 integration), including an actual fragmented TCP exchange and cancellation of a settings read plus queued status query. Desktop simulator Connect, status display, read-only settings report and Disconnect were checked. Physical USB startup delay/reset behavior and hardware compatibility remain unverified. No physical device was opened and no motion/firing/configuration-write command was sent. See [validation](../testing/milestone-10.md). Job streaming, motion, arbitrary console commands and full parity remain outstanding.
+
+## Milestone 0.9 - manual path cleanup
 
 Added active node highlighting/numbering, double-click segment insertion, midpoint insertion, node deletion, contour removal and break/split at a node. Operations preserve identity/layer and participate in undo/native saves. Breaking a closed contour retains all segments and produces two separate endpoints at the break; open splits retain two contours in the same object. Invalid/minimum-node edits leave source geometry unchanged. Nodes-mode Delete edits nodes; whole-object deletion remains explicit through Edit/toolbar.
 

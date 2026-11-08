@@ -49,3 +49,9 @@ The trace dialog serializes workers behind a semaphore, debounces live edits for
 ## Addendum: 0.9 node cleanup
 
 PathNodeEditing validates node addresses, edits world-coordinate immutable contours and delegates normalization/identity retention to VectorPaths.Create. Closing-edge insertion, minimum-node rules, contour removal and break/split semantics are owned here. No native format extension is needed. The canvas owns transient node selection bound to the exact source record, hit testing, segment projection and grab-offset drag state. A node edit installs one validated history snapshot; source changes or different selection make the stale node inapplicable. GUI commands and keyboard node edits share this same domain boundary.
+
+## Addendum: 0.10 read-only diagnostics
+
+GrblMonitor serializes status and settings requests through the same gate and links both deadlines to connection lifetime. Settings are installed only after an explicit terminal ok, with nonempty/unique numbered records and a bounded line count. GrblSetting retains raw/value text, including unknown numbers; descriptions are display metadata. GrblStatus parses known telemetry but keeps the full raw frame and explicit absent values; it does not cache or infer coordinate offsets/units. Query failures cause the desktop to disconnect before another exchange.
+
+The UI binds its monitor to the connected profile, disables profile edits/switches and duplicate queries, and compares firmware S maximum only for display. No reported setting silently changes the profile. SerialStartupDelayMs is a backward-compatible optional profile property; the serial opener owns and disposes the newly opened transport if cancellation occurs during the delay. Device profiles remain separate from design documents. No job execution API was introduced.

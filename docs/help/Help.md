@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.9 - manual node cleanup for traced and imported paths
+Version 0.10 - GRBL connection diagnostics and read-only firmware settings
 
 ## Create layers and control order
 
@@ -35,6 +35,18 @@ Choose Devices… in the Laser panel or Laser Tools menu. Create a named profile
 GRBL has a read-only connection adapter. grblHAL and FluidNC use an experimental GRBL-compatible adapter. Marlin, Smoothieware, Ruida and Trocen can be saved as profiles but do not yet have connection adapters. Selecting a controller family is not a claim of tested machine compatibility. No Atezr hardware has been tested.
 
 Select a saved profile, then Connect. The application queries firmware identity ($I) and status (?), without homing, jogging, firing or streaming a job. Read status refreshes the report; Disconnect closes the connection. Status coordinates identify MPos or WPos exactly as reported. Missing coordinates stay unknown. A built-in GRBL simulator is the default and works without hardware. Connection cancellation, line limits and response timeouts bound reads; real serial hardware behavior remains unverified.
+
+### Test a GRBL connection
+
+1. Close the connection in LightBurn or other software using the same COM port.
+2. Open Devices… / New profile. Choose GRBL and Serial, select the laser's COM port, and use the baud rate specified by its manufacturer (GRBL 1.1 commonly uses 115200). Refresh serial ports rescans the list without opening a port.
+3. Set Serial startup delay as needed. The default is 2000 ms after opening the port and before the identity query; 0–10000 ms is supported. Some boards restart on open. DTR and RTS default off; change them only as required for your controller. The delay is a configurable engineering default, not a guarantee for every board.
+4. Save the profile, select it in the Laser panel and click Connect. A successful connection displays firmware identity and a reported status such as Idle or Alarm. Read status sends another status query; missing telemetry remains explicitly unknown. Coordinates/feed use reported controller units, which may depend on firmware settings. No work/machine coordinate conversion is inferred.
+5. Read firmware settings… queries $$ and opens a selectable, read-only report. It shows the profile's S maximum alongside reported $30, and the raw reported $32 laser-mode value. A differing $30 produces a profile-review message; no controller or profile values are changed. Unknown setting numbers and their original values remain visible. Close the report and Disconnect when finished.
+
+For TCP, choose TCP and supply the controller's configured host and port; the serial startup delay does not apply. Do not use an arbitrary IP or COM port. A timeout or rejection closes the connection; check the endpoint, baud and whether another program owns the port. No reset, unlock or retry command is sent automatically. Profiles are locked against editing/switching while connecting or connected; disconnect first. Read operations are serialized, and Disconnect can cancel an outstanding read.
+
+Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. The read-only adapter supports only $I, ?, and the explicit $$ query. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Hardware motion, firing, homing, arbitrary console commands and job streaming are not implemented or qualified.
 
 Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
 

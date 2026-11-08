@@ -14,10 +14,20 @@ public static class TransportFactory
         return profile.Connection switch
         {
             ConnectionKind.Simulator => new SimulatedGrblTransport(),
-            ConnectionKind.Serial => await Task.Run<IGrblTransport>(() => new SerialGrblTransport(profile), cancellationToken),
+            ConnectionKind.Serial => await OpenSerialAsync(profile, cancellationToken),
             ConnectionKind.Tcp => await TcpGrblTransport.OpenAsync(profile, cancellationToken),
             _ => throw new NotSupportedException("Unknown transport.")
         };
+    }
+    private static async Task<IGrblTransport> OpenSerialAsync(DeviceProfile profile, CancellationToken cancellationToken)
+    {
+        var transport = await Task.Run<IGrblTransport>(() => new SerialGrblTransport(profile), cancellationToken);
+        try
+        {
+            await Task.Delay(profile.SerialStartupDelayMs, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested(); return transport;
+        }
+        catch { await transport.DisposeAsync(); throw; }
     }
 }
 internal sealed class SerialGrblTransport : IGrblTransport
@@ -28,7 +38,7 @@ internal sealed class SerialGrblTransport : IGrblTransport
         port = new(profile.SerialPort, profile.BaudRate, Parity.None, 8, StopBits.One) { Handshake = Handshake.None, DtrEnable = profile.Dtr, RtsEnable = profile.Rts, ReadTimeout = 200, WriteTimeout = 1000, Encoding = Encoding.ASCII };
         try { port.Open(); } catch { port.Dispose(); throw; }
     }
-    public async ValueTask WriteAsync(string command, CancellationToken cancellationToken) => await Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); port.Write(command); }, cancellationToken);
+    public async ValueTask WriteAsync(string command, CancellationToken cancellationToken) => await Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); try { port.Write(command); } catch (TimeoutException ex) { throw new IOException("Serial write timed out. Check the connection and baud rate.", ex); } }, cancellationToken);
     public async ValueTask<string> ReadLineAsync(CancellationToken cancellationToken) => await Task.Run(() =>
     {
         var line = new StringBuilder();

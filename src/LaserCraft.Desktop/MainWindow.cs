@@ -70,7 +70,12 @@ public sealed partial class MainWindow : Window
         selection.Text = shape is null ? "Select an object to edit its dimensions." : $"{shape.Kind} · layer {shape.Layer + 1}";
         if (c.Selection.Count > 0) { var bounds = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); x.Value = (decimal)bounds.X; y.Value = (decimal)bounds.Y; width.Value = (decimal)bounds.Width; height.Value = (decimal)bounds.Height; }
         RefreshWorkspace();
-        status.Text = $"{d.Name}  ·  {d.Width:0} × {d.Height:0} mm  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? "Disconnected" : "Read-only monitor connected")}"; RefreshLayer();
+        RefreshStatus(); RefreshLayer();
+    }
+    private void RefreshStatus()
+    {
+        var c = Current.Canvas; var d = c.History.Document;
+        status.Text = $"{d.Name}  ·  {d.Width:0} × {d.Height:0} mm  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : "Read-only monitor connected")}";
     }
     private void RefreshLayer() { var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; speed.Value = (decimal)l.Speed; power.Value = (decimal)l.Power; passes.Value = l.Passes; interval.Value = (decimal)l.Interval; mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible; }
     private void ApplyGeometry()
