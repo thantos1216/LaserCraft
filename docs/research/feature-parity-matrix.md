@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.8
+# Feature parity matrix - working baseline 0.9
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -13,7 +13,7 @@
 | Lines / Bezier curves | D p63 | Partial: open/closed straight polylines and compound contours, tested | Bezier control points and arcs |
 | Selection / translation / sizing | D p63-67 | Partial: Ctrl-click multi-select, collective movement and numeric scaling | Drag handles, rotation and richer hit testing |
 | Rotate / mirror / skew | R | Partial: horizontal/vertical mirror, tested | Rotation, skew and path transforms |
-| Node editing and curve conversion | R | Partial: drag path vertices, convert rectangle/ellipse to polylines, close contours | Insert/delete/join/split, curve handles |
+| Node editing and curve conversion | R | Partial: node selection/dragging, segment/midpoint insertion, node/contour deletion, open/split at node, shape-to-polyline conversion and closing; tested | Join endpoints, separate objects, curve handles and Bézier conversion |
 | Grid / snap / guides / rulers | R | Partial: grid, 1 mm snap, rulers | Configurable units and guides |
 | Undo / redo | R | Implemented, automated + UI tested | Bound memory, transaction edits |
 | Group / ungroup | R | Planned | Hierarchy and selection tests |

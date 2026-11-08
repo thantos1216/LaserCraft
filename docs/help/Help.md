@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.8 - photograph tracing with live tuning
+Version 0.9 - manual node cleanup for traced and imported paths
 
 ## Create layers and control order
 
@@ -66,6 +66,16 @@ This is an independent pixel-edge outline tracer with optional polyline refineme
 Try samples/photo-tracing.lcraft for an actual photograph. The source is NASA's Apollo 17 Blue Marble; see samples/PHOTO-CREDITS.md for attribution and usage information. A useful starting point is Cutoff 20, Threshold 160, Ignore less than 8, Noise smoothing 0.8, Outline smoothness 0.5, Optimize 0.7 and 512 samples. These are a starting point for this photograph, not calibrated laser settings. Review composition, cleanup, layer power/speed and output preview for each job. samples/trace-outlines.lcraft remains a generated clean-shape fixture. For its original four-contour, 242-vertex result, use 256 samples, threshold 128, minimum area 2 and zero noise/smoothness/optimize.
 
 ## Draw and edit vectors
+
+Nodes mode supports manual cleanup of traced photographs and imported polylines. Click a path to select it, then click a square vertex: the active vertex is orange, and the inspector shows its contour/node number. Clicking alone does not move geometry. Drag beyond the small movement threshold to move the vertex; snapping applies to the movement and preserves the grab offset. Each completed drag is one undo step.
+
+- Double-click a segment of the selected path to insert a node at the nearest point on that segment. This point stays on the segment even when grid snapping is enabled.
+- Insert (while the canvas has focus), or Tools / Insert node after selected, inserts a midpoint on the following segment. Closed contours include the last-to-first segment. An open contour's last node has no following segment.
+- Delete in Nodes mode, or Tools / Delete selected node, removes only the active node and reconnects its neighbors. Closed contours must keep at least three nodes and open contours two; invalid edits leave the original intact and show a message. Edit / Delete and the toolbar's Delete button still remove whole selected objects.
+- Tools / Break at selected node opens a closed contour at that point, retaining every segment and making two independent endpoints at the same position. On an open contour, an interior node splits it into two contours sharing that position; selecting an endpoint cannot split it. The pieces remain in one path object and on the same layer. Fill output requires closed contours, so close the path or use Line mode after breaking.
+- Tools / Remove selected contour removes the entire contour containing the active node. This can remove small regions or holes from a photo trace. Other contours remain unchanged. The last contour cannot be removed this way; use Edit / Delete for the whole object.
+
+Insert, remove, break and contour removal each support Undo/Redo. After deletion/breaking, click a node again before another node operation. Only a node belonging to the current selected, visible and unchanged path can be edited. These are straight-polyline operations; curve handles, joining separate objects and separating compound contours into objects remain planned. Removing nodes/holes can change the burned area; inspect the output preview after cleanup.
 
 Lines creates straight vector paths: click vertices, then Enter or double-click to finish an open path. C or clicking the first vertex closes a contour with at least three vertices. Backspace removes the last draft vertex; Escape cancels the draft. Switching tools cancels unfinished drawing. A draft has at most 10000 vertices. Drawing is restricted to the bed and commits as one undo step.
 

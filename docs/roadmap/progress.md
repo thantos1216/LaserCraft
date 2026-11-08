@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.8 - photograph tracing
+## Current milestone 0.9 - manual path cleanup
+
+Added active node highlighting/numbering, double-click segment insertion, midpoint insertion, node deletion, contour removal and break/split at a node. Operations preserve identity/layer and participate in undo/native saves. Breaking a closed contour retains all segments and produces two separate endpoints at the break; open splits retain two contours in the same object. Invalid/minimum-node edits leave source geometry unchanged. Nodes-mode Delete edits nodes; whole-object deletion remains explicit through Edit/toolbar.
+
+Interactive verification found and fixed selection clicks causing snapped node drift. Drags now have a movement threshold and preserve the grab offset. UI checked selection without mutation, keyboard insertion/deletion, double-click insertion, breaking via Tools, rejection of fill on open contours and undo back to the unchanged fixture. 131 tests pass (127 unit, 4 integration); see [validation](../testing/milestone-09.md). No machine execution was performed. Next gaps remain Bézier geometry, joining/separating paths and broader SVG interoperability.
+
+## Milestone 0.8 - photograph tracing
 
 2026-11-08. Added live photograph-oriented tracing sliders for brightness range, component area, Gaussian noise reduction, polyline corner smoothing and node optimization, plus local-contrast sketch mode, a 1024-sample ceiling, threshold-mask view and zoom/pan controls. Trace refinement retains delicate contours or the entire original trace when its checks cannot complete. Source bytes stay unchanged; separate-layer creation/source-output suppression remains one undo step.
 

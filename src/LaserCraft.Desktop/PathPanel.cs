@@ -5,6 +5,7 @@ namespace LaserCraft.Desktop;
 
 public sealed partial class MainWindow
 {
+    private void EditPathNode(string operation) => status.Text = Current.Canvas.EditNode(operation);
     private void ConvertToPaths()
     {
         var c = Current.Canvas; if (c.Selection.Count == 0) { status.Text = "Select vector artwork first."; return; }

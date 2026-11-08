@@ -23,11 +23,35 @@ public sealed class DesignCanvas : Control
     public bool Snap { get; set; } = true;
     public int ActiveLayer { get; set; }
     public event Action? Changed;
+    public event Action<string>? Notice;
+    public string NodeDescription => CurrentNode && activeNode is { } n ? $" · contour {n.Contour + 1}, node {n.Vertex + 1} / {n.Owner.Path!.Contours[n.Contour].Points.Length}" : "";
     private Point? start;
     private DesignShape? original, preview;
     private readonly List<PointMm> pathDraft = [];
     private PointMm? draftCursor;
     private int nodeContour = -1, nodeVertex = -1;
+    private bool nodeDragging;
+    private (DesignShape Owner, int Contour, int Vertex)? activeNode;
+    private bool CurrentNode => Tool == "Nodes" && activeNode is { } n && Selected == n.Owner.Id && History.Document.Shapes.Any(s => s == n.Owner && History.Document.Layers[s.Layer].Visible);
+    public string EditNode(string operation)
+    {
+        if (!CurrentNode || activeNode is not { } n) return "Click a node on the selected path first.";
+        try
+        {
+            var edited = operation switch
+            {
+                "Insert" => PathNodeEditing.InsertAfter(n.Owner, n.Contour, n.Vertex),
+                "Remove" => PathNodeEditing.Remove(n.Owner, n.Contour, n.Vertex),
+                "Break" => PathNodeEditing.Break(n.Owner, n.Contour, n.Vertex),
+                "Contour" => PathNodeEditing.RemoveContour(n.Owner, n.Contour, n.Vertex),
+                _ => throw new InvalidDataException("Unknown node operation.")
+            };
+            Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == edited.Id ? edited : s).ToList() });
+            activeNode = operation == "Insert" ? (edited, n.Contour, n.Vertex + 1) : null;
+            Refresh(); return operation + " node edit applied · Undo restores the previous geometry.";
+        }
+        catch (InvalidDataException ex) { return ex.Message; }
+    }
     private Vector moveDelta;
     private double zoom = 1;
     private Vector pan;
@@ -40,7 +64,7 @@ public sealed class DesignCanvas : Control
     private static IBrush Brush(string color) { try { return new SolidColorBrush(Color.Parse(color)); } catch { return Brushes.Cyan; } }
     public void Refresh() { InvalidateVisual(); Changed?.Invoke(); }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
-    public void CancelDrawing() { pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; InvalidateVisual(); }
+    public void CancelDrawing() { pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; activeNode = null; InvalidateVisual(); }
     private void FinishPath(bool closed)
     {
         if (pathDraft.Count < (closed ? 3 : 2)) return;
@@ -121,7 +145,15 @@ public sealed class DesignCanvas : Control
             else if (s.Kind == ShapeKind.Path)
             {
                 foreach (var edge in VectorPaths.Edges(s)) ctx.DrawLine(pen, Screen(edge.From), Screen(edge.To));
-                if (Tool == "Nodes" && Selection.Contains(s.Id)) foreach (var p in VectorPaths.World(s).SelectMany(c => c.Points)) ctx.DrawRectangle(Brushes.White, new Pen(Brushes.Cyan, 1), new Rect(Screen(p) - new Vector(3, 3), new Size(6, 6)));
+                if (Tool == "Nodes" && Selection.Contains(s.Id))
+                {
+                    var contours = VectorPaths.World(s);
+                    for (int ci = 0; ci < contours.Length; ci++) for (int vi = 0; vi < contours[ci].Points.Length; vi++)
+                    {
+                        var chosen = activeNode is { } n && Selected == s.Id && n.Owner.Id == s.Id && n.Contour == ci && n.Vertex == vi && (CurrentNode || preview?.Id == s.Id);
+                        ctx.DrawRectangle(chosen ? Brushes.Orange : Brushes.White, new Pen(Brushes.Cyan, 1), new Rect(Screen(contours[ci].Points[vi]) - new Vector(3, 3), new Size(6, 6)));
+                    }
+                }
             }
             else if (s.Kind == ShapeKind.Rectangle) ctx.DrawRectangle(null, pen, r); else ctx.DrawEllipse(null, pen, r);
             if (Selection.Contains(s.Id)) ctx.DrawRectangle(null, new Pen(Brushes.White, .8, DashStyle.Dash), r.Inflate(4));
@@ -134,7 +166,7 @@ public sealed class DesignCanvas : Control
         if (!props.IsLeftButtonPressed) return;
         if (ShowPreview) return;
         start = Snapped(World(e.GetPosition(this))); var p = start.Value; original = null; preview = null; moveDelta = default;
-        nodeContour = nodeVertex = -1;
+        nodeContour = nodeVertex = -1; nodeDragging = false;
         if (Tool == "Lines")
         {
             if (p.X >= 0 && p.Y >= 0 && p.X <= History.Document.Width && p.Y <= History.Document.Height && History.Document.Layers[ActiveLayer].Kind == LayerKind.Vector)
@@ -147,12 +179,42 @@ public sealed class DesignCanvas : Control
         }
         if (Tool == "Nodes")
         {
+            activeNode = null;
             var selected = History.Document.Shapes.FirstOrDefault(s => s.Id == Selected && s.Kind == ShapeKind.Path && History.Document.Layers[s.Layer].Visible);
             if (selected is not null)
             {
                 var contours = VectorPaths.World(selected);
+                double closest = 6 / Scale;
+                var raw = World(e.GetPosition(this)); var pointer = new PointMm(raw.X, raw.Y);
                 for (int ci = 0; ci < contours.Length; ci++) for (int vi = 0; vi < contours[ci].Points.Length; vi++)
-                    if (VectorPaths.Distance(new(p.X, p.Y), contours[ci].Points[vi], contours[ci].Points[vi]) <= 6 / Scale) { nodeContour = ci; nodeVertex = vi; original = selected; preview = selected; break; }
+                {
+                    var distance = VectorPaths.Distance(pointer, contours[ci].Points[vi], contours[ci].Points[vi]);
+                    if (distance <= closest) { closest = distance; nodeContour = ci; nodeVertex = vi; original = selected; preview = selected; activeNode = (selected, ci, vi); }
+                }
+                if (nodeVertex < 0 && e.ClickCount == 2)
+                {
+                    int edgeContour = -1, edgeVertex = -1; PointMm target = default; closest = 6 / Scale;
+                    for (int ci = 0; ci < contours.Length; ci++)
+                        for (int vi = 0; vi < contours[ci].Points.Length - (contours[ci].Closed ? 0 : 1); vi++)
+                        {
+                            var a = contours[ci].Points[vi]; var b = contours[ci].Points[(vi + 1) % contours[ci].Points.Length]; var distance = VectorPaths.Distance(pointer, a, b);
+                            if (distance > closest) continue;
+                            var dx = b.X - a.X; var dy = b.Y - a.Y; var length = dx * dx + dy * dy; if (length == 0) continue;
+                            var t = Math.Clamp(((pointer.X - a.X) * dx + (pointer.Y - a.Y) * dy) / length, 0, 1);
+                            closest = distance; edgeContour = ci; edgeVertex = vi; target = new(a.X + dx * t, a.Y + dy * t);
+                        }
+                    if (edgeContour >= 0)
+                    {
+                        try
+                        {
+                            var inserted = PathNodeEditing.InsertAfter(selected, edgeContour, edgeVertex, target);
+                            Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == selected.Id ? inserted : s).ToList() });
+                            activeNode = (inserted, edgeContour, edgeVertex + 1);
+                        }
+                        catch (InvalidDataException) { /* Vertex/work limits leave the original intact. */ }
+                        start = null; Refresh(); return;
+                    }
+                }
             }
             if (nodeVertex < 0) Selected = History.Document.Shapes.LastOrDefault(s => s.Kind == ShapeKind.Path && History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 6 / Scale))?.Id;
             e.Pointer.Capture(this); Refresh(); return;
@@ -175,7 +237,10 @@ public sealed class DesignCanvas : Control
         var p = Snapped(World(e.GetPosition(this)));
         if (original is not null && nodeVertex >= 0)
         {
-            try { preview = VectorPaths.MoveNode(original, nodeContour, nodeVertex, new(p.X, p.Y)); } catch (InvalidDataException) { preview = original; }
+            if (!nodeDragging && Math.Sqrt(Math.Pow(p.X - a.X, 2) + Math.Pow(p.Y - a.Y, 2)) * Scale < 3) return;
+            nodeDragging = true;
+            var node = VectorPaths.World(original)[nodeContour].Points[nodeVertex];
+            try { preview = VectorPaths.MoveNode(original, nodeContour, nodeVertex, new(node.X + p.X - a.X, node.Y + p.Y - a.Y)); } catch (InvalidDataException) { preview = original; }
         }
         else if (original is not null) moveDelta = p - a;
         else if (preview is not null) preview = preview with { X = Math.Min(a.X, p.X), Y = Math.Min(a.Y, p.Y), Width = Math.Max(.1, Math.Abs(p.X - a.X)), Height = Math.Max(.1, Math.Abs(p.Y - a.Y)) };
@@ -186,7 +251,7 @@ public sealed class DesignCanvas : Control
         if (Tool == "Lines") { panStart = null; e.Pointer.Capture(null); return; }
         if (nodeVertex >= 0 && preview is not null)
         {
-            try { History.Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); } catch (InvalidDataException) { /* Invalid node moves preserve the original. */ }
+            try { if (preview != original) History.Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); activeNode = (preview, nodeContour, nodeVertex); } catch (InvalidDataException) { activeNode = null; /* Invalid node moves preserve the original. */ }
         }
         else if (original is not null && moveDelta != default)
         {
@@ -207,6 +272,8 @@ public sealed class DesignCanvas : Control
         if (Tool == "Lines" && e.Key == Key.Enter) { FinishPath(false); e.Handled = true; }
         else if (Tool == "Lines" && e.Key == Key.C && e.KeyModifiers == KeyModifiers.None) { FinishPath(true); e.Handled = true; }
         else if (Tool == "Lines" && e.Key == Key.Back && pathDraft.Count > 0) { pathDraft.RemoveAt(pathDraft.Count - 1); InvalidateVisual(); e.Handled = true; }
+        else if (Tool == "Nodes" && e.Key == Key.Delete) { Notice?.Invoke(EditNode("Remove")); e.Handled = true; }
+        else if (Tool == "Nodes" && e.Key == Key.Insert) { Notice?.Invoke(EditNode("Insert")); e.Handled = true; }
         else if (e.Key == Key.Delete) { DeleteSelected(); e.Handled = true; }
         else if (e.Key == Key.Escape) { Selected = null; CancelDrawing(); Refresh(); }
         base.OnKeyDown(e);

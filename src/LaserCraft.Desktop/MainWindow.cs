@@ -59,7 +59,7 @@ public sealed partial class MainWindow : Window
     {
         d.Validate(); RasterImages.Verify(d);
         var s = new Session { Path = path }; s.Canvas.History.Reset(d); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
-        s.Canvas.Changed += Refresh; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
+        s.Canvas.Changed += Refresh; s.Canvas.Notice += message => status.Text = message; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
     }
     private void Refresh()
     {

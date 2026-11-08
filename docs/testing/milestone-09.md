@@ -1,0 +1,11 @@
+# Milestone 0.9 validation
+
+Independent node cleanup for polyline artwork, including photographic trace output. Build: zero warnings/errors. All 131 tests pass: 127 unit and 4 native integration tests.
+
+Seven new domain tests cover insertion on the closing edge without changing cut length; mirrored world-coordinate editing and layer/identity retention; removal isolated to one contour and history restoration; opening a closed contour with every original segment retained and fill rejection; splitting an open contour with a shared endpoint and unchanged cut length; contour removal/native project round-trip; and rejection of minimum-node, endpoint, invalid-index, nonfinite and globally collapsed geometry edits. Existing photograph, image tracing, SVG, planning and offline export tests remain passing.
+
+Release desktop checks used samples/paths-and-nodes.lcraft. Clicking a node keeps the document clean and dimensions unchanged. Insert increases the outer contour from four to five vertices and selects the midpoint; Delete restores four vertices while keeping the object. Undo restores the inserted node. Double-clicking an edge inserts a sixth vertex at the chosen location. Tools / Break at selected node succeeds; Preview then reports that Fill requires closed contours. Undo restores the original clean three-object sample without saving it over.
+
+The UI check exposed selection clicks being snapped into small geometry shifts. The fix establishes a three-screen-pixel drag threshold and applies movement relative to the grabbed node, retaining the pointer offset. Click-only behavior was rechecked after the fix. Node deletion, minimum constraints, contour removal and open splits have domain coverage; contour removal/open splits and drag-offset precision were not separately exercised through the desktop UI in this milestone.
+
+No new LightBurn binary analysis was needed for these original source changes. The prior controlled observations and REA evidence remain in the research ledger; static resource inventories do not verify interactive node semantics. This milestone does not claim matching proprietary node/curve algorithms. Missing: Bézier handles, endpoint joining, separating compound paths into independent objects, multi-node selection and broad photographic cleanup qualification. No hardware output was sent.
