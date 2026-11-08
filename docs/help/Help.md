@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.11 - independent trace-region objects and connection fixes
+Version 0.12 - endpoint joining with explicit gap handling
 
 ## Create layers and control order
 
@@ -78,6 +78,19 @@ This is an independent pixel-edge outline tracer with optional polyline refineme
 Try samples/photo-tracing.lcraft for an actual photograph. The source is NASA's Apollo 17 Blue Marble; see samples/PHOTO-CREDITS.md for attribution and usage information. A useful starting point is Cutoff 20, Threshold 160, Ignore less than 8, Noise smoothing 0.8, Outline smoothness 0.5, Optimize 0.7 and 512 samples. These are a starting point for this photograph, not calibrated laser settings. Review composition, cleanup, layer power/speed and output preview for each job. samples/trace-outlines.lcraft remains a generated clean-shape fixture. For its original four-contour, 242-vertex result, use 256 samples, threshold 128, minimum area 2 and zero noise/smoothness/optimize.
 
 ## Draw and edit vectors
+
+### Join open endpoints
+
+Select exactly two open contours on the same layer and choose Tools / Join open endpoints…. They may be two separate path objects or two contours in one compound path. For more complex selections, separate the paths first; break closed contours before joining. The dialog chooses the closest pair among the four endpoint combinations and reverses traversal as needed. Equal-distance ties keep the original traversal when possible. There is no automatic multi-path chaining or manual endpoint-pair picker yet.
+
+Maximum gap is in millimetres, defaults to 0.1 and accepts 0–20000. A zero limit accepts exactly coincident endpoints. Larger values permit a greater geometry change; the result must still fit the normal project/object limits. Out-of-range gaps and invalid selections disable Join paths and leave the document unchanged. The dialog offers two methods:
+
+- Merge endpoints at midpoint moves each chosen endpoint halfway across the gap and replaces the pair with one vertex. Adjacent segments change; their total length need not stay the same.
+- Bridge gap with a cut segment retains the original endpoints and adds a laser-on segment between them, using the layer's cut settings. For coincident endpoints there is no extra segment. This differs from Combine, which leaves disconnected contours separated by off-power travel.
+
+Review the reported gap, movement/added-length summary and drawing: dashed gray is original geometry, cyan is the proposed path, and orange marks the original endpoints. Nothing changes until Join paths. Cancel leaves the document untouched. The result is one open contour and stays open even if its remaining outer endpoints coincide; closing is a separate edit. The earliest selected object in document order keeps its identity/layer and position in object order; the other selected object is removed. Unselected objects remain unchanged. Joining is one undo step, and the resulting vertices are editable in Nodes mode.
+
+Try samples/endpoint-joining.lcraft: Ctrl+A selects both paths; their gap is approximately 0.4472136 mm, so the default 0.1 limit rejects it. Set the maximum to 1 mm to inspect either method. Use Preview after applying; no homing, motion or laser firing is performed by this editing workflow. Joining does not weld intersections, fit curves or guarantee a simple nonintersecting contour.
 
 ### Separate and combine path objects
 

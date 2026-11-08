@@ -35,3 +35,5 @@ Version 0.9 adds manual path cleanup: visible node selection, midpoint/edge inse
 Version 0.10 improves GRBL connection testing: read-only firmware settings, richer reported telemetry, serial-port refresh/startup delay, profile locking while connected, and clearer connection status. Simulator and TCP loopback tests pass; physical USB hardware is unverified. [Connection steps](docs/help/Help.md#test-a-grbl-connection) describe what can be tested without machine execution.
 
 Version 0.11 adds separation of compound trace contours into independently selectable path objects and same-layer combination without joining endpoints. It also fixes a Windows CI-discovered disconnect race in queued monitor queries. [Validation](docs/testing/milestone-11.md) records tests and remaining limits.
+
+Version 0.12 adds previewed joining of two open contours with a maximum gap and explicit midpoint-merge or laser-on bridge methods. Try samples/endpoint-joining.lcraft. Joining remains an editing operation; physical machine execution is not implemented.

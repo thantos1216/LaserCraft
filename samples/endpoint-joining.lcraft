@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Name": "Endpoint joining - 0.447 mm gap",
+  "Width": 400,
+  "Height": 400,
+  "Shapes": [
+    {
+      "Id": "64306695-5765-4b7e-99c3-f53dd37b8f4f", "Kind": 3,
+      "X": 50, "Y": 100, "Width": 100, "Height": 0, "Layer": 0,
+      "Path": { "Contours": [{ "Closed": false, "Points": [{ "X": 0, "Y": 0 }, { "X": 1, "Y": 0 }] }] }
+    },
+    {
+      "Id": "a41bdf3b-376d-4e67-95dd-031210f8e128", "Kind": 3,
+      "X": 150.4, "Y": 100.2, "Width": 129.6, "Height": 59.8, "Layer": 0,
+      "Path": { "Contours": [{ "Closed": false, "Points": [{ "X": 0, "Y": 0 }, { "X": 0.6141975308641975, "Y": 1 }, { "X": 1, "Y": 1 }] }] }
+    }
+  ],
+  "Layers": [{ "Name": "Joined line example", "Color": "#40E0D0", "Speed": 1200, "Power": 20 }]
+}

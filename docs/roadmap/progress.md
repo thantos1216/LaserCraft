@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.11 - independent trace regions and monitor cancellation
+## Current milestone 0.12 - endpoint joining
+
+Added Tools / Join open endpoints… for two same-layer open contours in one or two objects. The closest endpoint pair is selected deterministically; midpoint merging and cut-segment bridging have separate explanations and preview. Gap limits, layer/topology/format validation and source/selection checks prevent stale or invalid installation. Apply is one undo step; the result remains open and editable. A portable sample demonstrates a 0.447 mm gap.
+
+Local Release build has zero warnings/errors; 170 tests pass (165 unit, 5 integration). Tests cover endpoint orientations, mirrors, gap boundaries, merge/bridge geometry and cut power, identity/order/layers, format limits, history and file/export/planning round-trips. Desktop checked rejection at 0.1 mm, accepted preview at 1 mm, bridge wording/apply, output preview and undo to the unchanged two-object fixture. See [validation](../testing/milestone-12.md). Physical output and full parity remain unfinished; next vector work is Bézier geometry, curve-aware node editing and broader SVG interoperability.
+
+## Milestone 0.11 - independent trace regions and monitor cancellation
 
 Added Tools / Separate selected paths and Combine selected paths. Contours become independently selectable objects that can be assigned to other vector layers; combining preserves geometry and requires a shared layer. Both are atomic undoable operations. Holes retain same-layer Fill behavior; combining does not join/weld endpoints. Source identity/order, mirrors, mixed-layer rejection, malformed/degenerate selections, native saves and history have automated coverage. Desktop separation/combination/undo and corrected simulator connection footer were checked.
 
