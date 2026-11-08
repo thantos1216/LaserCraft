@@ -33,3 +33,5 @@ Version 0.8 adds photograph-oriented trace sliders, Gaussian noise reduction, po
 Version 0.9 adds manual path cleanup: visible node selection, midpoint/edge insertion, node and contour deletion, and breaking closed/open contours with undo. Try Nodes mode in samples/paths-and-nodes.lcraft or on a photo trace. Curve handles and endpoint joining remain planned.
 
 Version 0.10 improves GRBL connection testing: read-only firmware settings, richer reported telemetry, serial-port refresh/startup delay, profile locking while connected, and clearer connection status. Simulator and TCP loopback tests pass; physical USB hardware is unverified. [Connection steps](docs/help/Help.md#test-a-grbl-connection) describe what can be tested without machine execution.
+
+Version 0.11 adds separation of compound trace contours into independently selectable path objects and same-layer combination without joining endpoints. It also fixes a Windows CI-discovered disconnect race in queued monitor queries. [Validation](docs/testing/milestone-11.md) records tests and remaining limits.

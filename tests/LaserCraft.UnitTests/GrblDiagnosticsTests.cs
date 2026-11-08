@@ -59,12 +59,27 @@ public sealed class GrblDiagnosticsTests
         var t = new Replies(response.Split('\n')); await using var m = await GrblMonitor.ConnectAsync(t);
         await Assert.ThrowsAsync(expected, async () => await m.QuerySettingsAsync()); Assert.Equal(new[] { "$I\n", "$$\n" }, t.Commands);
     }
-    [Fact]
-    public async Task DisconnectCancelsSettingsReadAndQueuedStatusWithoutSendingStatus()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task DisconnectCancelsActiveAndQueuedQueriesWithoutSendingTheQueuedCommand(bool settingsFirst)
     {
-        var t = new Replies([]); var m = await GrblMonitor.ConnectAsync(t); var settings = m.QuerySettingsAsync(); await t.SettingsSent.Task.WaitAsync(TimeSpan.FromSeconds(2)); var status = m.QueryStatusAsync();
-        await m.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(2));
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => settings); await Assert.ThrowsAnyAsync<OperationCanceledException>(() => status); Assert.True(t.Disposed); Assert.DoesNotContain("?", t.Commands);
+        for (int i = 0; i < 16; i++)
+        {
+            var t = new Replies([]); var m = await GrblMonitor.ConnectAsync(t);
+            Task active = settingsFirst ? m.QuerySettingsAsync() : m.QueryStatusAsync();
+            if (settingsFirst) await t.SettingsSent.Task.WaitAsync(TimeSpan.FromSeconds(2)); else Assert.Contains("?", t.Commands);
+            Task queued = settingsFirst ? m.QueryStatusAsync() : m.QuerySettingsAsync();
+            await m.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(2));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => active); await Assert.ThrowsAnyAsync<OperationCanceledException>(() => queued); Assert.True(t.Disposed); Assert.DoesNotContain(settingsFirst ? "?" : "$$\n", t.Commands);
+        }
+    }
+    [Fact]
+    public async Task NewQueriesAfterDisposalFailWithoutSendingAnything()
+    {
+        var t = new SimulatedGrblTransport(); var m = await GrblMonitor.ConnectAsync(t); await m.DisposeAsync();
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => m.QueryStatusAsync()); await Assert.ThrowsAsync<ObjectDisposedException>(() => m.QuerySettingsAsync());
+        Assert.Equal(new[] { "$I\n" }, t.Commands);
     }
     [Fact]
     public async Task ResponseBudgetRejectsUnterminatedSettings()

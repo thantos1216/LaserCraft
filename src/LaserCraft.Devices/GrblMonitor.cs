@@ -49,7 +49,7 @@ public sealed class GrblMonitor : IAsyncDisposable
     private readonly IGrblTransport transport;
     private readonly SemaphoreSlim gate = new(1);
     private readonly CancellationTokenSource lifetime = new();
-    private bool disposed;
+    private int disposalStarted;
     public string Identity { get; private set; } = "";
     private GrblMonitor(IGrblTransport transport) => this.transport = transport;
     public static async Task<GrblMonitor> ConnectAsync(IGrblTransport transport, CancellationToken cancellationToken = default)
@@ -72,11 +72,13 @@ public sealed class GrblMonitor : IAsyncDisposable
     }
     public async Task<GrblStatus> QueryStatusAsync(CancellationToken cancellationToken = default)
     {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref disposalStarted) != 0, this);
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token); timeout.CancelAfter(TimeSpan.FromSeconds(4));
         await gate.WaitAsync(timeout.Token);
         try
         {
-            ObjectDisposedException.ThrowIf(disposed, this); await transport.WriteAsync("?", timeout.Token);
+            if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
+            timeout.Token.ThrowIfCancellationRequested(); await transport.WriteAsync("?", timeout.Token);
             for (int i = 0; i < 64; i++) { var line = await transport.ReadLineAsync(timeout.Token); if (line.StartsWith('<')) return GrblStatus.Parse(line); if (line.StartsWith("error:")) throw new IOException(line); }
             throw new InvalidDataException("No status frame within the response limit.");
         }
@@ -84,11 +86,13 @@ public sealed class GrblMonitor : IAsyncDisposable
     }
     public async Task<IReadOnlyList<GrblSetting>> QuerySettingsAsync(CancellationToken cancellationToken = default)
     {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref disposalStarted) != 0, this);
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token); timeout.CancelAfter(TimeSpan.FromSeconds(6));
         await gate.WaitAsync(timeout.Token);
         try
         {
-            ObjectDisposedException.ThrowIf(disposed, this); await transport.WriteAsync("$$\n", timeout.Token);
+            if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
+            timeout.Token.ThrowIfCancellationRequested(); await transport.WriteAsync("$$\n", timeout.Token);
             var settings = new List<GrblSetting>(); var numbers = new HashSet<int>();
             for (int i = 0; i < 256; i++)
             {
@@ -106,7 +110,7 @@ public sealed class GrblMonitor : IAsyncDisposable
     }
     public async ValueTask DisposeAsync()
     {
-        if (disposed) return; disposed = true; await lifetime.CancelAsync(); await gate.WaitAsync();
+        if (Interlocked.Exchange(ref disposalStarted, 1) != 0) return; await lifetime.CancelAsync(); await gate.WaitAsync();
         try { await transport.DisposeAsync(); } finally { gate.Release(); }
     }
 }

@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.10 - GRBL diagnostics
+## Current milestone 0.11 - independent trace regions and monitor cancellation
+
+Added Tools / Separate selected paths and Combine selected paths. Contours become independently selectable objects that can be assigned to other vector layers; combining preserves geometry and requires a shared layer. Both are atomic undoable operations. Holes retain same-layer Fill behavior; combining does not join/weld endpoints. Source identity/order, mirrors, mixed-layer rejection, malformed/degenerate selections, native saves and history have automated coverage. Desktop separation/combination/undo and corrected simulator connection footer were checked.
+
+Windows CI on 0.10 exposed a queued-query cancellation race that local tests had not reproduced: a query could acquire the gate during shutdown and throw ObjectDisposedException instead of cancellation. The monitor now distinguishes new calls after disconnect from already queued calls at the owning gate boundary, and disposal has one atomic initiator. Both status/settings queued orders run 16 times in regression coverage. Local build has zero warnings/errors; 158 tests pass (154 unit, 4 integration). See [validation](../testing/milestone-11.md). Physical USB and machine execution remain unverified/unimplemented, respectively. Next: endpoint joining, Bézier geometry and broader SVG interoperability.
+
+## Milestone 0.10 - GRBL diagnostics
 
 Added explicit read-only $$ settings retrieval with source-value preservation, report completion/duplicate/error/line-budget validation, and a desktop report showing $30/$32 alongside the profile S maximum. Added feed/spindle/buffer/pin/accessory status fields with explicit omission, serial-port refresh and a configurable 0–10000 ms serial startup delay (default 2000). Profile choice/editing is locked during connection; concurrent reads are disabled in the UI and serialized by the monitor. Serial write timeouts now surface as connection errors, and connection control changes refresh the footer state.
 

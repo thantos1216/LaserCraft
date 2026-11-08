@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.10 - GRBL connection diagnostics and read-only firmware settings
+Version 0.11 - independent trace-region objects and connection fixes
 
 ## Create layers and control order
 
@@ -78,6 +78,14 @@ This is an independent pixel-edge outline tracer with optional polyline refineme
 Try samples/photo-tracing.lcraft for an actual photograph. The source is NASA's Apollo 17 Blue Marble; see samples/PHOTO-CREDITS.md for attribution and usage information. A useful starting point is Cutoff 20, Threshold 160, Ignore less than 8, Noise smoothing 0.8, Outline smoothness 0.5, Optimize 0.7 and 512 samples. These are a starting point for this photograph, not calibrated laser settings. Review composition, cleanup, layer power/speed and output preview for each job. samples/trace-outlines.lcraft remains a generated clean-shape fixture. For its original four-contour, 242-vertex result, use 256 samples, threshold 128, minimum area 2 and zero noise/smoothness/optimize.
 
 ## Draw and edit vectors
+
+### Separate and combine path objects
+
+A photo trace is initially one compound path containing many contours. Select it and choose Tools / Separate selected paths to make each contour an independent path object. All resulting objects are selected and retain their layer. Click an individual region in Select mode (or use Ctrl-click to adjust selection), then assign it to another vector layer as needed. You can give those layers different speeds/powers and reorder them. The first contour keeps the original object's identity; other contours receive new identities. Each separation is one undo step. Existing single-contour paths in a mixed selection stay unchanged.
+
+Tools / Combine selected paths makes selected path objects into one compound object, preserving their contour order from the document, open/closed state and world geometry. All selected paths must already be on the same layer so their cut settings are preserved. Combining does not weld overlaps, join endpoints, or create connecting laser-on segments. Disconnected contours remain separated by off-power travel in Line output. It is also one undo step.
+
+Both operations accept paths only: convert rectangles/ellipses to paths first, or trace images. Separation refuses a contour with no extent that cannot be represented as its own object; combining/separation also respect object/contour/vertex limits. Failures leave the project unchanged. Same-layer Fill retains the even-odd rule across contours/objects, including holes. Assigning a separated hole to another layer can change the filled result; inspect Preview after reorganizing regions. This is contour separation, not automatic recognition of semantic photographic objects.
 
 Nodes mode supports manual cleanup of traced photographs and imported polylines. Click a path to select it, then click a square vertex: the active vertex is orange, and the inspector shows its contour/node number. Clicking alone does not move geometry. Drag beyond the small movement threshold to move the vertex; snapping applies to the movement and preserves the grab offset. Each completed drag is one undo step.
 
