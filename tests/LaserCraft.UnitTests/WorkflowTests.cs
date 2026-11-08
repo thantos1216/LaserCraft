@@ -18,7 +18,7 @@ public sealed class WorkflowTests
         var shapes = SvgImport.Read("<svg width='96px' height='96px' viewBox='0 0 96 96'><rect width='96' height='96'/></svg>"); Assert.Equal(25.4, shapes[0].Width, 8);
     }
     [Theory]
-    [InlineData("<path d='M0 0 L1 1'/>")]
+    [InlineData("<path d='M0 0 Q1 1 2 2'/>")]
     [InlineData("<g transform='scale(2)'><rect width='4' height='4'/></g>")]
     public void UnsupportedSvgCannotSilentlyDropGeometry(string element) => Assert.Throws<InvalidDataException>(() => SvgImport.Read($"<svg>{element}</svg>"));
     [Fact] public void SvgExternalEntitiesAreRejected() => Assert.Throws<System.Xml.XmlException>(() => SvgImport.Read("<!DOCTYPE svg [<!ENTITY e SYSTEM 'file:///test'>]><svg>&e;</svg>"));

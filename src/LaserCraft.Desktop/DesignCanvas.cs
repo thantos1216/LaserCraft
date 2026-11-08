@@ -25,6 +25,9 @@ public sealed class DesignCanvas : Control
     public event Action? Changed;
     private Point? start;
     private DesignShape? original, preview;
+    private readonly List<PointMm> pathDraft = [];
+    private PointMm? draftCursor;
+    private int nodeContour = -1, nodeVertex = -1;
     private Vector moveDelta;
     private double zoom = 1;
     private Vector pan;
@@ -37,6 +40,13 @@ public sealed class DesignCanvas : Control
     private static IBrush Brush(string color) { try { return new SolidColorBrush(Color.Parse(color)); } catch { return Brushes.Cyan; } }
     public void Refresh() { InvalidateVisual(); Changed?.Invoke(); }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
+    public void CancelDrawing() { pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; InvalidateVisual(); }
+    private void FinishPath(bool closed)
+    {
+        if (pathDraft.Count < (closed ? 3 : 2)) return;
+        try { var s = VectorPaths.Create([new([.. pathDraft], closed)], ActiveLayer); Apply(History.Document with { Shapes = [.. History.Document.Shapes, s] }); Selected = s.Id; pathDraft.Clear(); draftCursor = null; Refresh(); }
+        catch (InvalidDataException) { /* Keep the draft so Escape or a different finish can recover. */ }
+    }
     public void Apply(DesignDocument d) { History.Apply(d); Refresh(); }
     public void ReleaseImages() { foreach (var artwork in bitmaps.Values) artwork.Bitmap?.Dispose(); bitmaps.Clear(); }
     private async void PrepareArtwork(DesignShape shape, CutLayer layer, Artwork entry)
@@ -69,8 +79,11 @@ public sealed class DesignCanvas : Control
                 for (double x = 0; x <= d.Width; x += step) ctx.DrawLine(grid, new(o.X + x * scale, o.Y), new(o.X + x * scale, bed.Bottom));
                 for (double y = 0; y <= d.Height; y += step) ctx.DrawLine(grid, new(o.X, o.Y + y * scale), new(bed.Right, o.Y + y * scale));
                 foreach (var removed in bitmaps.Keys.Where(id => !d.Shapes.Any(s => s.Id == id)).ToArray()) { bitmaps[removed].Bitmap?.Dispose(); bitmaps.Remove(removed); }
-                foreach (var stored in d.Shapes.Where(s => d.Layers[s.Layer].Visible)) Draw(original is not null && Selection.Contains(stored.Id) ? stored with { X = stored.X + moveDelta.X, Y = stored.Y + moveDelta.Y } : preview?.Id == stored.Id ? preview : stored);
+                foreach (var stored in d.Shapes.Where(s => d.Layers[s.Layer].Visible)) Draw(nodeVertex >= 0 && preview?.Id == stored.Id ? preview : original is not null && Selection.Contains(stored.Id) ? stored with { X = stored.X + moveDelta.X, Y = stored.Y + moveDelta.Y } : preview?.Id == stored.Id ? preview : stored);
                 if (preview is not null && !d.Shapes.Any(s => s.Id == preview.Id)) Draw(preview);
+                for (int i = 1; i < pathDraft.Count; i++) ctx.DrawLine(new Pen(Brushes.Cyan, 1.5), Screen(pathDraft[i - 1]), Screen(pathDraft[i]));
+                if (pathDraft.Count > 0 && draftCursor is PointMm cursor) ctx.DrawLine(new Pen(Brushes.Cyan, 1, DashStyle.Dash), Screen(pathDraft[^1]), Screen(cursor));
+                foreach (var p in pathDraft) ctx.DrawEllipse(Brushes.White, null, Screen(p), 3, 3);
             }
             if (ShowPreview && Plan is not null)
             {
@@ -92,6 +105,7 @@ public sealed class DesignCanvas : Control
         for (double tick = 0; tick <= d.Width; tick += 50) Text(tick.ToString("0"), o.X + tick * scale - 6, o.Y - 20);
         for (double tick = 0; tick <= d.Height; tick += 50) Text(tick.ToString("0"), o.X - 30, o.Y + tick * scale - 6);
         void Text(string text, double x, double y) => ctx.DrawText(new FormattedText(text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 10, rulerBrush), new(x, y));
+        Point Screen(PointMm p) => new(o.X + p.X * scale, o.Y + p.Y * scale);
         void Draw(DesignShape s)
         {
             var r = new Rect(o.X + s.X * scale, o.Y + s.Y * scale, s.Width * scale, s.Height * scale);
@@ -104,6 +118,11 @@ public sealed class DesignCanvas : Control
                 if (entry.Bitmap is { } bitmap) using (ctx.PushTransform(Matrix.CreateTranslation(-r.Center.X, -r.Center.Y) * Matrix.CreateScale(s.FlipX ? -1 : 1, s.FlipY ? -1 : 1) * Matrix.CreateTranslation(r.Center.X, r.Center.Y))) ctx.DrawImage(bitmap, new Rect(bitmap.Size), r);
                 ctx.DrawRectangle(null, pen, r);
             }
+            else if (s.Kind == ShapeKind.Path)
+            {
+                foreach (var edge in VectorPaths.Edges(s)) ctx.DrawLine(pen, Screen(edge.From), Screen(edge.To));
+                if (Tool == "Nodes" && Selection.Contains(s.Id)) foreach (var p in VectorPaths.World(s).SelectMany(c => c.Points)) ctx.DrawRectangle(Brushes.White, new Pen(Brushes.Cyan, 1), new Rect(Screen(p) - new Vector(3, 3), new Size(6, 6)));
+            }
             else if (s.Kind == ShapeKind.Rectangle) ctx.DrawRectangle(null, pen, r); else ctx.DrawEllipse(null, pen, r);
             if (Selection.Contains(s.Id)) ctx.DrawRectangle(null, new Pen(Brushes.White, .8, DashStyle.Dash), r.Inflate(4));
         }
@@ -113,7 +132,31 @@ public sealed class DesignCanvas : Control
         Focus(); var props = e.GetCurrentPoint(this).Properties;
         if (props.IsMiddleButtonPressed) { panStart = e.GetPosition(this); e.Pointer.Capture(this); return; }
         if (!props.IsLeftButtonPressed) return;
+        if (ShowPreview) return;
         start = Snapped(World(e.GetPosition(this))); var p = start.Value; original = null; preview = null; moveDelta = default;
+        nodeContour = nodeVertex = -1;
+        if (Tool == "Lines")
+        {
+            if (p.X >= 0 && p.Y >= 0 && p.X <= History.Document.Width && p.Y <= History.Document.Height && History.Document.Layers[ActiveLayer].Kind == LayerKind.Vector)
+            {
+                if (pathDraft.Count >= 3 && VectorPaths.Distance(new(p.X, p.Y), pathDraft[0], pathDraft[0]) <= 6 / Scale) FinishPath(true);
+                else if (e.ClickCount == 2 && pathDraft.Count >= 2) FinishPath(false);
+                else if (pathDraft.Count < 10000 && (pathDraft.Count == 0 || pathDraft[^1] != new PointMm(p.X, p.Y))) pathDraft.Add(new(p.X, p.Y));
+            }
+            start = null; Refresh(); return;
+        }
+        if (Tool == "Nodes")
+        {
+            var selected = History.Document.Shapes.FirstOrDefault(s => s.Id == Selected && s.Kind == ShapeKind.Path && History.Document.Layers[s.Layer].Visible);
+            if (selected is not null)
+            {
+                var contours = VectorPaths.World(selected);
+                for (int ci = 0; ci < contours.Length; ci++) for (int vi = 0; vi < contours[ci].Points.Length; vi++)
+                    if (VectorPaths.Distance(new(p.X, p.Y), contours[ci].Points[vi], contours[ci].Points[vi]) <= 6 / Scale) { nodeContour = ci; nodeVertex = vi; original = selected; preview = selected; break; }
+            }
+            if (nodeVertex < 0) Selected = History.Document.Shapes.LastOrDefault(s => s.Kind == ShapeKind.Path && History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 6 / Scale))?.Id;
+            e.Pointer.Capture(this); Refresh(); return;
+        }
         if (Tool == "Select")
         {
             original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 5 / Scale));
@@ -127,15 +170,25 @@ public sealed class DesignCanvas : Control
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         if (panStart is Point last) { var current = e.GetPosition(this); pan += current - last; panStart = current; InvalidateVisual(); return; }
+        if (Tool == "Lines") { var cursor = Snapped(World(e.GetPosition(this))); draftCursor = new(cursor.X, cursor.Y); InvalidateVisual(); return; }
         if (start is not Point a) return;
         var p = Snapped(World(e.GetPosition(this)));
-        if (original is not null) moveDelta = p - a;
+        if (original is not null && nodeVertex >= 0)
+        {
+            try { preview = VectorPaths.MoveNode(original, nodeContour, nodeVertex, new(p.X, p.Y)); } catch (InvalidDataException) { preview = original; }
+        }
+        else if (original is not null) moveDelta = p - a;
         else if (preview is not null) preview = preview with { X = Math.Min(a.X, p.X), Y = Math.Min(a.Y, p.Y), Width = Math.Max(.1, Math.Abs(p.X - a.X)), Height = Math.Max(.1, Math.Abs(p.Y - a.Y)) };
         InvalidateVisual();
     }
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
-        if (original is not null && moveDelta != default)
+        if (Tool == "Lines") { panStart = null; e.Pointer.Capture(null); return; }
+        if (nodeVertex >= 0 && preview is not null)
+        {
+            try { History.Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); } catch (InvalidDataException) { /* Invalid node moves preserve the original. */ }
+        }
+        else if (original is not null && moveDelta != default)
         {
             try { History.Apply(ShapeEditing.Transform(History.Document, Selection, s => s with { X = s.X + moveDelta.X, Y = s.Y + moveDelta.Y })); } catch (InvalidDataException) { /* Invalid moves leave the document unchanged. */ }
         }
@@ -145,14 +198,17 @@ public sealed class DesignCanvas : Control
             if (!items.Any(s => s.Id == preview.Id)) items.Add(preview);
             try { History.Apply(History.Document with { Shapes = items }); } catch (InvalidDataException) { Selected = null; }
         }
-        preview = null; original = null; moveDelta = default; start = null; panStart = null; e.Pointer.Capture(null); Refresh();
+        preview = null; original = null; nodeContour = nodeVertex = -1; moveDelta = default; start = null; panStart = null; e.Pointer.Capture(null); Refresh();
     }
-    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e) { start = null; panStart = null; original = null; preview = null; InvalidateVisual(); }
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e) { start = null; panStart = null; original = null; preview = null; nodeContour = nodeVertex = -1; InvalidateVisual(); }
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e) { zoom = Math.Clamp(zoom * (e.Delta.Y > 0 ? 1.12 : 1 / 1.12), .25, 8); InvalidateVisual(); e.Handled = true; }
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key == Key.Delete) { DeleteSelected(); e.Handled = true; }
-        else if (e.Key == Key.Escape) { Selected = null; preview = null; start = null; Refresh(); }
+        if (Tool == "Lines" && e.Key == Key.Enter) { FinishPath(false); e.Handled = true; }
+        else if (Tool == "Lines" && e.Key == Key.C && e.KeyModifiers == KeyModifiers.None) { FinishPath(true); e.Handled = true; }
+        else if (Tool == "Lines" && e.Key == Key.Back && pathDraft.Count > 0) { pathDraft.RemoveAt(pathDraft.Count - 1); InvalidateVisual(); e.Handled = true; }
+        else if (e.Key == Key.Delete) { DeleteSelected(); e.Handled = true; }
+        else if (e.Key == Key.Escape) { Selected = null; CancelDrawing(); Refresh(); }
         base.OnKeyDown(e);
     }
 }

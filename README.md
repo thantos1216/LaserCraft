@@ -23,3 +23,5 @@ Version 0.3 adds embedded PNG/JPEG/BMP artwork and independently configured orde
 Version 0.4 adds image preparation (threshold, Floyd-Steinberg, Bayer, grayscale and tone controls), ordered raster/vector scanline planning and cancellable background previews. Use samples/raster-engraving.lcraft to try it; hardware execution remains unavailable.
 
 Version 0.5 adds monochrome canvas artwork, Stucki/Jarvis/Atkinson dithering, a visual layer color picker, white-bed beam playback and offline GRBL 1.1 export. No physical job execution is implemented.
+
+Version 0.6 adds straight path drawing, vertex dragging, shape-to-path conversion, open/closed compound paths and SVG M/L/H/V/Z, polygon, polyline and line import. See samples/paths-and-nodes.lcraft. Bezier curves and image tracing remain planned.

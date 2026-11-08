@@ -44,6 +44,7 @@ public static class ToolpathPlanner
                 else if (cut.Mode == CutMode.Line)
                     foreach (var s in shapes)
                     {
+                        if (s.Kind == ShapeKind.Path) { foreach (var edge in VectorPaths.Edges(s)) { cancellationToken.ThrowIfCancellationRequested(); Add(edge.From, edge.To); } continue; }
                         var points = s.Kind == ShapeKind.Rectangle
                             ? new[] { new PointMm(s.X, s.Y), new(s.X + s.Width, s.Y), new(s.X + s.Width, s.Y + s.Height), new(s.X, s.Y + s.Height), new(s.X, s.Y) }
                             : Enumerable.Range(0, 129).Select(i => new PointMm(s.X + s.Width / 2 + Math.Cos(i * Math.PI / 64) * s.Width / 2, s.Y + s.Height / 2 + Math.Sin(i * Math.PI / 64) * s.Height / 2)).ToArray();
@@ -53,7 +54,9 @@ public static class ToolpathPlanner
                 {
                     var b = ShapeEditing.Bounds(shapes); var rows = Math.Ceiling(b.Height / cut.Interval);
                     if (rows > 100000) throw new InvalidDataException("Fill preview exceeds the 100000-row limit. Increase line interval.");
-                    fillWork += (long)rows * shapes.Length;
+                    if (shapes.Any(s => s.Kind == ShapeKind.Path && s.Path!.Contours.Any(c => !c.Closed))) throw new InvalidDataException("Fill requires closed contours. Close the path or choose Line mode.");
+                    var pathEdges = shapes.Where(s => s.Kind == ShapeKind.Path).ToDictionary(s => s.Id, s => VectorPaths.Edges(s).ToArray());
+                    fillWork += (long)rows * shapes.Sum(s => s.Kind == ShapeKind.Path ? pathEdges[s.Id].Length : 1);
                     if (fillWork > 3_000_000) throw new InvalidDataException("Fill preview is too complex for the current interactive planner. Reduce shapes, passes or scan density.");
                     for (int row = 0; row < rows; row++)
                     {
@@ -62,6 +65,11 @@ public static class ToolpathPlanner
                         foreach (var s in shapes)
                         {
                             if (y < s.Y || y >= s.Y + s.Height) continue;
+                            if (s.Kind == ShapeKind.Path)
+                            {
+                                foreach (var (a, z) in pathEdges[s.Id]) if ((a.Y > y) != (z.Y > y)) crossings.Add(a.X + (y - a.Y) * (z.X - a.X) / (z.Y - a.Y));
+                                continue;
+                            }
                             var extent = s.Width / 2;
                             if (s.Kind == ShapeKind.Ellipse) extent *= Math.Sqrt(Math.Max(0, 1 - Math.Pow((y - s.Y - s.Height / 2) / (s.Height / 2), 2)));
                             crossings.Add(s.X + s.Width / 2 - extent); crossings.Add(s.X + s.Width / 2 + extent);

@@ -14,6 +14,7 @@ public static class ShapeEditing
         if (x < s.X - tolerance || y < s.Y - tolerance || x > s.X + s.Width + tolerance || y > s.Y + s.Height + tolerance) return false;
         var inside = x >= s.X && y >= s.Y && x <= s.X + s.Width && y <= s.Y + s.Height;
         if (s.Kind == ShapeKind.Image) return inside;
+        if (s.Kind == ShapeKind.Path) return VectorPaths.Edges(s).Any(e => VectorPaths.Distance(new(x, y), e.From, e.To) <= tolerance) || (d.Layers[s.Layer].Mode == CutMode.Fill && s.Path!.Contours.All(c => c.Closed) && VectorPaths.Contains(s, new(x, y)));
         if (s.Kind == ShapeKind.Rectangle) return d.Layers[s.Layer].Mode == CutMode.Fill ? inside : inside && Math.Min(Math.Min(x - s.X, s.X + s.Width - x), Math.Min(y - s.Y, s.Y + s.Height - y)) <= tolerance;
         var radius = Math.Sqrt(Math.Pow((x - s.X - s.Width / 2) / (s.Width / 2), 2) + Math.Pow((y - s.Y - s.Height / 2) / (s.Height / 2), 2));
         return d.Layers[s.Layer].Mode == CutMode.Fill ? radius <= 1 : Math.Abs(radius - 1) * Math.Min(s.Width, s.Height) / 2 <= tolerance;
@@ -45,6 +46,6 @@ public static class ShapeEditing
     public static DesignDocument Mirror(DesignDocument d, IReadOnlySet<Guid> ids, bool horizontal)
     {
         var b = Bounds(d.Shapes.Where(s => ids.Contains(s.Id)));
-        return Transform(d, ids, s => horizontal ? s with { X = 2 * b.X + b.Width - s.X - s.Width, FlipX = s.Kind == ShapeKind.Image ? !s.FlipX : s.FlipX } : s with { Y = 2 * b.Y + b.Height - s.Y - s.Height, FlipY = s.Kind == ShapeKind.Image ? !s.FlipY : s.FlipY });
+        return Transform(d, ids, s => horizontal ? s with { X = 2 * b.X + b.Width - s.X - s.Width, FlipX = s.Kind is ShapeKind.Image or ShapeKind.Path ? !s.FlipX : s.FlipX } : s with { Y = 2 * b.Y + b.Height - s.Y - s.Height, FlipY = s.Kind is ShapeKind.Image or ShapeKind.Path ? !s.FlipY : s.FlipY });
     }
 }

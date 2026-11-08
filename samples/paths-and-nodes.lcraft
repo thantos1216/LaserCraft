@@ -1,0 +1,30 @@
+{
+  "Version": 1,
+  "Name": "Paths and nodes",
+  "Width": 400,
+  "Height": 400,
+  "Shapes": [
+    {
+      "Id": "ff04e86b-404c-4ca3-975f-e6b4c4b4bf20",
+      "Kind": 3, "X": 30, "Y": 30, "Width": 100, "Height": 100, "Layer": 0,
+      "Path": { "Contours": [
+        { "Closed": true, "Points": [{"X":0,"Y":0},{"X":1,"Y":0},{"X":1,"Y":1},{"X":0,"Y":1}] },
+        { "Closed": true, "Points": [{"X":0.3,"Y":0.3},{"X":0.7,"Y":0.3},{"X":0.7,"Y":0.7},{"X":0.3,"Y":0.7}] }
+      ] }
+    },
+    {
+      "Id": "ff04e86b-404c-4ca3-975f-e6b4c4b4bf21",
+      "Kind": 3, "X": 160, "Y": 40, "Width": 80, "Height": 80, "Layer": 1,
+      "Path": { "Contours": [ { "Closed": false, "Points": [{"X":0,"Y":0},{"X":1,"Y":1},{"X":0,"Y":1}] } ] }
+    },
+    {
+      "Id": "ff04e86b-404c-4ca3-975f-e6b4c4b4bf22",
+      "Kind": 3, "X": 160, "Y": 160, "Width": 100, "Height": 0, "Layer": 1,
+      "Path": { "Contours": [ { "Closed": false, "Points": [{"X":0,"Y":0},{"X":1,"Y":0}] } ] }
+    }
+  ],
+  "Layers": [
+    { "Name": "Compound fill", "Color": "#06B6D4", "Mode": 1, "Interval": 2, "Speed": 1800, "Power": 20 },
+    { "Name": "Open lines", "Color": "#D946EF", "Mode": 0, "Speed": 1200, "Power": 35 }
+  ]
+}

@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.5 - monochrome workspace, extended dithering, visual colors and offline GRBL export
+Version 0.6 - editable straight paths and node movement
 
 ## Create layers and control order
 
@@ -44,6 +44,14 @@ Each layer has an Air assist on/off checkbox. The state is saved and follows its
 
 ## Vector editing and navigation
 
+Lines creates straight vector paths: click vertices, then Enter or double-click to finish an open path. C or clicking the first vertex closes a contour with at least three vertices. Backspace removes the last draft vertex; Escape cancels the draft. Switching tools cancels unfinished drawing. A draft has at most 10000 vertices. Drawing is restricted to the bed and commits as one undo step.
+
+Nodes selects a path near its outline. Its square vertices can be dragged; releasing commits one undo step. Tools / Convert selected to paths converts rectangles to four corners and ellipses to 128 straight segments. This conversion is undoable, retains layer/identity, and cannot convert images. Tools / Close selected paths closes every contour in selected paths; each needs at least three vertices. Curve handles and vertex insertion/deletion/join/split are not implemented yet. Select still moves whole objects; numerical resizing, copy, layer assignment and mirroring also apply to paths.
+
+Open and closed paths can be cut in Line mode. Fill requires every contour to be closed and uses the even-odd rule across shapes/contours, preserving holes independent of contour direction. Unconnected contours are separated by laser-off travel. Horizontal or vertical paths can have zero height or width; numeric scaling cannot create a missing extent, so move a vertex with Nodes to change their direction. Path files have limits of 100000 vertices per object, 200000 per project and 10000 contours per object. Dense fill checks an intersection-work budget before scanning. Bézier paths, arcs and automatic tracing remain planned.
+
+Try samples/paths-and-nodes.lcraft for compound fill, a polyline and a horizontal line. samples/linear-paths.svg exercises supported straight-path SVG import. Imported styles are not applied; layer settings govern output. SVG path imports use SVG user units and the root viewBox mapping. SVG exports straight contours with M/L/Z; native files retain open/closed topology and normalized immutable vertices.
+
 Choose Rectangle or Ellipse and drag. Select clicks or moves an object. Ctrl-click adds/removes selection; Ctrl+A selects visible objects. Line shapes are selected near their outlines so a surrounding frame does not intercept an image inside it. Dragging a selected object moves the selection. Enter X, Y, width and height at the top, then Apply. Multi-object sizing scales their combined bounds, in millimetres.
 
 Wheel zooms; middle-drag pans; Fit workspace resets the view. Snap rounds to 1 mm. Ctrl+Z/ Ctrl+Y undo/redo. Ctrl+C copies, Ctrl+V pastes, Ctrl+D duplicates. The internal artwork clipboard is separate from the Windows graphics clipboard. Paste offsets 5 mm and retains layer colors; target vector layers keep existing settings. Delete removes selected objects when the canvas is focused; Escape deselects/cancels. Arrange provides alignment, flips and Center on bed.
@@ -64,7 +72,7 @@ Save G-code creates an offline GRBL 1.1 laser-mode file from enabled layers (or 
 
 New opens a document tab. Save / Ctrl+S persists .lcraft; Save as creates another file. A tab dot/title asterisk marks unsaved work. File / Close project saves modified work first; canceling save keeps it open. Closing the entire window asks before discarding changes. A .lcraft path can also be supplied as a startup argument.
 
-SVG import supports untransformed numeric rectangles, circles and ellipses, root mm/cm/in/px dimensions (96 DPI pixels) and uniform viewBox scaling. Unsupported paths, styles, transforms, rounded rectangles and other constructs reject the entire import. Geometry goes to the active vector layer, or a new vector layer if an image layer was active. SVG export retains geometry and embedded raster sources; .lcraft retains job settings. Full SVG and additional formats remain planned.
+SVG import supports untransformed numeric rectangles, circles and ellipses, root mm/cm/in/px dimensions (96 DPI pixels) and uniform viewBox scaling. SVG paths support absolute/relative M/L/H/V/Z commands, repeated coordinates and compound contours; line, polyline and polygon elements are supported too. Curves/arcs, styles, transforms, rounded rectangles and other constructs reject the entire import. Geometry goes to the active vector layer, or a new vector layer if an image layer was active. SVG export retains geometry and embedded raster sources; .lcraft retains job settings. Full SVG and additional formats remain planned.
 
 Try samples/raster-engraving.lcraft for a working mixed raster/vector preview, samples/layers-and-image.lcraft for the image/layer workflow, samples/studio-demo.lcraft for nested vector fill, and samples/basic-shapes.svg for supported SVG import. Sample settings are illustrative, not material recommendations.
 
@@ -72,4 +80,4 @@ Try samples/raster-engraving.lcraft for a working mixed raster/vector preview, s
 
 Window / Light / dark switches the persisted theme. Help is copied from docs/help/Help.md at build time. LaserCraft's original source is MIT-licensed; third-party packages retain their own licenses. No LightBurn source or protected assets are used.
 
-Full parity remains unfinished: paths/Bezier/text/nodes, tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console is currently a read-only log; arbitrary command entry and macros remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.
+Full parity remains unfinished: Bezier curves, text, advanced node operations, tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console is currently a read-only log; arbitrary command entry and macros remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.

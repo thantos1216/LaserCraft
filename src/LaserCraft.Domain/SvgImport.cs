@@ -31,6 +31,9 @@ public static class SvgImport
                 "rect" when A("rx") == 0 && A("ry") == 0 => new(Guid.NewGuid(), ShapeKind.Rectangle, (A("x") - ox) * sx, (A("y") - oy) * sy, A("width") * sx, A("height") * sy, layer),
                 "ellipse" => new(Guid.NewGuid(), ShapeKind.Ellipse, (A("cx") - A("rx") - ox) * sx, (A("cy") - A("ry") - oy) * sy, 2 * A("rx") * sx, 2 * A("ry") * sy, layer),
                 "circle" => new(Guid.NewGuid(), ShapeKind.Ellipse, (A("cx") - A("r") - ox) * sx, (A("cy") - A("r") - oy) * sy, 2 * A("r") * sx, 2 * A("r") * sy, layer),
+                "path" => SvgLinearPaths.Read(e.Attribute("d")?.Value ?? "", layer, sx, sy, ox, oy),
+                "polyline" or "polygon" => SvgLinearPaths.Read("M " + (e.Attribute("points")?.Value ?? "") + (e.Name.LocalName == "polygon" ? " Z" : ""), layer, sx, sy, ox, oy),
+                "line" => VectorPaths.Create([new([new((A("x1") - ox) * sx, (A("y1") - oy) * sy), new((A("x2") - ox) * sx, (A("y2") - oy) * sy)])], layer),
                 _ => throw new InvalidDataException($"SVG element '{e.Name.LocalName}' is not supported yet. No shapes were imported.")
             };
             if (s is not null) result.Add(s);

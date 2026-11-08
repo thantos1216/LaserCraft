@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.4
+# Feature parity matrix - working baseline 0.6
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -10,10 +10,10 @@
 | Theme switching | R, BDK read-only review | Implemented | Light/dark and persistence UI validation |
 | Workspace and keyboard presets | R | Planned | Round-trip user settings |
 | Rectangles and ellipses | D p63-67 | Implemented; rectangle UI checked | Shape dimensions round-trip |
-| Lines / Bezier curves | D p63 | Planned | Control points, closure and export |
+| Lines / Bezier curves | D p63 | Partial: open/closed straight polylines and compound contours, tested | Bezier control points and arcs |
 | Selection / translation / sizing | D p63-67 | Partial: Ctrl-click multi-select, collective movement and numeric scaling | Drag handles, rotation and richer hit testing |
 | Rotate / mirror / skew | R | Partial: horizontal/vertical mirror, tested | Rotation, skew and path transforms |
-| Node editing and curve conversion | R | Planned | Preserve path topology |
+| Node editing and curve conversion | R | Partial: drag path vertices, convert rectangle/ellipse to polylines, close contours | Insert/delete/join/split, curve handles |
 | Grid / snap / guides / rulers | R | Partial: grid, 1 mm snap, rulers | Configurable units and guides |
 | Undo / redo | R | Implemented, automated + UI tested | Bound memory, transaction edits |
 | Group / ungroup | R | Planned | Hierarchy and selection tests |
@@ -24,9 +24,9 @@
 | Arrays / nesting | R | Planned | Rotation and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
 | Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |
-| Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses, tested | Offset fill, angles, overscan and controller planning |
+| Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses and closed compound paths, tested | Offset fill, angles, overscan and controller planning |
 | Native editable project | R | Partial v1, tested | Assets, recovery, migrations, previews |
-| SVG | D p63-67 | Export + basic rect/ellipse/circle import tested | Paths, transforms, styling, broad unit coverage |
+| SVG | D p63-67 | Export + rect/ellipse/circle/line/polygon/polyline and M/L/H/V/Z path import tested | Curves/arcs, transforms, styling, broad unit coverage |
 | DXF / PDF / AI / EPS | R | Planned | Codec/license review and malformed input tests |
 | PNG / JPEG / BMP / TIFF / WebP / GIF | R | Partial: PNG/JPEG/BMP embedding, rendering, transforms and dedicated layers | High-resolution optimization, TIFF/WebP/GIF and orientation coverage |
 | Vector-to-bitmap | D p929 | Planned | Outlines/fills rendering correctness |
