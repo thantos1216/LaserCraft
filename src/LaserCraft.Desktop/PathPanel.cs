@@ -27,7 +27,7 @@ public sealed partial class MainWindow
     private void ClosePaths()
     {
         var c = Current.Canvas;
-        try { c.Apply(ShapeEditing.Transform(c.History.Document, c.Selection, s => s.Kind == ShapeKind.Path ? s with { Path = new(s.Path!.Contours.Select(p => p with { Closed = true }).ToImmutableArray()) } : s)); }
+        try { c.Apply(ShapeEditing.Transform(c.History.Document, c.Selection, s => s.Kind == ShapeKind.Path ? s with { Text = null, Path = new(s.Path!.Contours.Select(p => p with { Closed = true }).ToImmutableArray()) } : s)); }
         catch (InvalidDataException ex) { status.Text = ex.Message; }
     }
 }

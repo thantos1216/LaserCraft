@@ -1,6 +1,20 @@
 # LaserCraft Help
 
-Version 0.17 - arrays, distribution, vector rotation and direction
+Version 0.18 - editable basic text and cached outlines
+
+## Create and edit text
+
+Choose the left T button or Tools / Create text. Choose an installed font family, Bold/Italic if that style exists, font em height in millimetres, line spacing and curve tolerance. Em height is a font design unit, not the exact visible capital-letter height; the dialog reports actual ink bounds. Enter multiple lines with Return. The initial outlines prepare automatically. After changing values, use Preview text; Create/Update stays disabled until those exact settings have a successful preview. Cancel changes nothing.
+
+This first text engine supports basic Latin/precomposed extended-Latin characters in U+0020–U+024F, excluding controls/format characters. Maximum 512 characters and 32 lines. Tabs, combining sequences, complex scripts, bidirectional shaping, ligatures, kerning controls, rich text, text-on-path and variable text are not implemented. Unsupported characters, missing glyphs, missing font/style, open/empty outlines or excessive geometry fail explicitly; an unavailable font is not silently substituted.
+
+Create inserts one selected text-outline object on the active vector layer, falling back to an existing vector layer if an image layer is active. It is centered on the bed when it fits. Use the main inspector to position/resize it and Cuts / Layers to assign speed, power, Line/Fill, passes and air. A very large text object can extend off-bed; Preview/export retains its existing bounds checks. Creating/updating is one Undo step.
+
+Select exactly one text object and choose Tools / Edit selected text to change its source settings. Editing keeps identity, position, cut layer, mirrors and existing horizontal/vertical resize factors; the new content's natural dimensions are multiplied by those factors. Its top-left ink anchor stays fixed, so a longer edit grows to the right. Blank lines add baseline spacing, but leading/trailing whitespace has no independent selectable bounds.
+
+Native .lcraft saves both source text/settings and cached closed polylines. Reopening, display and output use the saved geometry without requiring that font to be installed. Editing requires the named font/style or an explicit replacement. Fonts are not embedded or distributed. Changing fonts/versions and regenerating can change geometry; inspect the preview. Curve tolerance (0.001–1 mm) applies before later resizing; it is not a physical accuracy guarantee. Existing path-vertex and file-size budgets apply.
+
+Tools / Convert selected to paths removes the text link without changing outlines, making ordinary editable nodes. Node edits, rotation, reversal, close/join/separate/combine operations that replace geometry also remove text editability on affected objects. Undo restores it. Moving, numerical resizing, mirroring, alignment, distribution and copies/arrays keep the text source. SVG export writes outlines rather than editable SVG text. Fill follows the current even-odd rule; overlapping glyphs are not automatically welded. Physical laser execution remains unavailable.
 
 ## Arrange artwork
 

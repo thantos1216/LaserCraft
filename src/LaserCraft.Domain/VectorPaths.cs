@@ -50,7 +50,7 @@ public static class VectorPaths
     }
     public static DesignShape Convert(DesignShape s) => s.Kind switch
     {
-        ShapeKind.Path => s,
+        ShapeKind.Path => s with { Text = null },
         ShapeKind.Rectangle => Create([new([new(s.X, s.Y), new(s.X + s.Width, s.Y), new(s.X + s.Width, s.Y + s.Height), new(s.X, s.Y + s.Height)], true)], s.Layer, s.Id),
         ShapeKind.Ellipse => Create([new(Enumerable.Range(0, 128).Select(i => new PointMm(s.X + s.Width / 2 + Math.Cos(i * Math.PI / 64) * s.Width / 2, s.Y + s.Height / 2 + Math.Sin(i * Math.PI / 64) * s.Height / 2)).ToImmutableArray(), true)], s.Layer, s.Id),
         _ => throw new InvalidDataException("Images must be traced before they can become vector paths.")

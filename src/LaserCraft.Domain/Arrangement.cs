@@ -81,7 +81,7 @@ public static class Arrangement
     public static DesignDocument ReversePaths(DesignDocument d, IReadOnlySet<Guid> ids)
     {
         var selected = PathComposition.SelectedPaths(d, ids);
-        var replacements = selected.ToDictionary(s => s.Id, s => s with { Path = new(s.Path!.Contours.Select(c => c with { Points = c.Closed ? c.Points.Take(1).Concat(c.Points.Skip(1).Reverse()).ToImmutableArray() : c.Points.Reverse().ToImmutableArray() }).ToImmutableArray()) });
+        var replacements = selected.ToDictionary(s => s.Id, s => s with { Text = null, Path = new(s.Path!.Contours.Select(c => c with { Points = c.Closed ? c.Points.Take(1).Concat(c.Points.Skip(1).Reverse()).ToImmutableArray() : c.Points.Reverse().ToImmutableArray() }).ToImmutableArray()) });
         var next = d with { Shapes = d.Shapes.Select(s => replacements.GetValueOrDefault(s.Id, s)).ToList() }; next.Validate(); return next;
     }
 }

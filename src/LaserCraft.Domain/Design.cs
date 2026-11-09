@@ -13,7 +13,7 @@ public sealed record RasterAsset(Guid Id, string MimeType, string DataBase64, in
             throw new InvalidDataException("Invalid or oversized embedded raster image.");
     }
 }
-public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0, RasterAsset? Image = null, bool FlipX = false, bool FlipY = false, PathData? Path = null);
+public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0, RasterAsset? Image = null, bool FlipX = false, bool FlipY = false, PathData? Path = null, TextSource? Text = null);
 public enum CutMode { Line, Fill, Image }
 public enum LayerKind { Vector, Image }
 public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector, RasterSettings? Raster = null);
@@ -33,6 +33,11 @@ public sealed record DesignDocument(int Version, string Name, double Width, doub
             if (s.Kind == ShapeKind.Image) (s.Image ?? throw new InvalidDataException("Image object has no source asset.")).Validate();
             else if (s.Image is not null) throw new InvalidDataException("Only image objects can contain raster assets.");
             if (s.Kind == ShapeKind.Path) VectorPaths.Validate(s); else if (s.Path is not null) throw new InvalidDataException("Only paths can contain vertices.");
+            if (s.Text is not null)
+            {
+                s.Text.Validate();
+                if (s.Kind != ShapeKind.Path || s.Width <= 0 || s.Height <= 0 || s.Path!.Contours.Any(c => !c.Closed)) throw new InvalidDataException("Editable text requires nonzero closed cached outlines.");
+            }
             if ((s.Kind == ShapeKind.Image) != (Layers[s.Layer].Kind == LayerKind.Image)) throw new InvalidDataException("Images and vectors require separate layer types.");
         }
         if (Shapes.Where(s => s.Path is not null).Sum(s => (long)s.Path!.Contours.Sum(c => c.Points.Length)) > 200000) throw new InvalidDataException("Project exceeds the 200000 path-vertex budget.");

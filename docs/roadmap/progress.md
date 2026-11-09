@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.17 - editor arrangement operations
+## Current milestone 0.18 - editable basic text
+
+Added create/edit text dialogs with installed font/style selection, em height, multiline spacing, outline tolerance and prepared preview. Text is represented as cached closed paths with optional immutable source settings, so saved output does not require font resolution. Editing retains identity/layer/anchor and affine resize/mirror factors. Geometry-changing operations detach the source; conversion and Undo are explicit. Basic Latin only; complex shaping, text-on-path, welding and variable text remain planned.
+
+277 tests pass (266 unit, 11 integration). Tests cover source limits, invalid metadata, affine updates/history, cached native output without fonts, detach/preserve behavior, installed font styles, multiline outlines/holes, line/fill/SVG/G-code and cancellation. Desktop verified initial preview after fixing duplicate selection-event invalidation, stale Apply blocking, bold multiline creation, edit/Undo, conversion guard and Undo to clean empty. See [validation](../testing/milestone-18.md). Physical hardware and complete parity/production readiness remain unverified/unfinished.
+
+
+## Milestone 0.17 - editor arrangement operations
 
 Added rectangular arrays with total rows/columns, cell gaps, live resource/bounds summary, original/copy selection and dedicated copied image layers. Added center/gap distribution on both axes, collective vector rotation and contour-direction reversal. Operations preserve cut associations, validate before replacement and apply as one undo transaction. Vector rotation converts rectangles/ellipses to sampled paths; raster rotation, native curves, circular arrays and nesting remain planned.
 

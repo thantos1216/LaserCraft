@@ -1,0 +1,9 @@
+# Text scope and acceptance
+
+2026-11-09. Original implementation for the text backlog; exact LightBurn layout/shaping equivalence is not established. No reference code, fonts or assets copied. Existing control inventory establishes the broad requirement; this step uses public font APIs and existing path contracts rather than binary analysis.
+
+Inputs: installed family/style, basic Latin text, em height, line spacing and physical curve tolerance. Output: closed normalized path geometry plus optional immutable source/settings and natural ink dimensions. Native reopening/output consumes cached geometry; editing resolves fonts explicitly. Missing family/style/glyphs and unsupported characters must fail, not substitute silently. Domain must remain independent of SkiaSharp/Avalonia.
+
+Acceptance: multiline/style changes affect geometry; glyph holes survive; native/source and path topology round-trip; Line/Fill/SVG/offline G-code use existing pipelines. Edits retain identity/layer/anchor/scale/mirrors. Frame-only edits and copies retain source. Topology edits and conversion detach it; Undo recovers it. Cancelled/stale previews cannot apply. Font regeneration runs off the UI thread and is drained on close; path tokens, contour/vertex and source budgets bound retained geometry.
+
+The public [SKFont.GetTextPath API](https://learn.microsoft.com/en-us/dotnet/api/skiasharp.skfont.gettextpath?view=skiasharp) supplies outlines; [SKFont](https://learn.microsoft.com/en-us/dotnet/api/skiasharp.skfont?view=skiasharp-3.119) supplies glyph lookup. SvgPaths performs curve subdivision into the existing geometry model. This basic engine does not implement complex-script shaping, kerning/ligature controls, text-on-path, glyph welding or rich/variable text. Font em size differs from visible ink height. No physical accuracy, material quality or new execution support is claimed.

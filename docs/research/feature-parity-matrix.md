@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.17
+# Feature parity matrix - working baseline 0.18
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -20,7 +20,7 @@
 | Alignment / distribution | R | Partial: alignment, center-on-bed and horizontal/vertical center/gap distribution, tested | Additional anchor modes |
 | Union / subtract / intersect / weld | R | Planned | Geometry library/license evaluation |
 | Offsets / kerf / smoothing | R | Planned | Degenerate geometry fixtures |
-| Text / text-to-path / text-on-path | R | Planned | Font shaping and editable text |
+| Text / text-to-path / text-on-path | R | Partial: editable basic Latin source with cached closed paths, font/style/size/line spacing/tolerance, conversion and persistence tested | Complex-script shaping, kerning/ligatures, text-on-path, welding and variable text |
 | Arrays / nesting | R | Rectangular arrays with dedicated image-copy layers and expansion checks, tested | Circular arrays, nesting and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
 | Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |

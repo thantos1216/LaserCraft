@@ -1,0 +1,9 @@
+# Milestone 0.18 validation
+
+2026-11-09. Editable basic text and cached outlines, original implementation; no fonts bundled.
+
+- Release tests: 266 unit + 11 integration pass. New tests cover source character/count/line/metric validation, metadata constraints, atomic install/update, identity/layer/anchor/affine retention, history, cached native output with an unresolved font name, source retention on copies/mirrors and detachment on conversion/nodes/rotation/reversal/separation.
+- Installed Arial integration generated multiline closed outlines/holes, style-dependent dimensions, line spacing and tolerance detail. Native round-trip preserves source; Line/Fill plans, SVG outlines and offline GRBL export pass. Missing family and cancellation reject. These tests require the Windows font environment and do not establish all-font quality or script shaping.
+- Desktop found a duplicate selection-notification issue cancelling initial preparation. Invalidation now compares complete current source settings with the active request before cancelling; corrected build prepared its first preview automatically.
+- Desktop: bold Arial, em 10 mm, "BO 18" / "Café", tolerance 0.05 -> 27.978 × 19.402 mm ink bounds, 16 contours / 403 vertices. Changing style disabled Create until Preview. Created one selected object; output preview 403 segments / 256.1 mm cut / 16.3 s ideal. Reopened source, changed to "Laser 18", applied 39.370 × 7.314 mm outlines, then Undo restored prior text. Conversion blocked text editing with an explicit message. Undo returned to the clean empty document. Earlier Cancel also retained zero objects.
+- Self-contained 0.18 package verification is pending. No physical endpoint opened; no hardware, shaping equivalence, font-license redistribution or production-readiness claim is made. Native user documents retain generated geometry and font names, not font files.
