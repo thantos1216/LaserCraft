@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.13 - SVG curve interoperability
+## Current milestone 0.14 - dynamic tracing and manual-control rehearsal
+
+Trace sliders and numeric values always update the photograph overlay automatically after a 150 ms debounce; the manual Update/live-toggle path is removed. Stale work is cancelled and cannot be applied. Added simulator-only X/Y distance/feed controls, bounded timed power pulses, explicit Stop, shared simulated position/S status and bounded rehearsal history. Physical serial/TCP profiles cannot acquire these controls. Added per-profile M7/M8 air-output selection for offline G-code with M9 off and legacy M8 default.
+
+Release build and 204 tests pass (198 unit, 6 integration). Desktop verified X/Y jogs, automatic pulse off, shared status, disconnect disabling and live numeric/slider photograph updates with cancellation leaving one unchanged source object. See [validation](../testing/milestone-14.md). The [VM 2.2 inventory](../research/lightburn-22-device-controls.md) records additional missing options. Physical execution, first cuts and complete parity remain unfinished.
+
+
+## Milestone 0.13 - SVG curve interoperability
 
 Added cubic/smooth-cubic and quadratic/smooth-quadratic SVG path import, relative/repeated coordinate handling, physical-tolerance adaptive flattening and a cancellable import-options dialog. The parser is now SvgPaths; the superseded linear-only parser was removed and existing consumers migrated. Curves are stored as editable polyline vertices, not native control handles. Expansion budgets are enforced per path and incrementally across the whole import.
 

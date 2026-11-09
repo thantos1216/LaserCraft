@@ -20,12 +20,12 @@ public sealed partial class MainWindow
         public TraceParameter(string name, double min, double max, double value, double step = 1)
         {
             Number = MainWindow.Number((decimal)min, (decimal)max); Number.Value = (decimal)value; Number.Increment = (decimal)step; Number.Width = 76;
-            var slider = new Slider { Minimum = min, Maximum = max, Value = value, Height = 23, MinHeight = 23 };
+            var slider = new Slider { Minimum = min, Maximum = max, Value = value, SmallChange = step, LargeChange = step * 10, Height = 23, MinHeight = 23 };
             Avalonia.Automation.AutomationProperties.SetName(slider, name);
             var heading = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") }; heading.Children.Add(new TextBlock { Text = name, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center }); Grid.SetColumn(Number, 1); heading.Children.Add(Number);
             var panel = new StackPanel { Spacing = 1, Margin = new Thickness(0, 3) }; panel.Children.Add(heading); panel.Children.Add(slider); View = panel;
             bool syncing = false;
-            slider.ValueChanged += (_, _) => { if (syncing) return; syncing = true; Number.Value = (decimal)Math.Clamp(Math.Round(slider.Value / step) * step, min, max); syncing = false; Changed?.Invoke(); };
+            slider.ValueChanged += (_, _) => { if (syncing) return; syncing = true; Number.Value = (decimal)Math.Clamp(Math.Round(slider.Value / step) * step, min, max); slider.Value = Value; syncing = false; Changed?.Invoke(); };
             Number.ValueChanged += (_, _) => { if (syncing) return; syncing = true; slider.Value = Value; syncing = false; Changed?.Invoke(); };
         }
     }
@@ -42,14 +42,15 @@ public sealed partial class MainWindow
         var contrast = new TraceParameter("Sketch contrast", 0, 64, 8); var radius = new TraceParameter("Sketch radius · px", 2, 32, 8);
         var invert = new CheckBox { Content = "Invert image", IsChecked = sourceOptions.Invert }; var sketch = new CheckBox { Content = "Sketch · local contrast" };
         var fade = new CheckBox { Content = "Fade image", IsChecked = true }; var points = new CheckBox { Content = "Show vertices (up to 5000)" };
-        var showMask = new CheckBox { Content = "Show threshold mask" }; var automatic = new CheckBox { Content = "Live preview", IsChecked = true };
+        var showMask = new CheckBox { Content = "Show threshold mask" };
         var removeSource = new CheckBox { Content = "Remove source image (undoable)" };
         var preview = new TracePreview(image) { ClipToBounds = true }; var info = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(6) };
         var root = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"), Margin = new Thickness(14) };
         root.Children.Add(Label("Photograph tracing · adjust sliders, zoom to inspect, then create editable vectors", 17));
         var body = new Grid { ColumnDefinitions = new ColumnDefinitions("*,310") }; body.Children.Add(preview);
         var controls = new StackPanel { Spacing = 3, Margin = new Thickness(10, 0) };
-        foreach (var check in new[] { automatic, invert, sketch }) controls.Children.Add(check);
+        controls.Children.Add(Label("Live preview · updates automatically"));
+        foreach (var check in new[] { invert, sketch }) controls.Children.Add(check);
         foreach (var value in new[] { cutoff, threshold, minimum, noise, smoothing, optimize, resolution, contrast, radius }) controls.Children.Add(value.View);
         foreach (var check in new[] { fade, points, showMask, removeSource }) controls.Children.Add(check);
         controls.Children.Add(Button("Fit preview", preview.Fit));
@@ -60,16 +61,16 @@ public sealed partial class MainWindow
         using var lifetime = new CancellationTokenSource(); using var gate = new SemaphoreSlim(1); CancellationTokenSource? running = null; var jobs = new List<Task>();
         var apply = Button("Create vector layer", ApplyTrace); apply.IsEnabled = false;
         (int Samples, bool Invert, RasterGrid Gray)? cache = null;
-        var debounce = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+        var debounce = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         TraceRequest Read() => new(new((int)cutoff.Value, (int)threshold.Value, noise.Value, smoothing.Value, optimize.Value, sketch.IsChecked == true, (int)radius.Value, contrast.Value), (int)minimum.Value, (int)resolution.Value, invert.IsChecked == true);
         void Stale()
         {
             if (closed) return; apply.IsEnabled = false; running?.Cancel(); info.Text = "Settings changed · preparing a new trace…"; debounce.Stop();
             cutoff.View.IsEnabled = threshold.View.IsEnabled = sketch.IsChecked != true; contrast.View.IsEnabled = radius.View.IsEnabled = sketch.IsChecked == true;
-            if (automatic.IsChecked == true) debounce.Start(); else info.Text = "Settings changed · choose Update trace.";
+            debounce.Start();
         }
         foreach (var value in new[] { cutoff, threshold, minimum, noise, smoothing, optimize, resolution, contrast, radius }) value.Changed += Stale;
-        invert.IsCheckedChanged += (_, _) => Stale(); sketch.IsCheckedChanged += (_, _) => Stale(); automatic.IsCheckedChanged += (_, _) => { debounce.Stop(); if (automatic.IsChecked == true) StartUpdate(); };
+        invert.IsCheckedChanged += (_, _) => Stale(); sketch.IsCheckedChanged += (_, _) => Stale();
         fade.IsCheckedChanged += (_, _) => { preview.Fade = fade.IsChecked == true; preview.InvalidateVisual(); };
         points.IsCheckedChanged += (_, _) => { preview.ShowVertices = points.IsChecked == true; preview.InvalidateVisual(); };
         showMask.IsCheckedChanged += (_, _) => { preview.Source = showMask.IsChecked == true ? maskBitmap : bitmap; preview.InvalidateVisual(); };
@@ -121,7 +122,7 @@ public sealed partial class MainWindow
             }
             catch (InvalidDataException ex) { info.Text = ex.Message; }
         }
-        actions.Children.Add(Button("Update trace", StartUpdate)); actions.Children.Add(apply); actions.Children.Add(Button("Cancel", () => dialog.Close()));
+        actions.Children.Add(apply); actions.Children.Add(Button("Cancel", () => dialog.Close()));
         dialog.Content = root; contrast.View.IsEnabled = radius.View.IsEnabled = false; dialog.Opened += (_, _) => StartUpdate();
         dialog.Closed += (_, _) => { closed = true; debounce.Stop(); lifetime.Cancel(); running?.Cancel(); preview.Source = null; bitmap?.Dispose(); maskBitmap?.Dispose(); };
         await dialog.ShowDialog(this); await Task.WhenAll(jobs);

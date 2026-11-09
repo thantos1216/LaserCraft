@@ -13,7 +13,7 @@ public static class TransportFactory
         if (!ControllerCatalog.HasConnectionAdapter(profile.Controller)) throw new NotSupportedException(ControllerCatalog.Support(profile.Controller));
         return profile.Connection switch
         {
-            ConnectionKind.Simulator => new SimulatedGrblTransport(),
+            ConnectionKind.Simulator => new SimulatedGrblTransport(profile),
             ConnectionKind.Serial => await OpenSerialAsync(profile, cancellationToken),
             ConnectionKind.Tcp => await TcpGrblTransport.OpenAsync(profile, cancellationToken),
             _ => throw new NotSupportedException("Unknown transport.")

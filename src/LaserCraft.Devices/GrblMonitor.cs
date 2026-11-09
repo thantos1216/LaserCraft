@@ -51,6 +51,7 @@ public sealed class GrblMonitor : IAsyncDisposable
     private readonly CancellationTokenSource lifetime = new();
     private int disposalStarted;
     public string Identity { get; private set; } = "";
+    public ManualControlSimulation? Simulation => (transport as SimulatedGrblTransport)?.Simulation;
     private GrblMonitor(IGrblTransport transport) => this.transport = transport;
     public static async Task<GrblMonitor> ConnectAsync(IGrblTransport transport, CancellationToken cancellationToken = default)
     {
@@ -116,14 +117,22 @@ public sealed class GrblMonitor : IAsyncDisposable
 }
 public sealed class SimulatedGrblTransport : IGrblTransport
 {
+    public ManualControlSimulation Simulation { get; }
+    public SimulatedGrblTransport(LaserCraft.Domain.DeviceProfile? profile = null) => Simulation = new(profile ?? LaserCraft.Domain.DeviceProfile.Simulator());
     private readonly Channel<string> replies = Channel.CreateUnbounded<string>();
     public List<string> Commands { get; } = [];
     public ValueTask WriteAsync(string command, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested(); Commands.Add(command);
-        switch (command) { case "$I\n": replies.Writer.TryWrite("[VER:1.1h:LaserCraft simulator]"); replies.Writer.TryWrite("ok"); break; case "?": replies.Writer.TryWrite("<Idle|MPos:0.000,0.000,0.000|FS:0,0>"); break; case "$$\n": foreach (var line in new[] { "$10=1", "$13=0", "$30=1000", "$31=0", "$32=1", "$130=400.000", "$131=400.000", "ok" }) replies.Writer.TryWrite(line); break; default: throw new InvalidOperationException("The monitor only permits identity, status and settings queries."); }
+        switch (command)
+        {
+            case "$I\n": replies.Writer.TryWrite("[VER:1.1h:LaserCraft simulator]"); replies.Writer.TryWrite("ok"); break;
+            case "?": replies.Writer.TryWrite(FormattableString.Invariant($"<{(Simulation.IsPulsing ? "Run" : "Idle")}|MPos:{Simulation.Position.X:0.000},{Simulation.Position.Y:0.000},0.000|FS:0,{Simulation.SValue}>")); break;
+            case "$$\n": foreach (var line in new[] { "$10=1", "$13=0", "$30=" + Simulation.Profile.MaxPower.ToString(CultureInfo.InvariantCulture), "$31=0", "$32=1", FormattableString.Invariant($"$130={Simulation.Profile.BedWidth:0.000}"), FormattableString.Invariant($"$131={Simulation.Profile.BedHeight:0.000}"), "ok" }) replies.Writer.TryWrite(line); break;
+            default: throw new InvalidOperationException("The monitor only permits identity, status and settings queries.");
+        }
         return ValueTask.CompletedTask;
     }
     public ValueTask<string> ReadLineAsync(CancellationToken cancellationToken) => replies.Reader.ReadAsync(cancellationToken);
-    public ValueTask DisposeAsync() { replies.Writer.TryComplete(); return ValueTask.CompletedTask; }
+    public ValueTask DisposeAsync() { Simulation.Stop(); replies.Writer.TryComplete(); return ValueTask.CompletedTask; }
 }

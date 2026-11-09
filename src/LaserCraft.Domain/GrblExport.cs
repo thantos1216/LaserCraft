@@ -30,7 +30,7 @@ public static class GrblExport
         {
             if (layer != segment.Layer) { layer = segment.Layer; text.AppendLine($"; Layer {layer:00}"); }
             var requestedAir = !segment.Travel && segment.Power > 0 && segment.AirAssist;
-            if (air != requestedAir) { air = requestedAir; text.AppendLine(air ? "M8" : "M9"); }
+            if (air != requestedAir) { air = requestedAir; text.AppendLine(air ? profile.AirOutput.ToString() : "M9"); }
             var target = Map(segment.To);
             var power = segment.Travel ? 0 : (int)Math.Round(profile.MaxPower * segment.Power / 100, MidpointRounding.AwayFromZero);
             // Feed-controlled off-power spans retain scan/overscan speed rather than becoming rapids.

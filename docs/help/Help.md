@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.13 - SVG Bézier import with physical curve tolerance
+Version 0.14 - automatic tracing and manual-control rehearsal
 
 ## Create layers and control order
 
@@ -50,9 +50,15 @@ Status now includes feed, spindle/S, available planner/receive buffers, active p
 
 Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
 
+## Simulator Move panel
+
+Connect a Simulator profile, then select Move. Set distance and feed, then use X/Y buttons to rehearse movement inside the configured bed. Simulated +Y is up. Pulse power and duration rehearse a bounded pulse, limited to 5% and 500 ms; Stop ends it early. The timer turns simulated power off automatically. Read status reports the same simulated position/S value. The transcript holds the latest rehearsal commands; these never enter a serial/TCP transport. Disconnect ends the pulse and disables manual controls.
+
+This is a control rehearsal, not physical execution or a burn prediction. Jog positions update instantly; acceleration and real controller timing are not modeled. Physical jogging, firing, homing and first cuts remain unavailable. Serial/TCP connections support read-only diagnostics only.
+
 ## Air assist
 
-Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Cut-plan segments carry the requested state; travel segments do not. The device profile records whether its controller has a configured air-assist output. GRBL export emits M8/M9 for these requests and rejects enabled air requests when the profile does not support them. The app sends no air commands to a device.
+Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Cut-plan segments carry the requested state; travel segments do not. The device profile records whether its controller has a configured air-assist output. Choose M8 or M7 in Devices for the wired air-assist output (M8 is the default for existing profiles). GRBL export emits the selected command for air on and M9 for off and rejects enabled air requests when the profile does not support them. The app sends no air commands to a device.
 
 ## Trace an image
 
@@ -67,7 +73,7 @@ The controls are intended for photographs as well as clean artwork. Each slider 
 - Sketch / local contrast finds tones darker than their local neighborhood and can help with uneven illumination. It uses Sketch contrast and Sketch radius; Cutoff and Threshold are disabled in this mode. Higher contrast retains stronger dark features. It traces the boundaries of those features, not their centerlines.
 - Max samples / axis ranges from 64 to 1024, retaining aspect ratio. Higher resolution increases detail, noise and work. It is independent of engraving DPI and changes the physical size represented by every sample-pixel setting.
 
-Live preview waits 300 ms after a parameter change, cancels obsolete work and automatically recalculates. Turn it off to use Update trace manually. Create vector layer remains disabled until a current nonempty result is available. The footer reports original/refined vertex counts, contours and removed components. Delicate contours are retained if refinement would collapse them or change detected crossings/nesting; if a work limit is reached, the entire original outline is retained with an explanation. Inspect the result before creating vectors.
+Live preview always recalculates automatically, starting 150 ms after a parameter change and cancelling obsolete work. Both sliders and numeric values trigger updates; there is no Update button or manual-preview mode. Create vector layer remains disabled until a current nonempty result is available. The footer reports original/refined vertex counts, contours and removed components. Delicate contours are retained if refinement would collapse them or change detected crossings/nesting; if a work limit is reached, the entire original outline is retained with an explanation. Inspect the result before creating vectors.
 
 Wheel zoom inspects detail; middle drag pans; Fit preview or a middle double-click restores the view. Fade image, Show threshold mask and Show vertices affect only the preview. Vertex markers are limited to results with at most 5000 points. Closing or Cancel leaves the project unchanged. Tuning is temporary to this dialog; the created geometry is stored in the project.
 
@@ -134,7 +140,7 @@ Start/Pause/Stop control only offline playback, even while a controller monitor 
 
 ## Files and SVG
 
-Save G-code creates an offline GRBL 1.1 laser-mode file from enabled layers (or Cut selected graphics). Select the intended device profile first. The exporter uses its bed dimensions, corner origin, S-value maximum and configured air-output capability; it supports only the GRBL family for now. Bottom origins reflect Y and right origins reflect X around that bed. Set the controller work zero to the chosen bed corner and match firmware $30 to the S-value maximum. Firmware must already have $32=1; export never changes firmware settings. Files use millimetres, absolute work coordinates, units-per-minute feed, M4 dynamic power, explicit S0 travel, optional M8 air, and final M5/M9. Feed-controlled off spans retain raster overscan speed. It adds an initial laser-off rapid to the plan start, but does not home or return home. Bounds, continuity, finite feeds/powers and nonempty plans are validated. Physical execution and controller-specific qualification remain unavailable. The app does not run or transmit saved programs.
+Save G-code creates an offline GRBL 1.1 laser-mode file from enabled layers (or Cut selected graphics). Select the intended device profile first. The exporter uses its bed dimensions, corner origin, S-value maximum and configured air-output capability; it supports only the GRBL family for now. Bottom origins reflect Y and right origins reflect X around that bed. Set the controller work zero to the chosen bed corner and match firmware $30 to the S-value maximum. Firmware must already have $32=1; export never changes firmware settings. Files use millimetres, absolute work coordinates, units-per-minute feed, M4 dynamic power, explicit S0 travel, optional M8/M7 air, and final M5/M9. Feed-controlled off spans retain raster overscan speed. It adds an initial laser-off rapid to the plan start, but does not home or return home. Bounds, continuity, finite feeds/powers and nonempty plans are validated. Physical execution and controller-specific qualification remain unavailable. The app does not run or transmit saved programs.
 
 New opens a document tab. Save / Ctrl+S persists .lcraft; Save as creates another file. A tab dot/title asterisk marks unsaved work. File / Close project saves modified work first; canceling save keeps it open. Closing the entire window asks before discarding changes. A .lcraft path can also be supplied as a startup argument.
 

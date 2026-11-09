@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.13
+# Feature parity matrix - working baseline 0.14
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -53,3 +53,7 @@
 | Installer / updates / recovery | R | Planned | Signing, package notices and crash tests |
 
 Before implementing each planned family, add a requirement with inputs, outputs, public standards, dependencies, performance targets, safety effects and acceptance fixtures. The 1784-page index supports discovery but does not substitute for detailed review of each family. Full manual-wide command inventory and legacy/current black-box comparisons remain Phase 0 work.
+
+## Device-control audit 0.14
+
+See [observed LightBurn 2.2 device/Move controls](lightburn-22-device-controls.md). LaserCraft adds always-automatic trace updates, simulator X/Y/pulse rehearsal and offline M7/M8 selection. Live motion/fire/streaming, Z/U, saved/work/finish positions, advanced transfer/buffer/G-code options and full parity remain planned. Simulator verification does not establish physical controller behavior.
