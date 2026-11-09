@@ -75,3 +75,7 @@ SvgImportPanel owns temporary tolerance/options and a cancellation lifetime. Par
 ## Addendum: 0.15 USB diagnostics
 
 GrblModalState owns parsing of modal words, preserves source text and rejects contradictory known groups. GrblMonitor owns the serialized $G request/report/ack lifecycle, sharing its cancellation and disposal gate with settings/status queries. GrblConnectionCheck owns comparisons and explicit Match/Attention/Unknown findings; it never grants execution authority. The desktop owns the per-connection COM choice, immutable connected-profile snapshot, query sequence/collection timestamps and report presentation. Profile defaults and observed firmware facts remain separate. COM enumeration never opens a port; physical execution is still absent.
+
+## Addendum: 0.16 connection journal
+
+ConnectionJournal owns bounded, synchronized history and detached snapshots. JournaledGrblTransport records attempted TX, completed RX and transport failures, preserving original exceptions and disposal ownership. GrblMonitor captures the original simulator owner before optional instrumentation, so diagnostics do not change manual simulator availability. The desktop owns profile/attempt metadata, replacement of the latest journal and explicit file export. No ambient environment or automatic log persistence is introduced. The packaging script produces self-contained win-x64 output, source metadata, file hashes and a ZIP; it refuses existing package paths instead of deleting earlier outputs.

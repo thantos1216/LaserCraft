@@ -14,6 +14,7 @@ public sealed partial class MainWindow
     private bool connecting;
     private bool querying, disconnecting;
     private DeviceProfile? connectedProfile;
+    private ConnectionJournal? connectionJournal;
     private Button? connectButton, disconnectButton, readStatusButton, readSettingsButton, connectionCheckButton;
     private readonly ComboBox connectionPort = new() { MinWidth = 120, PlaceholderText = "Choose COM port" };
     private Button? refreshConnectionPorts;
@@ -52,6 +53,7 @@ public sealed partial class MainWindow
         var panel = new StackPanel { Spacing = 4 }; var row = new WrapPanel(); row.Children.Add(deviceChoice); row.Children.Add(Button("Devices…", () => _ = EditDevices())); row.Children.Add(connectButton = AsyncButton("Connect", ConnectDevice)); row.Children.Add(disconnectButton = AsyncButton("Disconnect", DisconnectDevice)); row.Children.Add(readStatusButton = AsyncButton("Read status", ReadDeviceStatus)); row.Children.Add(readSettingsButton = AsyncButton("Read firmware settings…", ReadFirmwareSettings)); row.Children.Add(Button("Apply device bed", () => { var p = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; Current.Canvas.Apply(Current.Canvas.History.Document with { Width = p.BedWidth, Height = p.BedHeight }); Current.Canvas.Fit(); })); panel.Children.Add(row); panel.Children.Add(connectionStatus); UpdateConnectionControls();
         var usb = new WrapPanel(); usb.Children.Add(Label("USB COM for this connection")); usb.Children.Add(connectionPort); usb.Children.Add(refreshConnectionPorts = Button("Refresh COM ports", RefreshConnectionPorts)); panel.Children.Insert(0, usb);
         row.Children.Add(connectionCheckButton = AsyncButton("Connection check…", ReadConnectionCheck)); UpdateConnectionControls();
+        row.Children.Add(AsyncButton("Save connection log…", SaveConnectionLog));
         Closed += async (_, _) => { await connectionLifetime.CancelAsync(); if (monitor is not null) await monitor.DisposeAsync(); foreach (var s in sessions) s.Canvas.ReleaseImages(); };
         return panel;
     }
@@ -60,20 +62,24 @@ public sealed partial class MainWindow
     {
         if (connecting || disconnecting || monitor is not null) return; connecting = true; connectionAttempt = CancellationTokenSource.CreateLinkedTokenSource(connectionLifetime.Token); var attempt = connectionAttempt; var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; UpdateConnectionControls();
         connectionStatus.Text = "Connecting to " + profile.Name + "…";
+        var journal = connectionJournal = new ConnectionJournal();
+        journal.Add("INFO", "LaserCraft " + typeof(MainWindow).Assembly.GetName().Version + "; read-only connection attempt; profile " + profile.Name);
         try
         {
             if (profile.Connection == ConnectionKind.Serial) profile = profile with { SerialPort = connectionPort.SelectedItem as string ?? throw new InvalidDataException("Select the currently detected USB COM port. Refresh ports after plugging in the laser.") };
-            var transport = await TransportFactory.OpenAsync(profile, attempt.Token); monitor = await GrblMonitor.ConnectAsync(transport, attempt.Token); attempt.Token.ThrowIfCancellationRequested();
+            journal.Add("INFO", profile.Connection == ConnectionKind.Serial ? $"USB serial {profile.SerialPort}; baud {profile.BaudRate}; startup wait {profile.SerialStartupDelayMs} ms; DTR {profile.Dtr}; RTS {profile.Rts}" : profile.Connection == ConnectionKind.Tcp ? $"TCP {profile.Host}:{profile.Port}" : "Built-in simulator");
+            journal.Add("INFO", FormattableString.Invariant($"Profile bed {profile.BedWidth} × {profile.BedHeight} mm; S maximum {profile.MaxPower}; origin {profile.Origin}. These are profile values, not firmware observations."));
+            var transport = await TransportFactory.OpenAsync(profile, attempt.Token); monitor = await GrblMonitor.ConnectAsync(transport, attempt.Token, journal); attempt.Token.ThrowIfCancellationRequested();
             connectedProfile = profile; connectionStatus.Text = $"{profile.Name} · {monitor.Identity} · read-only monitor"; Log("Connected: " + profile.Name + " (read-only queries)"); await ReadDeviceStatus();
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException or NotSupportedException or OperationCanceledException or System.Net.Sockets.SocketException) { connectionStatus.Text = attempt.IsCancellationRequested ? "Connection cancelled." : "Connection failed: " + ex.Message + " Check endpoint/baud and close other software using this port."; if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException or NotSupportedException or OperationCanceledException or System.Net.Sockets.SocketException) { journal.Add("ERROR", "Connection: " + ex.GetType().Name + ": " + ex.Message); connectionStatus.Text = attempt.IsCancellationRequested ? "Connection cancelled." : "Connection failed: " + ex.Message + " Check endpoint/baud and close other software using this port. Save connection log for details."; if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; }
         finally { connecting = false; connectionAttempt = null; attempt.Dispose(); UpdateConnectionControls(); }
     }
     private async Task ReadDeviceStatus()
     {
         var client = monitor; if (client is null || querying) return; querying = true; UpdateConnectionControls();
         try { var value = await client.QueryStatusAsync(connectionLifetime.Token); if (monitor != client) return; string N(double? n) => n?.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) ?? "not reported"; connectionStatus.Text = $"{connectedProfile?.Name} · {client.Identity} · {value.State}\n{value.Coordinates}: {N(value.X)}, {N(value.Y)}, {N(value.Z)} · reported controller units\nFeed {N(value.Feed)} · spindle/S {N(value.Spindle)} · buffers {value.PlannerAvailable?.ToString() ?? "?"}/{value.ReceiveAvailable?.ToString() ?? "?"} · pins {value.Pins ?? "not reported"} · accessories {value.Accessories ?? "not reported"}\nRead-only monitor · no machine execution"; Log(value.Raw); }
-        catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException) { if (monitor == client) { await DisconnectDevice(); connectionStatus.Text = "Status read failed: " + ex.Message; } }
+        catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException) { if (monitor == client) { connectionJournal?.Add("ERROR", "Status: " + ex.Message); await DisconnectDevice(); connectionStatus.Text = "Status read failed: " + ex.Message; } }
         finally { querying = false; UpdateConnectionControls(); }
     }
     private async Task DisconnectDevice()
@@ -97,7 +103,7 @@ public sealed partial class MainWindow
             var report = new TextBox { IsReadOnly = true, AcceptsReturn = true, TextWrapping = Avalonia.Media.TextWrapping.NoWrap, FontFamily = Avalonia.Media.FontFamily.Parse("Consolas"), Text = string.Join(Environment.NewLine, settings.Select(s => s.Raw + "    " + s.Description)) }; Grid.SetRow(report, 1); root.Children.Add(report);
             var footer = new StackPanel(); footer.Children.Add(Label($"{settings.Count} reported settings. Only $$ was queried; controller and profile settings were not changed.")); footer.Children.Add(Button("Close", () => dialog.Close())); Grid.SetRow(footer, 2); root.Children.Add(footer); dialog.Content = root; Log("Read " + settings.Count + " firmware settings (read only)."); await dialog.ShowDialog(this);
         }
-        catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException) { if (monitor == client) { await DisconnectDevice(); connectionStatus.Text = "Settings read failed: " + ex.Message; } }
+        catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException) { if (monitor == client) { connectionJournal?.Add("ERROR", "Settings: " + ex.Message); await DisconnectDevice(); connectionStatus.Text = "Settings read failed: " + ex.Message; } }
         finally { querying = false; UpdateConnectionControls(); }
     }
     private async Task EditDevices()

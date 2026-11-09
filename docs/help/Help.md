@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.15 - USB selection and read-only connection checks
+Version 0.16 - portable Windows package and connection logs
 
 ## Create layers and control order
 
@@ -59,6 +59,12 @@ For a saved Serial profile, choose USB COM for this connection in the Laser pane
 Connection check queries firmware settings ($$), parser modes ($G), then status (?). The report compares profile S maximum with $30, laser mode $32, status-report units $13, G-code units/distance/feed/spindle modes, controller state, reported S, and travel vs bed size. Match, Attention and Unknown describe individual comparisons, not permission or readiness to cut. Missing/invalid numeric facts stay unknown. G21 program units and $13 status units are separate facts. Position readouts do not prove homing, usable area, work offsets or origin.
 
 The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Physical jogging, firing and jobs remain unavailable in this build.
+
+## Testing a copy on another Windows computer
+
+Use the complete self-contained Windows x64 portable ZIP, extract it locally and start LaserCraft.Desktop.exe. Keep all companion files together. Debug EXE files alone are insufficient. Run on the computer with the USB laser attached; server storage does not forward that USB port. The package includes USB-CONNECTION-TEST.md, BUILD-INFO.json (source/version/runtime) and FILES-SHA256.json (file hashes). Per-user device/settings files remain under LocalAppData/LaserCraft. No driver is bundled or installed.
+
+Save connection log in Laser exports the latest connection attempt as a text snapshot, even after failure/disconnect. It includes application version, selected endpoint/profile values, attempted query writes, raw controller responses, transport errors and close events with UTC timestamps. TX is an attempted write, not an acknowledgement. Control characters are escaped for readable logs. The journal retains the latest 512 entries, limits individual messages to 4096 characters with explicit truncation, and reports dropped entries. New Connect replaces the journal. Nothing is uploaded or saved automatically; save before exit and review the file before sharing. No passwords or ambient environment are collected. Cancel in the file dialog writes nothing.
 
 ## Simulator Move panel
 

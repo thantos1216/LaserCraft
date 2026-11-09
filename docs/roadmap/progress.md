@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.15 - USB connection diagnostics
+## Current milestone 0.16 - transferable connection testing
+
+Added a bounded in-memory connection journal and user-chosen text export, including failed attempts, raw escaped query/reply lines, errors, selected endpoint/profile facts and close events. Snapshot export remains available after disconnect and never uploads automatically. Instrumentation preserves simulator ownership and monitor cancellation semantics. Status reads now surface ALARM immediately. Added a self-contained Windows x64 packaging script, source/build metadata, file hashes and USB testing guide.
+
+232 tests pass (226 unit, 6 integration), and desktop simulator connection/disconnect/log export/cancellation were checked. Exported text retained exact escaped $I newline, identity/status replies and close event. See [validation](../testing/milestone-16.md). Packaging verification is recorded there separately. Physical USB, command scheduling, motion/fire/cuts and complete feature parity remain unfinished.
+
+
+## Milestone 0.15 - USB connection diagnostics
 
 Added an explicit per-connection detected COM selector, refresh without port opening, and an unsaved Attzr 35 W USB draft using the requested 430 × 430 mm bed. Unknown manufacturer defaults remain labeled. Added bounded, serialized $G querying and source-preserving modal parsing. The Connection check compares settings/modes/status against the connected profile, distinguishes status units from program units, records the collection interval and never grants motion/fire authority.
 

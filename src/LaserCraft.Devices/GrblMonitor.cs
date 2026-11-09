@@ -51,11 +51,15 @@ public sealed class GrblMonitor : IAsyncDisposable
     private readonly CancellationTokenSource lifetime = new();
     private int disposalStarted;
     public string Identity { get; private set; } = "";
-    public ManualControlSimulation? Simulation => (transport as SimulatedGrblTransport)?.Simulation;
-    private GrblMonitor(IGrblTransport transport) => this.transport = transport;
-    public static async Task<GrblMonitor> ConnectAsync(IGrblTransport transport, CancellationToken cancellationToken = default)
+    public ManualControlSimulation? Simulation { get; }
+    private GrblMonitor(IGrblTransport transport, ConnectionJournal? journal)
     {
-        var monitor = new GrblMonitor(transport);
+        Simulation = (transport as SimulatedGrblTransport)?.Simulation;
+        this.transport = journal is null ? transport : new JournaledGrblTransport(transport, journal);
+    }
+    public static async Task<GrblMonitor> ConnectAsync(IGrblTransport transport, CancellationToken cancellationToken = default, ConnectionJournal? journal = null)
+    {
+        var monitor = new GrblMonitor(transport, journal); transport = monitor.transport;
         try
         {
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken); timeout.CancelAfter(TimeSpan.FromSeconds(6));
@@ -80,7 +84,7 @@ public sealed class GrblMonitor : IAsyncDisposable
         {
             if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
             timeout.Token.ThrowIfCancellationRequested(); await transport.WriteAsync("?", timeout.Token);
-            for (int i = 0; i < 64; i++) { var line = await transport.ReadLineAsync(timeout.Token); if (line.StartsWith('<')) return GrblStatus.Parse(line); if (line.StartsWith("error:")) throw new IOException(line); }
+            for (int i = 0; i < 64; i++) { var line = await transport.ReadLineAsync(timeout.Token); if (line.StartsWith('<')) return GrblStatus.Parse(line); if (line.StartsWith("error:") || line.StartsWith("ALARM:")) throw new IOException(line); }
             throw new InvalidDataException("No status frame within the response limit.");
         }
         finally { gate.Release(); }

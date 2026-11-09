@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.15
+# Feature parity matrix - working baseline 0.16
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -61,3 +61,7 @@ See [observed LightBurn 2.2 device/Move controls](lightburn-22-device-controls.m
 ## USB diagnostics 0.15
 
 Per-connection detected COM selection and a 430 × 430 Attzr USB draft are implemented. Source-preserving $G modal state and read-only settings/status comparisons are tested. Matches do not establish execution readiness, homing or hardware compatibility. USB-driver and physical controller testing remain unavailable; live scheduling and machine execution remain planned.
+
+## Connection support 0.16
+
+Connection journal export and Windows x64 self-contained packaging are implemented for remote testing. Transport logs retain attempted writes, replies/errors and closure with bounded storage; they do not demonstrate controller execution or physical compatibility. Live command scheduling and machine execution remain planned.

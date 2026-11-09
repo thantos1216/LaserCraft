@@ -29,7 +29,7 @@ public sealed partial class MainWindow
         }
         catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException)
         {
-            if (monitor == client) { await DisconnectDevice(); connectionStatus.Text = "Connection check failed: " + ex.Message; }
+            if (monitor == client) { connectionJournal?.Add("ERROR", "Connection check: " + ex.Message); await DisconnectDevice(); connectionStatus.Text = "Connection check failed: " + ex.Message; }
         }
         finally { querying = false; UpdateConnectionControls(); }
     }
