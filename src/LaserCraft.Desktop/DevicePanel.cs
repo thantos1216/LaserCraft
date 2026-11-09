@@ -14,7 +14,20 @@ public sealed partial class MainWindow
     private bool connecting;
     private bool querying, disconnecting;
     private DeviceProfile? connectedProfile;
-    private Button? connectButton, disconnectButton, readStatusButton, readSettingsButton;
+    private Button? connectButton, disconnectButton, readStatusButton, readSettingsButton, connectionCheckButton;
+    private readonly ComboBox connectionPort = new() { MinWidth = 120, PlaceholderText = "Choose COM port" };
+    private Button? refreshConnectionPorts;
+    private void RefreshConnectionPorts()
+    {
+        var prior = connectionPort.SelectedItem as string;
+        try
+        {
+            var ports = TransportFactory.SerialPorts(); connectionPort.ItemsSource = ports;
+            var saved = profiles.ElementAtOrDefault(deviceChoice.SelectedIndex)?.SerialPort;
+            connectionPort.SelectedItem = ports.FirstOrDefault(p => string.Equals(p, prior ?? saved, StringComparison.OrdinalIgnoreCase));
+        }
+        catch (IOException ex) { connectionPort.ItemsSource = Array.Empty<string>(); connectionStatus.Text = "Port discovery failed: " + ex.Message; }
+    }
     private void UpdateConnectionControls()
     {
         deviceChoice.IsEnabled = !connecting && !disconnecting && monitor is null;
@@ -22,6 +35,9 @@ public sealed partial class MainWindow
         if (disconnectButton is not null) disconnectButton.IsEnabled = !disconnecting && (connecting || monitor is not null);
         if (readStatusButton is not null) readStatusButton.IsEnabled = monitor is not null && !connecting && !querying && !disconnecting;
         if (readSettingsButton is not null) readSettingsButton.IsEnabled = readStatusButton?.IsEnabled == true;
+        if (connectionCheckButton is not null) connectionCheckButton.IsEnabled = readStatusButton?.IsEnabled == true;
+        connectionPort.IsEnabled = deviceChoice.IsEnabled && profiles.ElementAtOrDefault(deviceChoice.SelectedIndex)?.Connection == ConnectionKind.Serial;
+        if (refreshConnectionPorts is not null) refreshConnectionPorts.IsEnabled = connectionPort.IsEnabled;
         if (sessions.Count > 0) RefreshStatus();
         UpdateManualControls();
     }
@@ -31,8 +47,11 @@ public sealed partial class MainWindow
     private Control BuildConnectionPanel()
     {
         try { profiles = ProfileStore.Load(ProfilesPath); } catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or InvalidDataException) { profiles = [DeviceProfile.Simulator()]; connectionStatus.Text = "Saved profiles could not be read: " + ex.Message; }
+        deviceChoice.SelectionChanged += (_, _) => { connectionPort.SelectedItem = null; RefreshConnectionPorts(); UpdateConnectionControls(); };
         ReloadDeviceChoices();
         var panel = new StackPanel { Spacing = 4 }; var row = new WrapPanel(); row.Children.Add(deviceChoice); row.Children.Add(Button("Devices…", () => _ = EditDevices())); row.Children.Add(connectButton = AsyncButton("Connect", ConnectDevice)); row.Children.Add(disconnectButton = AsyncButton("Disconnect", DisconnectDevice)); row.Children.Add(readStatusButton = AsyncButton("Read status", ReadDeviceStatus)); row.Children.Add(readSettingsButton = AsyncButton("Read firmware settings…", ReadFirmwareSettings)); row.Children.Add(Button("Apply device bed", () => { var p = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; Current.Canvas.Apply(Current.Canvas.History.Document with { Width = p.BedWidth, Height = p.BedHeight }); Current.Canvas.Fit(); })); panel.Children.Add(row); panel.Children.Add(connectionStatus); UpdateConnectionControls();
+        var usb = new WrapPanel(); usb.Children.Add(Label("USB COM for this connection")); usb.Children.Add(connectionPort); usb.Children.Add(refreshConnectionPorts = Button("Refresh COM ports", RefreshConnectionPorts)); panel.Children.Insert(0, usb);
+        row.Children.Add(connectionCheckButton = AsyncButton("Connection check…", ReadConnectionCheck)); UpdateConnectionControls();
         Closed += async (_, _) => { await connectionLifetime.CancelAsync(); if (monitor is not null) await monitor.DisposeAsync(); foreach (var s in sessions) s.Canvas.ReleaseImages(); };
         return panel;
     }
@@ -43,6 +62,7 @@ public sealed partial class MainWindow
         connectionStatus.Text = "Connecting to " + profile.Name + "…";
         try
         {
+            if (profile.Connection == ConnectionKind.Serial) profile = profile with { SerialPort = connectionPort.SelectedItem as string ?? throw new InvalidDataException("Select the currently detected USB COM port. Refresh ports after plugging in the laser.") };
             var transport = await TransportFactory.OpenAsync(profile, attempt.Token); monitor = await GrblMonitor.ConnectAsync(transport, attempt.Token); attempt.Token.ThrowIfCancellationRequested();
             connectedProfile = profile; connectionStatus.Text = $"{profile.Name} · {monitor.Identity} · read-only monitor"; Log("Connected: " + profile.Name + " (read-only queries)"); await ReadDeviceStatus();
         }
@@ -96,6 +116,11 @@ public sealed partial class MainWindow
         family.SelectionChanged += (_, _) => { if (family.SelectedItem is ControllerFamily f) support.Text = ControllerCatalog.Support(f); };
         list.SelectionChanged += (_, _) => { if (list.SelectedIndex >= 0 && list.SelectedIndex < profiles.Count) Load(profiles[list.SelectedIndex]); };
         var panel = new StackPanel { Spacing = 4, Margin = new Thickness(18) }; panel.Children.Add(Label("Device profiles · configuration and read-only connection", 17)); panel.Children.Add(list); panel.Children.Add(Button("New profile", () => Load(new DeviceProfile(Guid.NewGuid(), "New laser"))));
+        panel.Children.Add(Button("Attzr 35 W USB draft · 430 × 430", () =>
+        {
+            Load(new DeviceProfile(Guid.NewGuid(), "Attzr 35 W · USB (verify settings)", Connection: ConnectionKind.Serial, BedWidth: 430, BedHeight: 430));
+            message.Text = "User-specified bed: 430 × 430 mm. Select the detected COM port. 115200 baud, S1000 and bottom-left origin are unverified starting values, not confirmed Attzr defaults. Save does not connect. Run Connection check after connecting; no physical motion/fire is available.";
+        }));
         Field("Name", name); Field("Controller family", family); panel.Children.Add(support); Field("Connection", connection); Field("Detected serial ports (no port is opened)", ports); panel.Children.Add(Button("Refresh serial ports", RefreshPorts)); Field("Serial port", portName); Field("Baud · 8 data bits, no parity, 1 stop bit", baud); Field("Serial startup delay · ms before identity query", startupDelay); Field("TCP host", host); Field("TCP port", tcpPort);
         var dims = new WrapPanel(); Inline(dims, "Bed width mm", bedW, 120); Inline(dims, "Bed height mm", bedH, 120); Inline(dims, "S-value maximum", maxPower, 120); panel.Children.Add(dims); Field("Machine origin (stored for future coordinate mapping)", origin); panel.Children.Add(airSupport); Field("Air-assist output for offline export", airCommand); panel.Children.Add(dtr); panel.Children.Add(rts);
         panel.Children.Add(Label("Connect opens only the chosen endpoint and queries firmware identity/status. Opening a serial port can reset some controllers. Homing, motion, firing, job streaming and air commands are not sent. Other controller families can be saved as profiles while their adapters are developed.")); panel.Children.Add(message);

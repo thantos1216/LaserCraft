@@ -85,6 +85,28 @@ public sealed class GrblMonitor : IAsyncDisposable
         }
         finally { gate.Release(); }
     }
+    public async Task<GrblModalState> QueryModalStateAsync(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref disposalStarted) != 0, this);
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token); timeout.CancelAfter(TimeSpan.FromSeconds(4));
+        await gate.WaitAsync(timeout.Token);
+        try
+        {
+            if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
+            timeout.Token.ThrowIfCancellationRequested(); await transport.WriteAsync("$G\n", timeout.Token); GrblModalState? modal = null;
+            for (int i = 0; i < 64; i++)
+            {
+                var line = await transport.ReadLineAsync(timeout.Token);
+                if (line == "ok") return modal ?? throw new InvalidDataException("Parser-state query acknowledged without a report.");
+                if (line.StartsWith("error:") || line.StartsWith("ALARM:")) throw new IOException("Controller rejected parser-state query: " + line);
+                if (!line.StartsWith("[GC:", StringComparison.Ordinal)) continue;
+                if (modal is not null) throw new InvalidDataException("Duplicate parser-state report.");
+                modal = GrblModalState.Parse(line);
+            }
+            throw new InvalidDataException("Parser-state response exceeded 64 lines without completion.");
+        }
+        finally { gate.Release(); }
+    }
     public async Task<IReadOnlyList<GrblSetting>> QuerySettingsAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(Volatile.Read(ref disposalStarted) != 0, this);
@@ -128,8 +150,9 @@ public sealed class SimulatedGrblTransport : IGrblTransport
         {
             case "$I\n": replies.Writer.TryWrite("[VER:1.1h:LaserCraft simulator]"); replies.Writer.TryWrite("ok"); break;
             case "?": replies.Writer.TryWrite(FormattableString.Invariant($"<{(Simulation.IsPulsing ? "Run" : "Idle")}|MPos:{Simulation.Position.X:0.000},{Simulation.Position.Y:0.000},0.000|FS:0,{Simulation.SValue}>")); break;
+            case "$G\n": replies.Writer.TryWrite(FormattableString.Invariant($"[GC:G0 G54 G17 G21 G90 G94 M{(Simulation.IsPulsing ? 3 : 5)} M9 T0 S{Simulation.SValue} F0]")); replies.Writer.TryWrite("ok"); break;
             case "$$\n": foreach (var line in new[] { "$10=1", "$13=0", "$30=" + Simulation.Profile.MaxPower.ToString(CultureInfo.InvariantCulture), "$31=0", "$32=1", FormattableString.Invariant($"$130={Simulation.Profile.BedWidth:0.000}"), FormattableString.Invariant($"$131={Simulation.Profile.BedHeight:0.000}"), "ok" }) replies.Writer.TryWrite(line); break;
-            default: throw new InvalidOperationException("The monitor only permits identity, status and settings queries.");
+            default: throw new InvalidOperationException("The monitor only permits identity, status, settings and parser-state queries.");
         }
         return ValueTask.CompletedTask;
     }

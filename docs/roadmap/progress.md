@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.14 - dynamic tracing and manual-control rehearsal
+## Current milestone 0.15 - USB connection diagnostics
+
+Added an explicit per-connection detected COM selector, refresh without port opening, and an unsaved Attzr 35 W USB draft using the requested 430 × 430 mm bed. Unknown manufacturer defaults remain labeled. Added bounded, serialized $G querying and source-preserving modal parsing. The Connection check compares settings/modes/status against the connected profile, distinguishes status units from program units, records the collection interval and never grants motion/fire authority.
+
+225 tests pass (219 unit, 6 integration), including fragmented real loopback TCP, missing/duplicate/conflicting modal data, acknowledgement completion, cancellation, mismatches and explicit unknown homing. Desktop verified simulator report/source evidence, disconnect and draft cancellation. See [validation](../testing/milestone-15.md). Physical USB, live command scheduling, jogging/fire/cuts and full feature parity remain unfinished.
+
+
+## Milestone 0.14 - dynamic tracing and manual-control rehearsal
 
 Trace sliders and numeric values always update the photograph overlay automatically after a 150 ms debounce; the manual Update/live-toggle path is removed. Stale work is cancelled and cannot be applied. Added simulator-only X/Y distance/feed controls, bounded timed power pulses, explicit Stop, shared simulated position/S status and bounded rehearsal history. Physical serial/TCP profiles cannot acquire these controls. Added per-profile M7/M8 air-output selection for offline G-code with M9 off and legacy M8 default.
 

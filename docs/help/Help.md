@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.14 - automatic tracing and manual-control rehearsal
+Version 0.15 - USB selection and read-only connection checks
 
 ## Create layers and control order
 
@@ -49,6 +49,16 @@ For TCP, choose TCP and supply the controller's configured host and port; the se
 Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. The read-only adapter supports only $I, ?, and the explicit $$ query. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Hardware motion, firing, homing, arbitrary console commands and job streaming are not implemented or qualified.
 
 Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
+
+## USB setup and connection checks
+
+In Devices, Attzr 35 W USB draft prepares a new unsaved USB serial profile with the user-specified 430 × 430 mm bed. Choose a detected COM port and review all settings before Save profile. Its 115200 baud, S1000, bottom-left origin and air settings are starting values, not independently confirmed manufacturer defaults. Saving does not open the port. Close discards the draft.
+
+For a saved Serial profile, choose USB COM for this connection in the Laser panel. Refresh COM ports after plugging in the machine. This enumerates ports without opening them. A detected port must be explicitly selected; LaserCraft does not try arbitrary ports or sweep baud rates. A changed port selection applies to this connection only and does not overwrite the saved profile. Profile/port selection is locked while connecting or connected. Close other software using that port, then use Connect for read-only diagnostics.
+
+Connection check queries firmware settings ($$), parser modes ($G), then status (?). The report compares profile S maximum with $30, laser mode $32, status-report units $13, G-code units/distance/feed/spindle modes, controller state, reported S, and travel vs bed size. Match, Attention and Unknown describe individual comparisons, not permission or readiness to cut. Missing/invalid numeric facts stay unknown. G21 program units and $13 status units are separate facts. Position readouts do not prove homing, usable area, work offsets or origin.
+
+The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Physical jogging, firing and jobs remain unavailable in this build.
 
 ## Simulator Move panel
 

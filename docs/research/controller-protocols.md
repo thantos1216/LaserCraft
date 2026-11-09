@@ -7,3 +7,7 @@ The initial monitor sends only the identity query `$I\n` and real-time status qu
 GRBL is the initial adapter target; grblHAL and FluidNC use its compatible read-only subset experimentally. Marlin, Smoothieware, Ruida and Trocen are recorded controller families with no adapter yet. Device profiles do not imply supported execution. Serial DTR/RTS are explicit, disabled by default, because opening/reset behavior differs by hardware. No physical controller has been contacted during development.
 
 Tests use an in-process GRBL simulator and a TCP listener on loopback only. They verify exact commands, status parsing, endpoint validation, disposal/cancellation and profile persistence. They do not establish USB-driver, Wi-Fi, controller variant or Atezr behavior. Air requests are carried on planned cut segments and stored per layer/profile; there is no physical air command path.
+
+## Connection checks 0.15
+
+Read-only queries now include $$ and $G. The latter requires one bounded [GC:...] report and terminal acknowledgement; modal words are preserved, known contradictory groups rejected, and absent groups remain unknown. A connection report compares these facts with settings and a later status frame. $13 controls status-report units independently of G20/G21 program units. Endpoint and collection interval identify scope, but sequential reads do not establish an atomic state, homing or physical execution readiness. No execution command path is introduced.
