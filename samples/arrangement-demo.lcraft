@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Name": "Arrangement demo",
+  "Width": 400,
+  "Height": 400,
+  "Shapes": [
+    { "Id": "71a70200-0000-4000-8000-000000000001", "Kind": 0, "X": 20, "Y": 100, "Width": 10, "Height": 10, "Layer": 0 },
+    { "Id": "71a70200-0000-4000-8000-000000000002", "Kind": 0, "X": 55, "Y": 100, "Width": 20, "Height": 10, "Layer": 0 },
+    { "Id": "71a70200-0000-4000-8000-000000000003", "Kind": 0, "X": 110, "Y": 100, "Width": 30, "Height": 10, "Layer": 0 }
+  ],
+  "Layers": [ { "Name": "Arrangement vectors", "Color": "#4169E1", "Speed": 1200, "Power": 20, "Mode": 0, "Passes": 1, "Output": true, "Visible": true, "AirAssist": false, "Interval": 0.1, "Kind": 0 } ]
+}

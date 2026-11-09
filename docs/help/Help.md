@@ -1,6 +1,22 @@
 # LaserCraft Help
 
-Version 0.16 - portable Windows package and connection logs
+Version 0.17 - arrays, distribution, vector rotation and direction
+
+## Arrange artwork
+
+Arrange / Rectangular array repeats the entire selected set as one cell. Rows and Columns are totals including originals, which stay unchanged in the top-left cell. Nonnegative horizontal/vertical gaps are between combined cell bounds; pitch equals cell width/height plus gap. Copies extend right/down. The dialog updates added-object/layer counts and final bounds as values change, and disables Create for invalid or oversized results. A repeated axis with zero-extent artwork needs a nonzero gap.
+
+Vector copies keep their existing cut layers. Every image copy gets a new dedicated layer appended to the list, retaining its source speed, power, passes, air and image-processing settings. Original embedded pixels and mirrors are preserved. Objects are appended cell by cell in row-major order; output still follows the layer list, so a multi-layer cell is not necessarily burned as a unit. Originals and copies are selected afterward. Creation is one Undo step. Cancel leaves artwork unchanged. There is no automatic nesting, overlap removal or bed fitting; off-bed bounds are called out and output preview/export retains its bed checks.
+
+Arrays check the existing project limits before allocating copies: 100000 objects, 256 layers, 128 images, 200000 path vertices and 24 MB of encoded embedded image data. Native saves retain the separate 32 MB file limit. Very dense projects can still be unsuitable for interactive editing or physical output.
+
+Arrange / Distribute requires at least three selected objects. Horizontal/Vertical centers sorts by center and evenly spaces those centers, retaining the two outer center anchors. Horizontal/Vertical gaps sorts by leading edge and gives equal nonnegative edge gaps with the first/last objects fixed. Equal-position ties follow document order. Negative available gaps reject the whole operation; center spacing can overlap differently sized objects. The other coordinate, identity, layer, image data and dimensions are retained. One Undo restores positions.
+
+Arrange / Rotate vectors rotates about the combined selection center, with positive degrees clockwise on the canvas. It accepts finite angles from -360 to 360, excluding zero/full turns. Rectangles become closed paths; ellipses become 128-point polylines; original path contours, holes and direction are retained. Identities and cut layers stay the same. This is sampled vector geometry, not native curve handles or a physical accuracy guarantee. Images in the selection reject the operation; raster rotation remains planned. Undo restores original shape types. No automatic bed fit occurs.
+
+Arrange / Reverse path direction reverses each selected path contour. Open start/end vertices swap; a closed contour keeps its first vertex while traversal reverses. The contour list/object order and cut settings are unchanged. Mirrored paths are supported. Convert rectangles/ellipses to paths first; images must be traced. Fill uses the existing even-odd rule rather than contour direction. Reversal is one Undo step; it does not perform cut-order optimization.
+
+Try samples/arrangement-demo.lcraft (included in the portable package). Ctrl+A selects three rectangles. The default 2 × 3 array creates 18 objects with bounds 370 × 25 mm and a 1080 mm vector cut length. Undo returns to three originals. Horizontal gaps moves the middle rectangle from X55 to X60; then a 90-degree rotation produces combined bounds X75/Y45, 10 × 120 mm. These are editing/preview examples; no machine commands are sent.
 
 ## Create layers and control order
 

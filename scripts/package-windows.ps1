@@ -12,6 +12,9 @@ if ((Test-Path -LiteralPath $publishPath) -or (Test-Path -LiteralPath $archivePa
 & dotnet publish (Join-Path $projectRoot 'src/LaserCraft.Desktop/LaserCraft.Desktop.csproj') -c Release -r win-x64 --self-contained true -o $publishPath --nologo
 if ($LASTEXITCODE -ne 0) { throw 'Portable publish failed; no archive created.' }
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/help/USB-CONNECTION-TEST.md') -Destination (Join-Path $publishPath 'USB-CONNECTION-TEST.md')
+$samplePath = Join-Path $publishPath 'samples'
+New-Item -ItemType Directory -Path $samplePath | Out-Null
+Copy-Item -LiteralPath (Join-Path $projectRoot 'samples/arrangement-demo.lcraft') -Destination $samplePath
 $commit = (& git -C $projectRoot rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw 'Could not record source commit.' }
 $dirty = [bool](& git -C $projectRoot status --porcelain)
@@ -21,5 +24,4 @@ $manifest = Get-ChildItem -LiteralPath $publishPath -Recurse -File | Sort-Object
 }
 $manifest | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath (Join-Path $publishPath 'FILES-SHA256.json')
 Compress-Archive -Path (Join-Path $publishPath '*') -DestinationPath $archivePath -CompressionLevel Optimal
-Get-Item -LiteralPath $archivePath | Select-Object FullName,Length
-Get-FileHash -LiteralPath $archivePath -Algorithm SHA256
+[pscustomobject]@{ Archive=$archivePath; Bytes=(Get-Item -LiteralPath $archivePath).Length; Sha256=(Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash } | ConvertTo-Json

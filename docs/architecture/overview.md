@@ -79,3 +79,7 @@ GrblModalState owns parsing of modal words, preserves source text and rejects co
 ## Addendum: 0.16 connection journal
 
 ConnectionJournal owns bounded, synchronized history and detached snapshots. JournaledGrblTransport records attempted TX, completed RX and transport failures, preserving original exceptions and disposal ownership. GrblMonitor captures the original simulator owner before optional instrumentation, so diagnostics do not change manual simulator availability. The desktop owns profile/attempt metadata, replacement of the latest journal and explicit file export. No ambient environment or automatic log persistence is introduced. The packaging script produces self-contained win-x64 output, source metadata, file hashes and a ZIP; it refuses existing package paths instead of deleting earlier outputs.
+
+## Addendum: 0.17 arrangement
+
+Arrangement owns selection validation, array measurement/expansion, distribution, vector rotation and reversal. ArrayLayout is the shared count/pitch/bounds interpretation for the UI and copy builder; expansion checks precede copy allocation. Image copies share immutable source assets but receive independent appended layer records. Rotation consumes world-space mirror transforms and normalizes through VectorPaths.Create; reversal edits immutable contour order while preserving closed starts. The desktop owns temporary dialog values and source/selection fingerprints, and applies each fully validated result once through history. No native-format or controller extension was needed.

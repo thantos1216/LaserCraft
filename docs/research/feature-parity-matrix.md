@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.16
+# Feature parity matrix - working baseline 0.17
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -12,16 +12,16 @@
 | Rectangles and ellipses | D p63-67 | Implemented; rectangle UI checked | Shape dimensions round-trip |
 | Lines / Bezier curves | D p63; SVG 2 path semantics | Partial: polylines/compound contours; cubic/quadratic SVG curves imported as tolerance-controlled polylines, tested | Native Bézier control points and arcs |
 | Selection / translation / sizing | D p63-67 | Partial: Ctrl-click multi-select, collective movement and numeric scaling | Drag handles, rotation and richer hit testing |
-| Rotate / mirror / skew | R | Partial: horizontal/vertical mirror, tested | Rotation, skew and path transforms |
+| Rotate / mirror / skew | R | Partial: mirror and collective vector rotation, tested; rectangles/ellipses become polylines | Raster rotation, skew and native curve transforms |
 | Node editing and curve conversion | R | Partial: node editing, open/split at node, shape conversion, separate/combine, nearest-endpoint joining with midpoint/bridge preview and closing; tested | Manual endpoint pairing, multi-path joining, curve handles and Bézier conversion |
 | Grid / snap / guides / rulers | R | Partial: grid, 1 mm snap, rulers | Configurable units and guides |
 | Undo / redo | R | Implemented, automated + UI tested | Bound memory, transaction edits |
 | Group / ungroup | R | Planned | Hierarchy and selection tests |
-| Alignment / distribution | R | Partial: edge/center alignment and center-on-bed, tested | Distribution and anchor modes |
+| Alignment / distribution | R | Partial: alignment, center-on-bed and horizontal/vertical center/gap distribution, tested | Additional anchor modes |
 | Union / subtract / intersect / weld | R | Planned | Geometry library/license evaluation |
 | Offsets / kerf / smoothing | R | Planned | Degenerate geometry fixtures |
 | Text / text-to-path / text-on-path | R | Planned | Font shaping and editable text |
-| Arrays / nesting | R | Planned | Rotation and overlap constraints |
+| Arrays / nesting | R | Rectangular arrays with dedicated image-copy layers and expansion checks, tested | Circular arrays, nesting and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
 | Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |
 | Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses and closed compound paths, tested | Offset fill, angles, overscan and controller planning |

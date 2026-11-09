@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.16 - transferable connection testing
+## Current milestone 0.17 - editor arrangement operations
+
+Added rectangular arrays with total rows/columns, cell gaps, live resource/bounds summary, original/copy selection and dedicated copied image layers. Added center/gap distribution on both axes, collective vector rotation and contour-direction reversal. Operations preserve cut associations, validate before replacement and apply as one undo transaction. Vector rotation converts rectangles/ellipses to sampled paths; raster rotation, native curves, circular arrays and nesting remain planned.
+
+260 tests pass (252 unit, 8 integration). Coverage includes geometry, mirrors, compound holes, expansion budgets, independent raster-layer settings/real PNG planning, history and native/SVG/G-code round trips. Desktop checked over-budget rejection, 18-object array/90-segment preview (1080 mm), equal gaps, 90-degree rotation, direction reversal and Undo to the clean original fixture. See [validation](../testing/milestone-17.md) and [requirements](../research/arrangement-requirements-17.md). Physical execution and production readiness remain unfinished.
+
+
+## Milestone 0.16 - transferable connection testing
 
 Added a bounded in-memory connection journal and user-chosen text export, including failed attempts, raw escaped query/reply lines, errors, selected endpoint/profile facts and close events. Snapshot export remains available after disconnect and never uploads automatically. Instrumentation preserves simulator ownership and monitor cancellation semantics. Status reads now surface ALARM immediately. Added a self-contained Windows x64 packaging script, source/build metadata, file hashes and USB testing guide.
 
