@@ -4,7 +4,7 @@ namespace LaserCraft.UnitTests;
 
 public sealed class PathNodeEditingTests
 {
-    private static DesignShape Square() => SvgLinearPaths.Read("M10 10H30V30H10Z");
+    private static DesignShape Square() => SvgPaths.Read("M10 10H30V30H10Z");
     private static DesignDocument Document(DesignShape s) { var d = DesignDocument.Empty(); d.Shapes.Add(s); return d; }
     [Fact]
     public void InsertingOnClosingEdgeRetainsLengthAndIdentity()
@@ -27,7 +27,7 @@ public sealed class PathNodeEditingTests
     [Fact]
     public void RemovingNodeChangesOnlyItsContourAndIsUndoable()
     {
-        var s = SvgLinearPaths.Read("M10 10H30V30H10ZM15 15H20V20H15Z"); var edited = PathNodeEditing.Remove(s, 0, 1);
+        var s = SvgPaths.Read("M10 10H30V30H10ZM15 15H20V20H15Z"); var edited = PathNodeEditing.Remove(s, 0, 1);
         Assert.Equal(3, edited.Path!.Contours[0].Points.Length);
         Assert.Equal(VectorPaths.World(s)[1].Points.ToArray(), VectorPaths.World(edited)[1].Points.ToArray());
         var h = new EditorHistory(); h.Reset(Document(s)); h.Apply(Document(edited)); h.Undo(); Assert.Equal(s, h.Document.Shapes[0]); h.Redo(); Assert.Equal(edited, h.Document.Shapes[0]);
@@ -43,14 +43,14 @@ public sealed class PathNodeEditingTests
     [Fact]
     public void SplittingOpenContourKeepsSharedEndpointAndOriginalGeometry()
     {
-        var s = SvgLinearPaths.Read("M10 10H20V20H30"); var edited = PathNodeEditing.Break(s, 0, 1); var c = VectorPaths.World(edited);
+        var s = SvgPaths.Read("M10 10H20V20H30"); var edited = PathNodeEditing.Break(s, 0, 1); var c = VectorPaths.World(edited);
         Assert.Equal(2, c.Length); Assert.Equal(c[0].Points[^1], c[1].Points[0]);
         Assert.All(c, p => Assert.False(p.Closed)); Assert.Equal(30, ToolpathPlanner.Build(Document(edited)).CutLength, 8);
     }
     [Fact]
     public void RemovingPhotoContourRetainsOtherRegionsAndRoundTrips()
     {
-        var s = SvgLinearPaths.Read("M10 10H30V30H10ZM15 15H20V20H15Z"); var edited = PathNodeEditing.RemoveContour(s, 1, 0);
+        var s = SvgPaths.Read("M10 10H30V30H10ZM15 15H20V20H15Z"); var edited = PathNodeEditing.RemoveContour(s, 1, 0);
         Assert.Single(edited.Path!.Contours); Assert.Equal(VectorPaths.World(s)[0].Points.ToArray(), VectorPaths.World(edited)[0].Points.ToArray());
         var file = Path.GetTempFileName();
         try { ProjectFile.Save(file, Document(edited)); Assert.Single(ProjectFile.Load(file).Shapes[0].Path!.Contours); }
@@ -59,7 +59,7 @@ public sealed class PathNodeEditingTests
     [Fact]
     public void InvalidAndDegenerateEditsLeaveSourceUntouched()
     {
-        var triangle = SvgLinearPaths.Read("M10 10L30 10 20 20Z"); var line = SvgLinearPaths.Read("M10 10H30");
+        var triangle = SvgPaths.Read("M10 10L30 10 20 20Z"); var line = SvgPaths.Read("M10 10H30");
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.Remove(triangle, 0, 0));
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.Remove(line, 0, 0));
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.RemoveContour(line, 0, 0));
@@ -67,7 +67,7 @@ public sealed class PathNodeEditingTests
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.InsertAfter(line, 0, 1));
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.Remove(line, 4, 0));
         Assert.Throws<InvalidDataException>(() => PathNodeEditing.InsertAfter(line, 0, 0, new(double.NaN, 0)));
-        var collapsing = SvgLinearPaths.Read("M10 10H30L10 10"); Assert.Throws<InvalidDataException>(() => PathNodeEditing.Remove(collapsing, 0, 1));
+        var collapsing = SvgPaths.Read("M10 10H30L10 10"); Assert.Throws<InvalidDataException>(() => PathNodeEditing.Remove(collapsing, 0, 1));
         Assert.Equal(2, line.Path!.Contours[0].Points.Length);
     }
 }

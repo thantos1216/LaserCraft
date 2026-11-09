@@ -24,6 +24,7 @@
     <None Include="..\..\samples\trace-fixture.png" Link="samples\trace-fixture.png" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\nasa-blue-marble.jpg" Link="samples\nasa-blue-marble.jpg" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\endpoint-joining.lcraft" Link="samples\endpoint-joining.lcraft" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\bezier-curves.svg" Link="samples\bezier-curves.svg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

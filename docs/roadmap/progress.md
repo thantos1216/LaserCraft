@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.12 - endpoint joining
+## Current milestone 0.13 - SVG curve interoperability
+
+Added cubic/smooth-cubic and quadratic/smooth-quadratic SVG path import, relative/repeated coordinate handling, physical-tolerance adaptive flattening and a cancellable import-options dialog. The parser is now SvgPaths; the superseded linear-only parser was removed and existing consumers migrated. Curves are stored as editable polyline vertices, not native control handles. Expansion budgets are enforced per path and incrementally across the whole import.
+
+Local Release build has zero warnings/errors; 193 tests pass (187 unit, 6 integration). Dense independent curve samples, control-history resets, collinear backtracking, coincident-endpoint loops, scaling, malformed/unsupported input, cancellation and expansion limits are tested. Desktop checked Cancel leaving zero objects, a 0.025 mm three-object import, output preview (387 segments / 799.3 mm / 44.0 s ideal) and one-step undo to the clean empty document. See [validation](../testing/milestone-13.md). Next: native curve geometry/handles, SVG arcs/transforms and continued controller execution qualification; physical streaming remains unimplemented.
+
+## Milestone 0.12 - endpoint joining
 
 Added Tools / Join open endpoints… for two same-layer open contours in one or two objects. The closest endpoint pair is selected deterministically; midpoint merging and cut-segment bridging have separate explanations and preview. Gap limits, layer/topology/format validation and source/selection checks prevent stale or invalid installation. Apply is one undo step; the result remains open and editable. A portable sample demonstrates a 0.447 mm gap.
 

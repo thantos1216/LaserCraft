@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300mm" height="260mm" viewBox="0 0 300 260">
+  <title>LaserCraft original cubic and quadratic curve fixture</title>
+  <desc>Import as polylines with a physical tolerance. Includes C/S, Q/T and a closed cubic loop.</desc>
+  <path d="M20 80 C20 20 80 20 80 80 S140 140 140 80" fill="none" stroke="#40e0d0"/>
+  <path d="M20 180 Q80 100 140 180 T260 180" fill="none" stroke="#40e0d0"/>
+  <path d="M180 40 C240 0 280 80 220 100 C160 120 140 60 180 40 Z" fill="none" stroke="#40e0d0"/>
+</svg>

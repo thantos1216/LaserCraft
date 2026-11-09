@@ -37,3 +37,5 @@ Version 0.10 improves GRBL connection testing: read-only firmware settings, rich
 Version 0.11 adds separation of compound trace contours into independently selectable path objects and same-layer combination without joining endpoints. It also fixes a Windows CI-discovered disconnect race in queued monitor queries. [Validation](docs/testing/milestone-11.md) records tests and remaining limits.
 
 Version 0.12 adds previewed joining of two open contours with a maximum gap and explicit midpoint-merge or laser-on bridge methods. Try samples/endpoint-joining.lcraft. Joining remains an editing operation; physical machine execution is not implemented.
+
+Version 0.13 imports SVG cubic/quadratic Bézier paths (C/S/Q/T, including relative forms) as editable polylines with a physical tolerance option and cancellable background processing. Try samples/bezier-curves.svg. Original control handles, arcs and transforms remain unsupported; this is a geometry-import extension, not native Bézier editing.

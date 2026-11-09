@@ -65,3 +65,9 @@ Monitor disposal uses an atomic initiation marker. New queries reject disposal a
 ## Addendum: 0.12 joining
 
 PathComposition.SelectedPaths owns validated document selection for separation, combination and joining. PathJoining prepares two world-space open contours, chooses the nearest endpoint orientation in stable order, applies an explicit midpoint/bridge rule, and validates the complete replacement document without mutating sources. It returns endpoint/gap facts for display rather than having the UI reinterpret normalized geometry. The desktop owns temporary options, preview and source/scope fingerprint checks; Apply installs one history entry. Shared VectorPaths normalization and existing planners/serializers handle the resulting single open contour. No native-format or transport extension was needed.
+
+## Addendum: 0.13 SVG curves
+
+SvgPaths now owns path tokenization, current-point/control-history semantics and mapped-millimetre Bézier flattening; SvgLinearPaths was removed. Smooth control history is updated per segment packet and reset by incompatible commands. Quadratics become cubic controls, then bounded adaptive subdivision produces ordinary VectorPaths contours. SvgImport owns whole-file XML/unit/viewBox interpretation and checks aggregate expanded vertices after each object. Unsupported input rejects the entire operation.
+
+SvgImportPanel owns temporary tolerance/options and a cancellation lifetime. Parsing runs on a worker; the dialog drains it after cancellation/close. Installation requires the captured document fingerprint, selected destination layer and session, and creates any necessary vector layer only after successful parsing. Imported objects are installed/selected in one history edit. No native format or planner extension was needed, and the original curve handles are deliberately not represented as editable native curves.

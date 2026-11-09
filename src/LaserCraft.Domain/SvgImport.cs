@@ -7,8 +7,9 @@ namespace LaserCraft.Domain;
 
 public static class SvgImport
 {
-    public static List<DesignShape> Read(string text, int layer = 0)
+    public static List<DesignShape> Read(string text, int layer = 0, double curveTolerance = SvgPaths.DefaultCurveTolerance, CancellationToken cancellationToken = default)
     {
+        SvgPaths.ValidateTolerance(curveTolerance); cancellationToken.ThrowIfCancellationRequested();
         if (layer < 0 || layer >= 256) throw new InvalidDataException("Invalid target SVG layer.");
         using var reader = XmlReader.Create(new StringReader(text), new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null, MaxCharactersInDocument = 4_000_000 });
         var root = XDocument.Load(reader).Root ?? throw new InvalidDataException("Empty SVG.");
@@ -20,9 +21,10 @@ public static class SvgImport
         var sx = box.Length == 4 ? w / box[2] : 25.4 / 96; var sy = box.Length == 4 ? h / box[3] : 25.4 / 96;
         if (Math.Abs(sx - sy) > 1e-8) throw new InvalidDataException("Non-uniform SVG viewBox scaling is not supported yet.");
         var ox = box.Length == 4 ? box[0] : 0; var oy = box.Length == 4 ? box[1] : 0;
-        var result = new List<DesignShape>();
+        var result = new List<DesignShape>(); long vertices = 0;
         foreach (var e in root.DescendantsAndSelf())
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (e.Attribute("transform") is not null || e.Attribute("style") is not null) throw new InvalidDataException("SVG transforms and CSS styles are not supported yet.");
             double A(string name, double fallback = 0) => e.Attribute(name) is { } a ? N(a.Value) : fallback;
             DesignShape? s = e.Name.LocalName switch
@@ -31,12 +33,17 @@ public static class SvgImport
                 "rect" when A("rx") == 0 && A("ry") == 0 => new(Guid.NewGuid(), ShapeKind.Rectangle, (A("x") - ox) * sx, (A("y") - oy) * sy, A("width") * sx, A("height") * sy, layer),
                 "ellipse" => new(Guid.NewGuid(), ShapeKind.Ellipse, (A("cx") - A("rx") - ox) * sx, (A("cy") - A("ry") - oy) * sy, 2 * A("rx") * sx, 2 * A("ry") * sy, layer),
                 "circle" => new(Guid.NewGuid(), ShapeKind.Ellipse, (A("cx") - A("r") - ox) * sx, (A("cy") - A("r") - oy) * sy, 2 * A("r") * sx, 2 * A("r") * sy, layer),
-                "path" => SvgLinearPaths.Read(e.Attribute("d")?.Value ?? "", layer, sx, sy, ox, oy),
-                "polyline" or "polygon" => SvgLinearPaths.Read("M " + (e.Attribute("points")?.Value ?? "") + (e.Name.LocalName == "polygon" ? " Z" : ""), layer, sx, sy, ox, oy),
+                "path" => SvgPaths.Read(e.Attribute("d")?.Value ?? "", layer, sx, sy, ox, oy, curveTolerance, cancellationToken),
+                "polyline" or "polygon" => SvgPaths.Read("M " + (e.Attribute("points")?.Value ?? "") + (e.Name.LocalName == "polygon" ? " Z" : ""), layer, sx, sy, ox, oy, curveTolerance, cancellationToken),
                 "line" => VectorPaths.Create([new([new((A("x1") - ox) * sx, (A("y1") - oy) * sy), new((A("x2") - ox) * sx, (A("y2") - oy) * sy)])], layer),
                 _ => throw new InvalidDataException($"SVG element '{e.Name.LocalName}' is not supported yet. No shapes were imported.")
             };
-            if (s is not null) result.Add(s);
+            if (s is not null)
+            {
+                vertices += s.Path?.Contours.Sum(c => (long)c.Points.Length) ?? 0;
+                if (vertices > 200000 || result.Count >= 100000) throw new InvalidDataException("SVG expanded geometry exceeds project limits.");
+                result.Add(s);
+            }
         }
         (DesignDocument.Empty() with { Shapes = result, Layers = Enumerable.Range(0, layer + 1).Select(i => new CutLayer($"Layer {i + 1}", "#4169E1")).ToList() }).Validate(); return result;
     }

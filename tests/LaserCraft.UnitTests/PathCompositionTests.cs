@@ -5,7 +5,7 @@ namespace LaserCraft.UnitTests;
 public sealed class PathCompositionTests
 {
     private static DesignDocument Document(params DesignShape[] shapes) { var d = DesignDocument.Empty(); d.Shapes.AddRange(shapes); return d; }
-    private static DesignShape Ring() => SvgLinearPaths.Read("M10 10H30V30H10ZM15 15H25V25H15Z");
+    private static DesignShape Ring() => SvgPaths.Read("M10 10H30V30H10ZM15 15H25V25H15Z");
     [Fact]
     public void SeparateRetainsWorldGeometryMirrorsLayerAndFirstIdentity()
     {
@@ -26,7 +26,7 @@ public sealed class PathCompositionTests
     [Fact]
     public void CombinePreservesDocumentOrderAndDoesNotBridgeOpenContours()
     {
-        var a = SvgLinearPaths.Read("M10 10H20"); var b = SvgLinearPaths.Read("M30 10H40"); var untouched = new DesignShape(Guid.NewGuid(), ShapeKind.Rectangle, 50, 50, 10, 10);
+        var a = SvgPaths.Read("M10 10H20"); var b = SvgPaths.Read("M30 10H40"); var untouched = new DesignShape(Guid.NewGuid(), ShapeKind.Rectangle, 50, 50, 10, 10);
         var d = Document(a, untouched, b); var result = PathComposition.Combine(d, new HashSet<Guid> { b.Id, a.Id });
         Assert.Equal(a.Id, result.Selection.Single()); Assert.Equal(untouched, result.Document.Shapes[1]);
         var combined = result.Document.Shapes[0]; Assert.Equal(2, combined.Path!.Contours.Length); Assert.All(combined.Path.Contours, c => Assert.False(c.Closed));
@@ -56,7 +56,7 @@ public sealed class PathCompositionTests
     [Fact]
     public void EmptyStaleAndSingleObjectSelectionsReportActionableFailures()
     {
-        var a = SvgLinearPaths.Read("M10 10H20"); var d = Document(a);
+        var a = SvgPaths.Read("M10 10H20"); var d = Document(a);
         Assert.Throws<InvalidDataException>(() => PathComposition.Separate(d, new HashSet<Guid>()));
         Assert.Throws<InvalidDataException>(() => PathComposition.Combine(d, new HashSet<Guid> { Guid.NewGuid() }));
         Assert.Throws<InvalidDataException>(() => PathComposition.Combine(d, new HashSet<Guid> { a.Id }));

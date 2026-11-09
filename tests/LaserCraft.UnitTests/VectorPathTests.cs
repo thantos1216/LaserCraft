@@ -17,12 +17,12 @@ public sealed class VectorPathTests
     [Fact]
     public void VerticalAndHorizontalLinesRetainZeroExtent()
     {
-        foreach (var line in new[] { "M10 10V40", "M10 10H40" }) { var s = SvgLinearPaths.Read(line); Document(s).Validate(); Assert.Equal(30, ToolpathPlanner.Build(Document(s)).CutLength, 8); }
+        foreach (var line in new[] { "M10 10V40", "M10 10H40" }) { var s = SvgPaths.Read(line); Document(s).Validate(); Assert.Equal(30, ToolpathPlanner.Build(Document(s)).CutLength, 8); }
     }
     [Fact]
     public void RelativeImplicitAndHorizontalVerticalCommandsMatchAbsoluteGeometry()
     {
-        var a = SvgLinearPaths.Read("m10,20 10,0 v10 h-10 z"); var b = SvgLinearPaths.Read("M10 20 L20 20 20 30 10 30 Z");
+        var a = SvgPaths.Read("m10,20 10,0 v10 h-10 z"); var b = SvgPaths.Read("M10 20 L20 20 20 30 10 30 Z");
         Assert.Equal(VectorPaths.World(a)[0].Points.ToArray(), VectorPaths.World(b)[0].Points.ToArray()); Assert.True(a.Path!.Contours[0].Closed);
     }
     [Fact]
@@ -33,11 +33,11 @@ public sealed class VectorPathTests
         Assert.DoesNotContain(plan.Segments, p => !p.Travel && p.From.Y > 13 && p.From.Y < 17 && Math.Min(p.From.X, p.To.X) < 15 && Math.Max(p.From.X, p.To.X) > 15);
         Assert.False(ShapeEditing.HitTest(d, s, 15, 15, .1)); Assert.True(ShapeEditing.HitTest(d, s, 11, 11, .1));
     }
-    [Fact] public void FillRejectsAnOpenContour() => Assert.Throws<InvalidDataException>(() => ToolpathPlanner.Build(Document(SvgLinearPaths.Read("M10 10L30 10 30 30"), CutMode.Fill)));
+    [Fact] public void FillRejectsAnOpenContour() => Assert.Throws<InvalidDataException>(() => ToolpathPlanner.Build(Document(SvgPaths.Read("M10 10L30 10 30 30"), CutMode.Fill)));
     [Fact]
     public void DisconnectedContoursAreJoinedOnlyByOffPowerTravel()
     {
-        var s = SvgLinearPaths.Read("M10 10L20 10M30 10L40 10"); var plan = ToolpathPlanner.Build(Document(s)); Assert.Equal(20, plan.CutLength, 8);
+        var s = SvgPaths.Read("M10 10L20 10M30 10L40 10"); var plan = ToolpathPlanner.Build(Document(s)); Assert.Equal(20, plan.CutLength, 8);
         Assert.Contains(plan.Segments, e => e.Travel && e.From == new PointMm(20, 10) && e.To == new PointMm(30, 10) && e.Power == 0);
         Assert.EndsWith("M5\nM9\n", GrblExport.Write(plan, DeviceProfile.Simulator()));
     }
@@ -51,7 +51,7 @@ public sealed class VectorPathTests
     [Fact]
     public void MirroringAndResizingTransformActualVertices()
     {
-        var s = SvgLinearPaths.Read("M10 10L30 20 10 40"); var d = Document(s); var mirrored = ShapeEditing.Mirror(d, new HashSet<Guid> { s.Id }, true).Shapes[0];
+        var s = SvgPaths.Read("M10 10L30 20 10 40"); var d = Document(s); var mirrored = ShapeEditing.Mirror(d, new HashSet<Guid> { s.Id }, true).Shapes[0];
         Assert.Equal(new PointMm(30, 10), VectorPaths.World(mirrored)[0].Points[0]);
         Assert.Equal(new PointMm(10, 20), VectorPaths.World(mirrored)[0].Points[1]);
         Assert.Equal(new PointMm(10, 70), VectorPaths.World(s with { Width = 40, Height = 60 })[0].Points[2]);
@@ -60,7 +60,7 @@ public sealed class VectorPathTests
     [Fact]
     public void NodeMovesRenormalizeWithoutChangingOtherVerticesOrIdentity()
     {
-        var s = SvgLinearPaths.Read("M10 10L30 10 30 30Z"); var changed = VectorPaths.MoveNode(s, 0, 0, new(5, 8));
+        var s = SvgPaths.Read("M10 10L30 10 30 30Z"); var changed = VectorPaths.MoveNode(s, 0, 0, new(5, 8));
         Assert.Equal(s.Id, changed.Id); Assert.Equal(new PointMm(5, 8), VectorPaths.World(changed)[0].Points[0]); Assert.Equal(new PointMm(30, 10), VectorPaths.World(changed)[0].Points[1]);
         Assert.Equal(new PointMm(10, 10), VectorPaths.World(s)[0].Points[0]);
         var history = new EditorHistory(); history.Reset(Document(s)); history.Apply(Document(changed)); history.Undo(); Assert.Equal(new PointMm(10, 10), VectorPaths.World(history.Document.Shapes[0])[0].Points[0]); history.Redo(); Assert.Equal(new PointMm(5, 8), VectorPaths.World(history.Document.Shapes[0])[0].Points[0]);
@@ -79,19 +79,19 @@ public sealed class VectorPathTests
         Assert.Equal(3, shapes.Count); Assert.True(shapes[0].Path!.Contours[0].Closed); Assert.False(shapes[1].Path!.Contours[0].Closed); Assert.Equal(0, shapes[2].Width);
     }
     [Theory]
-    [InlineData("M0 0 C1 1 2 2 3 3")]
-    [InlineData("M0 0 Q1 1 2 2")]
+    [InlineData("M0 0 C1 1 2 2")]
+    [InlineData("M0 0 Q1 1")]
     [InlineData("M0 0 A1 1 0 0 0 2 2")]
     [InlineData("L1 1")]
     [InlineData("M1")]
     [InlineData("M1 1L")]
     [InlineData("M1 1L2 2@")]
     [InlineData("M1 1Z")]
-    public void InvalidOrUnsupportedPathsFailAtomically(string data) => Assert.Throws<InvalidDataException>(() => SvgLinearPaths.Read(data));
+    public void InvalidOrUnsupportedPathsFailAtomically(string data) => Assert.Throws<InvalidDataException>(() => SvgPaths.Read(data));
     [Fact]
     public void StrokeHitTestingDoesNotSelectEmptyBoundingBoxInterior()
     {
-        var s = SvgLinearPaths.Read("M10 10L30 30"); var d = Document(s); Assert.True(ShapeEditing.HitTest(d, s, 20, 20, .5)); Assert.False(ShapeEditing.HitTest(d, s, 11, 29, .5));
+        var s = SvgPaths.Read("M10 10L30 30"); var d = Document(s); Assert.True(ShapeEditing.HitTest(d, s, 20, 20, .5)); Assert.False(ShapeEditing.HitTest(d, s, 11, 29, .5));
     }
     [Fact]
     public void ShapesConvertToEditableClosedContours()
@@ -101,7 +101,7 @@ public sealed class VectorPathTests
     [Fact]
     public void InvalidNormalizedVerticesAreRejected()
     {
-        var s = SvgLinearPaths.Read("M10 10L30 30"); var bad = s with { Path = new([new([new(double.NaN, 0), new(1, 1)])]) }; Assert.Throws<InvalidDataException>(() => Document(bad).Validate());
+        var s = SvgPaths.Read("M10 10L30 30"); var bad = s with { Path = new([new([new(double.NaN, 0), new(1, 1)])]) }; Assert.Throws<InvalidDataException>(() => Document(bad).Validate());
         Assert.Throws<InvalidDataException>(() => Document(s with { Width = -1 }).Validate());
     }
 }

@@ -46,7 +46,7 @@ public sealed partial class MainWindow
             ItemsSource = new[]{
             MenuGroup("File",Item("New",()=>AddDocument(DesignDocument.Empty())),AsyncItem("Open…",Open),AsyncItem("Import SVG…",ImportSvg),AsyncItem("Import image…",ImportImage),AsyncItem("Save",()=>Save(false)),AsyncItem("Save as…",()=>Save(true)),AsyncItem("Export SVG…",Export),Item("Close project",()=>_=CloseDocument()),Item("Exit",Close)),
             MenuGroup("Edit",Item("Undo",Undo),Item("Redo",Redo),Item("Copy",Copy),Item("Cut",()=>{ Copy(); Current.Canvas.DeleteSelected(); }),Item("Paste",Paste),Item("Duplicate",Duplicate),Item("Delete",()=>Current.Canvas.DeleteSelected()),Item("Select all",()=>Current.Canvas.SelectAll())),
-            MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Insert node after selected",()=>EditPathNode("Insert")),Item("Delete selected node",()=>EditPathNode("Remove")),Item("Break at selected node",()=>EditPathNode("Break")),Item("Remove selected contour",()=>EditPathNode("Contour")),Item("Separate selected paths",()=>ComposePaths(true)),Item("Combine selected paths",()=>ComposePaths(false)),AsyncItem("Join open endpoints…",JoinPaths),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Bezier curves"),Unavailable("Text"),AsyncItem("Trace image…",TraceImage)),
+            MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Insert node after selected",()=>EditPathNode("Insert")),Item("Delete selected node",()=>EditPathNode("Remove")),Item("Break at selected node",()=>EditPathNode("Break")),Item("Remove selected contour",()=>EditPathNode("Contour")),Item("Separate selected paths",()=>ComposePaths(true)),Item("Combine selected paths",()=>ComposePaths(false)),AsyncItem("Join open endpoints…",JoinPaths),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Editable Bézier handles"),Unavailable("Text"),AsyncItem("Trace image…",TraceImage)),
             MenuGroup("Arrange",Item("Flip horizontal",()=>Mirror(true)),Item("Flip vertical",()=>Mirror(false)),MenuGroup("Align",new[]{"Left","Right","Top","Bottom","Horizontal center","Vertical center"}.Select(a=>Item(a,()=>Align(a))).ToArray()),Item("Center on bed",CenterOnBed),Unavailable("Group / Ungroup"),Unavailable("Boolean operations"),Unavailable("Arrays / Nesting")),
             MenuGroup("Laser Tools",Item("Preview",Preview),Item("Devices…",()=>_=EditDevices()),Unavailable("Material test"),Unavailable("Rotary setup"),Unavailable("Camera calibration"),Unavailable("Print and cut")),
             MenuGroup("Web Tools",Unavailable("Online integrations")),
@@ -63,7 +63,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.12", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.13", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -227,17 +227,6 @@ public sealed partial class MainWindow
     private void AssignLayer(int index)
     {
         var c = Current.Canvas; c.ActiveLayer = index; if (c.Selection.Count > 0) { try { c.Apply(LayerEditing.Assign(c.History.Document, c.Selection, index)); } catch (InvalidDataException ex) { status.Text = ex.Message; } } else Refresh();
-    }
-    private async Task ImportSvg()
-    {
-        try
-        {
-            var session = Current; var files = await StorageProvider.OpenFilePickerAsync(new() { Title = "Import SVG geometry", FileTypeFilter = [new("SVG geometry") { Patterns = ["*.svg"] }] }); if (files.Count == 0) return;
-            using var stream = await files[0].OpenReadAsync(); if (stream.Length > 4_000_000) throw new InvalidDataException("SVG exceeds the 4 MB limit."); using var reader = new StreamReader(stream); var document = session.Canvas.History.Document; var target = session.Canvas.ActiveLayer; if (document.Layers[target].Kind == LayerKind.Image) { document = LayerEditing.Add(document, "Imported SVG", LayerKind.Vector); target = document.Layers.Count - 1; }
-            var shapes = SvgImport.Read(await reader.ReadToEndAsync(), 0).Select(s => s with { Layer = target }).ToList();
-            session.Canvas.ActiveLayer = target; session.Canvas.Apply(document with { Shapes = [.. document.Shapes, .. shapes] }); status.Text = $"Imported {shapes.Count} SVG objects into the active layer. Styles are not imported.";
-        }
-        catch (Exception ex) when (ex is IOException or InvalidDataException or System.Xml.XmlException) { status.Text = "Import failed: " + ex.Message; }
     }
     private async Task CloseDocument()
     {
