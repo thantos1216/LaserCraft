@@ -63,7 +63,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.24", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.25", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -111,10 +111,10 @@ public sealed partial class MainWindow
     private Control BuildLaserPanel()
     {
         var panel = new StackPanel { Spacing = 5, Margin = new Thickness(8) }; panel.Children.Add(jobStatus);
-        var controls = new UniformGrid { Columns = 3 }; controls.Children.Add(Button("Ⅱ Pause", PauseSimulation)); controls.Children.Add(Button("■ Stop", StopSimulation)); controls.Children.Add(Button("▶ Start", StartSimulation)); panel.Children.Add(controls);
+        var controls = new UniformGrid { Columns = 3 }; controls.Children.Add(AsyncButton("Ⅱ Pause / Resume", PausePhysicalOrPreview)); controls.Children.Add(AsyncButton("■ Abort", StopPhysicalOrPreview)); controls.Children.Add(AsyncButton("▶ Review & Run", StartPhysicalOrPreview)); panel.Children.Add(controls);
         var actions = new WrapPanel(); actions.Children.Add(Button("Preview", Preview)); actions.Children.Add(Button("Frame preview", FramePreview));
         actions.Children.Add(AsyncButton("Save G-code", SaveGcode));
-        foreach (var name in new[] { "Run G-code", "Home", "Go to origin" }) { var b = Button(name, () => { }); b.IsEnabled = false; ToolTip.SetTip(b, "Machine execution is not implemented yet."); actions.Children.Add(b); }
+        actions.Children.Add(runDocumentButton = AsyncButton("Run document…", ReviewDocumentJob)); actions.Children.Add(homeButton = AsyncButton("Home",()=>PhysicalAction(new(LaserCraft.Devices.GrblManualAction.Home))));
         panel.Children.Add(actions); panel.Children.Add(BuildConnectionPanel());
         var view = new WrapPanel(); playbackSpeed.Value = 10; Inline(view, "Playback speed ×", playbackSpeed, 85); var travel = new CheckBox { Content = "Show travel", IsChecked = true, Margin = new Thickness(8) }; travel.IsCheckedChanged += (_, _) => { Current.Canvas.ShowTravel = travel.IsChecked == true; Current.Canvas.InvalidateVisual(); }; view.Children.Add(travel); view.Children.Add(Button("Return to design", StopSimulation)); panel.Children.Add(view);
         panel.Children.Add(cutSelected); panel.Children.Add(estimate); panel.Children.Add(jobProgress); panel.Children.Add(Label("Preview shows power-weighted black marks and the moving beam on a white bed. Design coordinates: top-left origin. Ideal timing excludes acceleration, controller delays and material effects."));
@@ -199,7 +199,7 @@ public sealed partial class MainWindow
     }
     private void PauseSimulation() { simulation?.Pause(); playbackClock.Stop(); simulationTimer.Stop(); UpdateSimulation(); }
     private void StopSimulation() { previewCancellation?.Cancel(); playbackClock.Reset(); lastPlaybackTick = 0; simulationTimer.Stop(); simulation?.Stop(); if (sessions.Count > 0) { Current.Canvas.ShowPreview = false; Current.Canvas.InvalidateVisual(); } UpdateSimulation(); }
-    private void UpdateSimulation() { jobStatus.Text = "SIMULATOR · " + (simulation?.State.ToString() ?? "Ready") + " · no machine execution"; jobProgress.Value = simulation is null || simulation.Plan.Seconds == 0 ? 0 : simulation.Elapsed / simulation.Plan.Seconds * 100; }
+    private void UpdateSimulation() { if(monitor?.JobActive==true)return; jobStatus.Text = monitor is not null && monitor.Simulation is null && simulation?.State is not (SimulationState.Running or SimulationState.Paused) ? "Physical GRBL connected · Review & Run sends the document" : "PREVIEW · " + (simulation?.State.ToString() ?? "Ready") + " · no machine execution"; jobProgress.Value = simulation is null || simulation.Plan.Seconds == 0 ? 0 : simulation.Elapsed / simulation.Plan.Seconds * 100; }
     private async void FramePreview() { await GeneratePreview(false); if (Current.Canvas.Plan is { } p && p.Segments.Count > 0) { Current.Canvas.Fit(); status.Text = "Output bounds checked against the bed. Frame preview only; no machine motion."; } }
     private void Log(string text) { var next = console.Text + $"\n{DateTime.Now:HH:mm:ss}  {text}"; console.Text = next.Length > 64000 ? "[Older console text trimmed]\n" + next[^60000..] : next; console.CaretIndex = console.Text.Length; }
     private void RefreshWorkspace()

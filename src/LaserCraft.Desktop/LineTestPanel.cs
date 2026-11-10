@@ -6,7 +6,7 @@ public sealed partial class MainWindow
     private async Task ReviewLineTest()
     {
         var client = monitor; var profile = connectedProfile;
-        if (client is null || profile is null || querying || physicalControl.IsChecked != true || physicalFire.IsChecked != true) return;
+        if (client is null || profile is null || querying || !PhysicalControlsAvailable) return;
         var dialog = new Window { Title = "Review physical line test", Width = 650, Height = 550, MinWidth = 550, MinHeight = 480, WindowStartupLocation = WindowStartupLocation.CenterOwner };
         var axis = new ComboBox { ItemsSource = new[] { "X axis", "Y axis" }, SelectedIndex = 0 };
         var length = Number(-20,20); length.Value = 5; length.Increment = 1;

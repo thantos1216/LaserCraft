@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.24 - supervised one-line cut qualification
+## Current milestone 0.25 - connected production workflow foundation
+
+User reported successful 0.24 line cuts; retained log confirms acknowledged 20 mm/S800 and final Idle, plus jog-limit rejections. Added Home/Home on Connect, automatic profile-bed application, larger axis-bounded jogs, direct connected controls, original icon and reviewed vector/raster document streaming. Jobs require current-session homing and a homed negative-range footprint check, and use a fresh current machine anchor, explicit G53 coordinates, one-line/ack ownership, realtime hold/resume and abort/reset. Existing simulator remains a separate regression/preview path.
+
+396 tests pass (383 unit, 13 integration), including vector/raster settings, negative machine placement, homing, larger jogs, pause dispatch, abort/cancellation, malformed settings and real fragmented TCP document output. Desktop checked icon/disconnected controls and removal of checkbox clutter; full physical UI/homing/streaming qualification remains pending. See [validation](../testing/milestone-25.md). Full parity/production qualification is not claimed.
+
+## Milestone 0.24 - supervised one-line cut qualification
 
 User supplied 0.14 screenshots and 48 annotated firmware settings: identity/status/settings queries succeeded; motion/cutting was not established. Added reviewed single-axis, single-pass physical line tests with separate control/fire/clear-path authority, bounded length/feed/power, fresh settings/modal checks, queued off and final Idle reporting. This is not arbitrary job streaming. Defaults are mark examples, not a 5 mm plywood through-cut recipe.
 

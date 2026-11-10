@@ -3,13 +3,13 @@ using LaserCraft.Domain;
 
 namespace LaserCraft.Devices;
 
-public enum GrblManualAction { JogX, JogY, Pulse, LaserOff, CancelJog, CutLineX, CutLineY }
+public enum GrblManualAction { JogX, JogY, Pulse, LaserOff, CancelJog, CutLineX, CutLineY, Home }
 public sealed record GrblManualRequest(GrblManualAction Action, double Distance = 1, double Feed = 600, double PowerPercent = 1, int Milliseconds = 100, bool ClearPathConfirmed = false)
 {
     public void Validate()
     {
         if (!Enum.IsDefined(Action)) throw new InvalidDataException("Unknown manual action.");
-        if (Action is GrblManualAction.JogX or GrblManualAction.JogY && (!double.IsFinite(Distance) || Math.Abs(Distance) < .001 || Math.Abs(Distance) > 10 || !double.IsFinite(Feed) || Feed < 60 || Feed > 3000)) throw new InvalidDataException("Physical jogs require 0.001–10 mm and 60–3000 mm/min.");
+        if (Action is GrblManualAction.JogX or GrblManualAction.JogY && (!double.IsFinite(Distance) || Math.Abs(Distance) < .001 || Math.Abs(Distance) > 10000 || !double.IsFinite(Feed) || Feed < 60 || Feed > 3000)) throw new InvalidDataException("Physical jogs require 0.001–10000 mm and 60–3000 mm/min.");
         if (Action is GrblManualAction.CutLineX or GrblManualAction.CutLineY && (!double.IsFinite(Distance) || Math.Abs(Distance) < .1 || Math.Abs(Distance) > 20 || !double.IsFinite(Feed) || Feed < 60 || Feed > 3000 || !double.IsFinite(PowerPercent) || PowerPercent <= 0 || PowerPercent > 100)) throw new InvalidDataException("Line tests require 0.1–20 mm, 60–3000 mm/min and >0–100% power.");
         if (Action == GrblManualAction.Pulse && (!double.IsFinite(PowerPercent) || PowerPercent <= 0 || PowerPercent > 5 || Milliseconds < 1 || Milliseconds > 500)) throw new InvalidDataException("Physical pulses require >0–5% and 1–500 ms.");
     }
@@ -21,11 +21,12 @@ public sealed partial class GrblMonitor
     public async Task<GrblManualResult> ExecuteManualAsync(DeviceProfile profile, GrblManualRequest request, bool allowMotion, bool allowFire = false, CancellationToken cancellationToken = default)
     {
         profile.Validate(); request.Validate();
+        if (request.Action is GrblManualAction.JogX or GrblManualAction.JogY && Math.Abs(request.Distance) > (request.Action == GrblManualAction.JogX ? profile.BedWidth : profile.BedHeight)) throw new InvalidDataException("Jog distance exceeds the selected axis profile travel; this does not establish current clearance.");
         if (request.Action is GrblManualAction.CutLineX or GrblManualAction.CutLineY && !request.ClearPathConfirmed) throw new InvalidDataException("Confirm positioning, clear signed path, protection and physical stop before a line test.");
         if (!allowMotion || request.Action is GrblManualAction.Pulse or GrblManualAction.CutLineX or GrblManualAction.CutLineY && !allowFire) throw new InvalidDataException("Enable physical control, and the separate firing permission for a pulse.");
         if (profile.Controller != ControllerFamily.Grbl || profile.Connection == ConnectionKind.Simulator || !Identity.StartsWith("[VER:1.1", StringComparison.Ordinal) && !Identity.StartsWith("Grbl 1.1", StringComparison.Ordinal)) throw new InvalidDataException("Guided physical controls require an identified GRBL 1.1 serial/TCP connection. Other firmware remains console-only.");
         ObjectDisposedException.ThrowIf(Volatile.Read(ref disposalStarted) != 0, this);
-        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token); timeout.CancelAfter(TimeSpan.FromSeconds(request.Action is GrblManualAction.CutLineX or GrblManualAction.CutLineY ? 40 : 10));
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token); timeout.CancelAfter(TimeSpan.FromSeconds(request.Action == GrblManualAction.Home ? 120 : request.Action is GrblManualAction.CutLineX or GrblManualAction.CutLineY ? 40 : 10));
         await gate.WaitAsync(timeout.Token);
         try
         {
@@ -39,6 +40,19 @@ public sealed partial class GrblMonitor
                 transcript.AddRange(result.Lines.Select(l => "RX < " + l));
                 if (result.Outcome is GrblConsoleOutcome.Rejected or GrblConsoleOutcome.Alarm) throw new InvalidDataException("Controller rejected manual control: " + result.Lines[^1]);
                 return result;
+            }
+            if (request.Action == GrblManualAction.Home)
+            {
+                Volatile.Write(ref homingConfirmed,0);
+                var homeReport = await Exchange("$$");
+                var enabled = homeReport.Lines.Where(l => l.StartsWith("$22=",StringComparison.Ordinal)).Select(GrblSetting.Parse).ToArray();
+                if (enabled.Length != 1 || !double.TryParse(enabled[0].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value != 1) throw new InvalidDataException("Firmware homing $22 is not reported enabled.");
+                var before = await Exchange("?"); var homingState = GrblStatus.Parse(before.Lines.Last(l => l.StartsWith('<'))).State;
+                if (homingState is not ("Idle" or "Alarm")) throw new InvalidDataException("Home requires Idle or Alarm; reported " + homingState);
+                await Exchange("$H"); var after = await Exchange("?");
+                if (GrblStatus.Parse(after.Lines.Last(l => l.StartsWith('<'))).State != "Idle") throw new IOException("Home did not finish Idle.");
+                Volatile.Write(ref homingConfirmed,1);
+                return new(transcript.AsReadOnly(), "Homing acknowledged and Idle reported. Firmware reference established; work offsets unchanged, displayed machine coordinates may be negative.");
             }
             if (request.Action == GrblManualAction.CancelJog)
             {

@@ -12,8 +12,7 @@ public sealed partial class MainWindow
     private readonly TextBox manualTranscript = new() { IsReadOnly = true, AcceptsReturn = true, Height = 100, FontFamily = Avalonia.Media.FontFamily.Parse("Consolas") };
     private readonly List<Button> jogButtons = [];
     private Button? pulseButton, stopPulseButton, cancelJogButton, lineTestButton;
-    private readonly CheckBox physicalControl = new() { Content = "Enable physical GRBL control for this connection" };
-    private readonly CheckBox physicalFire = new() { Content = "Enable firing test; area clear, laser protection and physical stop ready" };
+    private bool PhysicalControlsAvailable => monitor is { Simulation: null } && connectedProfile?.Controller == ControllerFamily.Grbl && !connecting && !disconnecting;
     private readonly DispatcherTimer manualTimer = new() { Interval = TimeSpan.FromMilliseconds(25) };
     private readonly System.Diagnostics.Stopwatch manualClock = new();
     private TimeSpan lastManualTime;
@@ -22,10 +21,8 @@ public sealed partial class MainWindow
         jogDistance.Value = 1; jogDistance.Increment = .1m; jogFeed.Value = 600; pulsePower.Value = 1; pulseDuration.Value = 100;
         var panel = new StackPanel { Spacing = 4, Margin = new Avalonia.Thickness(10) };
         panel.Children.Add(Label("Manual control · simulator or GRBL 1.1", 16));
-        panel.Children.Add(Label("Connect below. Simulator rehearses only. For physical GRBL 1.1, enable control explicitly. Jog is relative in millimetres; axis direction follows firmware, not canvas origin. Start at 1 mm with clearance from all limits. No homing/position bounds are assumed."));
-        panel.Children.Add(physicalControl); panel.Children.Add(physicalFire);
-        physicalControl.IsCheckedChanged += (_, _) => { if (physicalControl.IsChecked != true) physicalFire.IsChecked = false; UpdateManualControls(); };
-        physicalFire.IsCheckedChanged += (_, _) => UpdateManualControls();
+        panel.Children.Add(Label("Connect below. Simulator rehearses only. Connected GRBL 1.1 controls are available directly. Jog is relative in millimetres; axis direction follows firmware, not canvas origin. Start at 1 mm with clearance from all limits. No homing/position bounds are assumed."));
+        // Connected GRBL controls are available directly; physical firing is explicit in the action buttons/review.
         var jogOptions = new WrapPanel(); Inline(jogOptions, "Distance · mm", jogDistance, 120); Inline(jogOptions, "Feed · mm/min", jogFeed, 120); panel.Children.Add(jogOptions);
         var pad = new Grid { RowDefinitions = new RowDefinitions("Auto,Auto,Auto"), ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto"), HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left };
         void JogButton(string label, int x, int y, int row, int column)
@@ -49,7 +46,7 @@ public sealed partial class MainWindow
         cancelJogButton = AsyncButton("Cancel jog", () => PhysicalAction(new(GrblManualAction.CancelJog))); actions.Children.Add(cancelJogButton); actions.Children.Add(pulseButton); actions.Children.Add(stopPulseButton); panel.Children.Add(actions);
         lineTestButton = AsyncButton("Review line cut test…", ReviewLineTest); panel.Children.Add(lineTestButton);
         panel.Children.Add(manualStatus); panel.Children.Add(Label("Manual-control result / simulator transcript")); panel.Children.Add(manualTranscript);
-        panel.Children.Add(Label("Physical limits: jog 0.001–10 mm at 60–3000 mm/min; pulse up to 5% / 500 ms. Pulse reads $30/$31/$32 and queues G1/G94 F60, M3, dwell and M5. Nominal dwell is not measured optical duration; a partial USB write/controller failure can prevent off. Use the physical stop/power switch if needed. Cancel jog and M5 are not emergency stops and wait for any exchange in progress. Disconnect/closing the app does not stop hardware. Job streaming remains unavailable."));
+        panel.Children.Add(Label("Physical limits: jog up to selected profile axis travel at 60–3000 mm/min; pulse up to 5% / 500 ms. Pulse reads $30/$31/$32 and queues G1/G94 F60, M3, dwell and M5. Nominal dwell is not measured optical duration; a partial USB write/controller failure can prevent off. Use the physical stop/power switch if needed. Cancel jog and M5 are not emergency stops and wait for any exchange in progress. Use Abort for physical jobs; disconnect only attempts a reset, not a hardware stop. Reviewed vector/image jobs are available in Laser."));
         manualTimer.Tick += (_, _) =>
         {
             var sim = monitor?.Simulation; if (sim is null) { manualTimer.Stop(); UpdateManualControls(); return; }
@@ -71,7 +68,7 @@ public sealed partial class MainWindow
     {
         var client = monitor; var profile = connectedProfile;
         if (client is null || profile is null || connecting || querying || disconnecting) return;
-        var allowMotion = physicalControl.IsChecked == true; var allowFire = physicalFire.IsChecked == true;
+        var allowMotion = PhysicalControlsAvailable; var allowFire = PhysicalControlsAvailable;
         querying = true; UpdateConnectionControls();
         string resultText;
         try
@@ -93,14 +90,15 @@ public sealed partial class MainWindow
     {
         var sim = monitor?.Simulation; var busy = connecting || querying || disconnecting;
         var physical = monitor is not null && sim is null && connectedProfile?.Controller == ControllerFamily.Grbl;
-        physicalControl.IsEnabled = physical && !busy; physicalFire.IsEnabled = physical && !busy && physicalControl.IsChecked == true;
-        var enabled = !busy && (sim is not null && !sim.IsPulsing || physical && physicalControl.IsChecked == true);
+        jogDistance.Maximum = physical && connectedProfile is not null ? (decimal)Math.Max(connectedProfile.BedWidth,connectedProfile.BedHeight) : 1000;
+        jogFeed.Minimum = physical ? 60 : .001m; jogFeed.Maximum = physical ? 3000 : 100000;
+        var enabled = !busy && (sim is not null && !sim.IsPulsing || physical && PhysicalControlsAvailable);
         foreach (var button in jogButtons) button.IsEnabled = enabled;
-        if (pulseButton is not null) pulseButton.IsEnabled = enabled && (sim is not null || physicalFire.IsChecked == true);
-        if (stopPulseButton is not null) stopPulseButton.IsEnabled = !busy && (sim is not null || physical && physicalControl.IsChecked == true);
-        if (lineTestButton is not null) lineTestButton.IsEnabled = !busy && physical && physicalControl.IsChecked == true && physicalFire.IsChecked == true;
-        if (cancelJogButton is not null) cancelJogButton.IsEnabled = !busy && physical && physicalControl.IsChecked == true;
-        if (sim is null) { manualTimer.Stop(); if (!querying) manualStatus.Text = physical ? "Physical GRBL connection · enable control, then one action at a time. Read status after each jog. Hardware unverified." : "Connect a simulator or GRBL 1.1 profile. Controls default to disabled."; return; }
+        if (pulseButton is not null) pulseButton.IsEnabled = enabled && (sim is not null || PhysicalControlsAvailable);
+        if (stopPulseButton is not null) stopPulseButton.IsEnabled = !busy && (sim is not null || physical && PhysicalControlsAvailable);
+        if (lineTestButton is not null) lineTestButton.IsEnabled = !busy && physical && PhysicalControlsAvailable;
+        if (cancelJogButton is not null) cancelJogButton.IsEnabled = !busy && physical && PhysicalControlsAvailable;
+        if (sim is null) { manualTimer.Stop(); if (!querying) manualStatus.Text = physical ? "Physical GRBL connection · one action at a time. Read status after each jog. New homing/job workflows require hardware qualification." : "Connect a simulator or GRBL 1.1 profile. Controls default to disabled."; return; }
         manualStatus.Text = FormattableString.Invariant($"SIMULATED X {sim.Position.X:0.###} · Y {sim.Position.Y:0.###} · S {sim.SValue} · remaining {sim.RemainingPulseSeconds * 1000:0} ms");
         manualTranscript.Text = string.Join(Environment.NewLine, sim.Commands.TakeLast(12));
     }

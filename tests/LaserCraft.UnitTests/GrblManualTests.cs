@@ -12,7 +12,7 @@ public sealed class GrblManualTests
         var t = new Peer(); await using var c = await GrblMonitor.ConnectAsync(t);
         await Assert.ThrowsAsync<InvalidDataException>(() => c.ExecuteManualAsync(Profile, new(action), motion, fire)); Assert.Single(t.Commands);
     }
-    [Theory] [InlineData(0)] [InlineData(10.001)] [InlineData(-11)] [InlineData(double.NaN)] [InlineData(double.PositiveInfinity)]
+    [Theory] [InlineData(0)] [InlineData(10000.001)] [InlineData(-10001)] [InlineData(double.NaN)] [InlineData(double.PositiveInfinity)]
     public void InvalidJogDistanceIsRejected(double distance) => Assert.Throws<InvalidDataException>(() => new GrblManualRequest(GrblManualAction.JogX, distance).Validate());
     [Theory] [InlineData(0,100)] [InlineData(5.001,100)] [InlineData(1,0)] [InlineData(1,501)] [InlineData(double.NaN,100)]
     public void InvalidPulseIsRejected(double percent, int ms) => Assert.Throws<InvalidDataException>(() => new GrblManualRequest(GrblManualAction.Pulse, PowerPercent:percent, Milliseconds:ms).Validate());

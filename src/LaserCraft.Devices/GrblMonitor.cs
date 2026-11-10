@@ -55,13 +55,15 @@ public sealed partial class GrblMonitor : IAsyncDisposable
     {
         if (Volatile.Read(ref consoleUncertain) != 0) throw new IOException("The console session requires reconnection after an interrupted exchange or alarm. Disconnect and reconnect before further commands; reconnecting does not stop controller motion.");
     }
+    private int homingConfirmed;
+    public bool HomingConfirmed => Volatile.Read(ref homingConfirmed)!=0;
     public bool RequiresReconnect => Volatile.Read(ref consoleUncertain) != 0;
     public string Identity { get; private set; } = "";
     public ManualControlSimulation? Simulation { get; }
     private GrblMonitor(IGrblTransport transport, ConnectionJournal? journal)
     {
         Simulation = (transport as SimulatedGrblTransport)?.Simulation;
-        this.transport = journal is null ? transport : new JournaledGrblTransport(transport, journal);
+        this.transport = new SerializedGrblTransport(journal is null ? transport : new JournaledGrblTransport(transport, journal));
     }
     public static async Task<GrblMonitor> ConnectAsync(IGrblTransport transport, CancellationToken cancellationToken = default, ConnectionJournal? journal = null)
     {
@@ -152,6 +154,7 @@ public sealed partial class GrblMonitor : IAsyncDisposable
         {
             if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
             RequireSynchronizedConsole(); timeout.Token.ThrowIfCancellationRequested();
+            if(!command.IsQuery)Volatile.Write(ref homingConfirmed,0);
             return await ExchangeConsoleCore(command, timeout.Token);
         }
         finally { gate.Release(); }

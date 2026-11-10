@@ -1,5 +1,7 @@
 # LaserCraft
 
+Version 0.25 adds Home/Home on Connect, automatic profile-bed application, larger profile-bounded jogs, direct connected controls, original app icon and reviewed physical vector/image jobs with realtime hold/resume and abort/reset. Document jobs use current machine position as the minimum X/Y footprint anchor. New workflows require hardware qualification; see [current test guide](docs/help/USB-CONNECTION-TEST.md).
+
 Version 0.24 adds a reviewed, one-pass X/Y line test from the current physical head position, with bounded length/feed/power, preflight settings/modes, queued laser-off and final Idle reporting. User-supplied 0.14 screenshots establish query connectivity only; actual cuts remain unverified. Use the current portable package and [first-test guide](docs/help/USB-CONNECTION-TEST.md).
 
 Version 0.23 enables a local Material Library: capture applied layer settings, replace/delete recipes and apply them to compatible layers with Undo. Includes image-processing settings, optional thickness/notes, validated persistence and one previous-file backup. Recipes are user supplied and uncalibrated; applying them sends no machine commands.

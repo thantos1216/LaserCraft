@@ -15,6 +15,8 @@ public sealed partial class MainWindow
     private bool querying, disconnecting;
     private DeviceProfile? connectedProfile;
     private ConnectionJournal? connectionJournal;
+    private readonly CheckBox homeOnConnect = new() {Content="Home on Connect (moves to switches)",IsChecked=true};
+    private Button? homeButton, runDocumentButton;
     private Button? connectButton, disconnectButton, readStatusButton, readSettingsButton, connectionCheckButton;
     private readonly ComboBox connectionPort = new() { MinWidth = 120, PlaceholderText = "Choose COM port" };
     private Button? refreshConnectionPorts;
@@ -40,6 +42,10 @@ public sealed partial class MainWindow
         connectionPort.IsEnabled = deviceChoice.IsEnabled && profiles.ElementAtOrDefault(deviceChoice.SelectedIndex)?.Connection == ConnectionKind.Serial;
         if (refreshConnectionPorts is not null) refreshConnectionPorts.IsEnabled = connectionPort.IsEnabled;
         if (sessions.Count > 0) RefreshStatus();
+        homeOnConnect.IsEnabled = monitor is null && !connecting && !disconnecting && profiles.ElementAtOrDefault(deviceChoice.SelectedIndex) is { Controller: ControllerFamily.Grbl, Connection: not ConnectionKind.Simulator };
+        if(connectButton is not null)connectButton.Content=homeOnConnect.IsEnabled && homeOnConnect.IsChecked==true ? "Connect + Home" : "Connect";
+        if(homeButton is not null)homeButton.IsEnabled=monitor is not null && connectedProfile?.Controller==ControllerFamily.Grbl && monitor.Simulation is null && !connecting && !querying && !disconnecting;
+        if(runDocumentButton is not null)runDocumentButton.IsEnabled=homeButton?.IsEnabled==true;
         UpdateManualControls();
         UpdateConsoleControls();
     }
@@ -50,8 +56,9 @@ public sealed partial class MainWindow
     {
         try { profiles = ProfileStore.Load(ProfilesPath); } catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or InvalidDataException) { profiles = [DeviceProfile.Simulator()]; connectionStatus.Text = "Saved profiles could not be read: " + ex.Message; }
         deviceChoice.SelectionChanged += (_, _) => { connectionPort.SelectedItem = null; RefreshConnectionPorts(); UpdateConnectionControls(); };
+        homeOnConnect.IsCheckedChanged += (_,_)=>UpdateConnectionControls();
         ReloadDeviceChoices();
-        var panel = new StackPanel { Spacing = 4 }; var row = new WrapPanel(); row.Children.Add(deviceChoice); row.Children.Add(Button("Devices…", () => _ = EditDevices())); row.Children.Add(connectButton = AsyncButton("Connect", ConnectDevice)); row.Children.Add(disconnectButton = AsyncButton("Disconnect", DisconnectDevice)); row.Children.Add(readStatusButton = AsyncButton("Read status", ReadDeviceStatus)); row.Children.Add(readSettingsButton = AsyncButton("Read firmware settings…", ReadFirmwareSettings)); row.Children.Add(Button("Apply device bed", () => { var p = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; Current.Canvas.Apply(Current.Canvas.History.Document with { Width = p.BedWidth, Height = p.BedHeight }); Current.Canvas.Fit(); })); panel.Children.Add(row); panel.Children.Add(connectionStatus); UpdateConnectionControls();
+        var panel = new StackPanel { Spacing = 4 }; var row = new WrapPanel(); row.Children.Add(deviceChoice); row.Children.Add(Button("Devices…", () => _ = EditDevices())); row.Children.Add(connectButton = AsyncButton("Connect", ConnectDevice)); row.Children.Add(disconnectButton = AsyncButton("Disconnect", DisconnectDevice)); row.Children.Add(readStatusButton = AsyncButton("Read status", ReadDeviceStatus)); row.Children.Add(readSettingsButton = AsyncButton("Read firmware settings…", ReadFirmwareSettings)); row.Children.Add(Button("Apply device bed", () => { var p = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; Current.Canvas.Apply(Current.Canvas.History.Document with { Width = p.BedWidth, Height = p.BedHeight }); Current.Canvas.Fit(); })); panel.Children.Add(row); panel.Children.Add(homeOnConnect); panel.Children.Add(connectionStatus); UpdateConnectionControls();
         var usb = new WrapPanel(); usb.Children.Add(Label("USB COM for this connection")); usb.Children.Add(connectionPort); usb.Children.Add(refreshConnectionPorts = Button("Refresh COM ports", RefreshConnectionPorts)); panel.Children.Insert(0, usb);
         row.Children.Add(connectionCheckButton = AsyncButton("Connection check…", ReadConnectionCheck)); UpdateConnectionControls();
         row.Children.Add(AsyncButton("Save connection log…", SaveConnectionLog));
@@ -61,7 +68,7 @@ public sealed partial class MainWindow
     private void ReloadDeviceChoices(int index = 0) { deviceChoice.ItemsSource = profiles.Select(p => $"{p.Name} · {p.Connection}").ToArray(); deviceChoice.SelectedIndex = Math.Clamp(index, 0, profiles.Count - 1); }
     private async Task ConnectDevice()
     {
-        if (connecting || disconnecting || monitor is not null) return; manualConsole.IsChecked = false; physicalControl.IsChecked = false; physicalFire.IsChecked = false; consoleCommand.Text = ""; manualTranscript.Text = ""; commandHistory.Clear(); historyIndex = 0; connecting = true; connectionAttempt = CancellationTokenSource.CreateLinkedTokenSource(connectionLifetime.Token); var attempt = connectionAttempt; var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; UpdateConnectionControls();
+        if (connecting || disconnecting || monitor is not null) return; manualConsole.IsChecked = false; consoleCommand.Text = ""; manualTranscript.Text = ""; commandHistory.Clear(); historyIndex = 0; connecting = true; connectionAttempt = CancellationTokenSource.CreateLinkedTokenSource(connectionLifetime.Token); var attempt = connectionAttempt; var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; UpdateConnectionControls();
         connectionStatus.Text = "Connecting to " + profile.Name + "…";
         var journal = connectionJournal = new ConnectionJournal();
         journal.Add("INFO", "LaserCraft " + typeof(MainWindow).Assembly.GetName().Version + "; connection attempt; profile " + profile.Name);
@@ -71,7 +78,12 @@ public sealed partial class MainWindow
             journal.Add("INFO", profile.Connection == ConnectionKind.Serial ? $"USB serial {profile.SerialPort}; baud {profile.BaudRate}; startup wait {profile.SerialStartupDelayMs} ms; DTR {profile.Dtr}; RTS {profile.Rts}" : profile.Connection == ConnectionKind.Tcp ? $"TCP {profile.Host}:{profile.Port}" : "Built-in simulator");
             journal.Add("INFO", FormattableString.Invariant($"Profile bed {profile.BedWidth} × {profile.BedHeight} mm; S maximum {profile.MaxPower}; origin {profile.Origin}. These are profile values, not firmware observations."));
             var transport = await TransportFactory.OpenAsync(profile, attempt.Token); monitor = await GrblMonitor.ConnectAsync(transport, attempt.Token, journal); attempt.Token.ThrowIfCancellationRequested();
-            connectedProfile = profile; connectionStatus.Text = $"{profile.Name} · {monitor.Identity} · query connection · manual console opt-in"; Log("Connected: " + profile.Name + " (queries by default; manual console opt-in)"); await ReadDeviceStatus();
+            connectedProfile = profile;
+            var physical = profile.Connection != ConnectionKind.Simulator && profile.Controller == ControllerFamily.Grbl;
+            if (sessions.Count > 0) { StopSimulation(); var canvas=Current.Canvas; var d=canvas.History.Document; if(d.Width!=profile.BedWidth||d.Height!=profile.BedHeight)canvas.Apply(d with {Width=profile.BedWidth,Height=profile.BedHeight});canvas.Fit(); }
+            connectionStatus.Text = $"{profile.Name} · {monitor.Identity} · connected"; Log("Connected: " + profile.Name);
+            if(physical && homeOnConnect.IsChecked==true) { Log("Home on Connect requested.");connectionStatus.Text="Homing · wait for firmware completion…";var result=await monitor.ExecuteManualAsync(profile,new(GrblManualAction.Home),true,cancellationToken:attempt.Token);Log(result.Summary); }
+            await ReadDeviceStatus();
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException or NotSupportedException or OperationCanceledException or System.Net.Sockets.SocketException) { journal.Add("ERROR", "Connection: " + ex.GetType().Name + ": " + ex.Message); connectionStatus.Text = attempt.IsCancellationRequested ? "Connection cancelled." : "Connection failed: " + ex.Message + " Check endpoint/baud and close other software using this port. Save connection log for details."; if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; }
         finally { connecting = false; connectionAttempt = null; attempt.Dispose(); UpdateConnectionControls(); }
@@ -79,14 +91,14 @@ public sealed partial class MainWindow
     private async Task ReadDeviceStatus()
     {
         var client = monitor; if (client is null || querying) return; querying = true; UpdateConnectionControls();
-        try { var value = await client.QueryStatusAsync(connectionLifetime.Token); if (monitor != client) return; string N(double? n) => n?.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) ?? "not reported"; connectionStatus.Text = $"{connectedProfile?.Name} · {client.Identity} · {value.State}\n{value.Coordinates}: {N(value.X)}, {N(value.Y)}, {N(value.Z)} · reported controller units\nFeed {N(value.Feed)} · spindle/S {N(value.Spindle)} · buffers {value.PlannerAvailable?.ToString() ?? "?"}/{value.ReceiveAvailable?.ToString() ?? "?"} · pins {value.Pins ?? "not reported"} · accessories {value.Accessories ?? "not reported"}\nQuery snapshot · advanced console commands require opt-in; job streaming unavailable"; Log(value.Raw); }
+        try { var value = await client.QueryStatusAsync(connectionLifetime.Token); if (monitor != client) return; string N(double? n) => n?.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) ?? "not reported"; connectionStatus.Text = $"{connectedProfile?.Name} · {client.Identity} · {value.State}\n{value.Coordinates}: {N(value.X)}, {N(value.Y)}, {N(value.Z)} · reported controller units\nFeed {N(value.Feed)} · spindle/S {N(value.Spindle)} · buffers {value.PlannerAvailable?.ToString() ?? "?"}/{value.ReceiveAvailable?.ToString() ?? "?"} · pins {value.Pins ?? "not reported"} · accessories {value.Accessories ?? "not reported"}\nQuery snapshot · advanced console commands require opt-in; physical document jobs available through Review & Run"; Log(value.Raw); }
         catch (Exception ex) when (ex is IOException or OperationCanceledException or InvalidDataException) { if (monitor == client) { connectionJournal?.Add("ERROR", "Status: " + ex.Message); await DisconnectDevice(); connectionStatus.Text = "Status read failed: " + ex.Message; } }
         finally { querying = false; UpdateConnectionControls(); }
     }
     private async Task DisconnectDevice()
     {
-        if (disconnecting) return; manualConsole.IsChecked = false; physicalControl.IsChecked = false; physicalFire.IsChecked = false; disconnecting = true; UpdateConnectionControls();
-        try { if (connectionAttempt is not null) await connectionAttempt.CancelAsync(); if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; connectionStatus.Text = "Device disconnected"; }
+        if (disconnecting) return; manualConsole.IsChecked = false; disconnecting = true; UpdateConnectionControls();
+        try { if(monitor?.JobActive==true){try{await monitor.StopJobAsync();}catch(Exception ex)when(ex is IOException or OperationCanceledException or ObjectDisposedException){Log("Abort on disconnect: "+ex.Message);}} if (connectionAttempt is not null) await connectionAttempt.CancelAsync(); if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; connectionStatus.Text = "Device disconnected"; }
         finally { disconnecting = false; UpdateConnectionControls(); }
     }
     private async Task ReadFirmwareSettings()
@@ -126,11 +138,11 @@ public sealed partial class MainWindow
         panel.Children.Add(Button("Attzr 35 W USB draft · 430 × 430", () =>
         {
             Load(new DeviceProfile(Guid.NewGuid(), "Attzr 35 W · USB (verify settings)", Connection: ConnectionKind.Serial, BedWidth: 430, BedHeight: 430));
-            message.Text = "User-specified bed: 430 × 430 mm. Select the detected COM port. 115200 baud, S1000 and bottom-left origin are unverified starting values, not confirmed Attzr defaults. Save does not connect. Run Connection check after connecting; no physical motion/fire is available.";
+            message.Text = "User-specified bed: 430 × 430 mm. Select the detected COM port. 115200 baud, S1000 and bottom-left origin are unverified starting values, not confirmed Attzr defaults. Save does not connect. Run Connection check after connecting; physical control is available after connecting.";
         }));
         Field("Name", name); Field("Controller family", family); panel.Children.Add(support); Field("Connection", connection); Field("Detected serial ports (no port is opened)", ports); panel.Children.Add(Button("Refresh serial ports", RefreshPorts)); Field("Serial port", portName); Field("Baud · 8 data bits, no parity, 1 stop bit", baud); Field("Serial startup delay · ms before identity query", startupDelay); Field("TCP host", host); Field("TCP port", tcpPort);
-        var dims = new WrapPanel(); Inline(dims, "Bed width mm", bedW, 120); Inline(dims, "Bed height mm", bedH, 120); Inline(dims, "S-value maximum", maxPower, 120); panel.Children.Add(dims); Field("Machine origin (stored for future coordinate mapping)", origin); panel.Children.Add(airSupport); Field("Air-assist output for offline export", airCommand); panel.Children.Add(dtr); panel.Children.Add(rts);
-        panel.Children.Add(Label("Connect opens only the chosen endpoint and queries firmware identity/status. Opening a serial port can reset some controllers. Connect itself sends no homing/motion/fire/air commands. The separately enabled manual console can send state-changing commands; job streaming is unavailable. Other controller families can be saved as profiles while their adapters are developed.")); panel.Children.Add(message);
+        var dims = new WrapPanel(); Inline(dims, "Bed width mm", bedW, 120); Inline(dims, "Bed height mm", bedH, 120); Inline(dims, "S-value maximum", maxPower, 120); panel.Children.Add(dims); Field("Origin for output orientation", origin); panel.Children.Add(airSupport); Field("Configured air-assist output for export/jobs", airCommand); panel.Children.Add(dtr); panel.Children.Add(rts);
+        panel.Children.Add(Label("Connect opens only the chosen endpoint and queries firmware identity/status. Opening a serial port can reset some controllers. Connect + Home requests homing when the visible option is checked; uncheck it for query-only connection. The separately enabled manual console can send state-changing commands; reviewed document jobs are available for GRBL. Other controller families can be saved as profiles while their adapters are developed.")); panel.Children.Add(message);
         var buttons = new WrapPanel(); buttons.Children.Add(Button("Save profile", () =>
         {
             try { var p = new DeviceProfile(editId, name.Text ?? "", (ControllerFamily)(family.SelectedItem ?? ControllerFamily.Grbl), (ConnectionKind)(connection.SelectedItem ?? ConnectionKind.Simulator), portName.Text ?? "", (int)(baud.SelectedItem ?? 115200), host.Text ?? "", (int)(tcpPort.Value ?? 23), (double)(bedW.Value ?? 400), (double)(bedH.Value ?? 400), (MachineOrigin)(origin.SelectedItem ?? MachineOrigin.BottomLeft), (int)(maxPower.Value ?? 1000), airSupport.IsChecked == true, dtr.IsChecked == true, rts.IsChecked == true, (int)(startupDelay.Value ?? 2000), (AirAssistOutput)(airCommand.SelectedItem ?? AirAssistOutput.M8)); p.Validate(); var next = profiles.Where(x => x.Id != p.Id).Append(p).ToList(); ProfileStore.Save(ProfilesPath, next); profiles = next; ReloadDeviceChoices(profiles.FindIndex(x => x.Id == p.Id)); dialog.Close(); }
