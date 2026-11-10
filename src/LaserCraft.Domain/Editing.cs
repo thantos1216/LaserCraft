@@ -31,17 +31,21 @@ public static class ShapeEditing
     }
     public static DesignDocument Align(DesignDocument d, IReadOnlySet<Guid> ids, string alignment)
     {
-        var bounds = Bounds(d.Shapes.Where(s => ids.Contains(s.Id)));
-        return Transform(d, ids, s => alignment switch
+        var units = ShapeGroups.Units(d, ids); var bounds = Bounds(units.SelectMany(u => u.Members)); var offsets = new Dictionary<Guid, PointMm>();
+        foreach (var unit in units)
         {
-            "Left" => s with { X = bounds.X },
-            "Right" => s with { X = bounds.X + bounds.Width - s.Width },
-            "Top" => s with { Y = bounds.Y },
-            "Bottom" => s with { Y = bounds.Y + bounds.Height - s.Height },
-            "Horizontal center" => s with { X = bounds.X + (bounds.Width - s.Width) / 2 },
-            "Vertical center" => s with { Y = bounds.Y + (bounds.Height - s.Height) / 2 },
-            _ => throw new ArgumentException("Unknown alignment.")
-        });
+            var b = unit.Bounds;
+            var delta = alignment switch
+            {
+                "Left" => new PointMm(bounds.X - b.X, 0), "Right" => new(bounds.X + bounds.Width - b.X - b.Width, 0),
+                "Top" => new(0, bounds.Y - b.Y), "Bottom" => new(0, bounds.Y + bounds.Height - b.Y - b.Height),
+                "Horizontal center" => new(bounds.X + (bounds.Width - b.Width) / 2 - b.X, 0),
+                "Vertical center" => new(0, bounds.Y + (bounds.Height - b.Height) / 2 - b.Y),
+                _ => throw new ArgumentException("Unknown alignment.")
+            };
+            foreach (var member in unit.Members) offsets.Add(member.Id, delta);
+        }
+        return Transform(d, ids, s => s with { X = s.X + offsets[s.Id].X, Y = s.Y + offsets[s.Id].Y });
     }
     public static DesignDocument Mirror(DesignDocument d, IReadOnlySet<Guid> ids, bool horizontal)
     {

@@ -62,7 +62,11 @@ public sealed class DesignCanvas : Control
     private Point World(Point p) { var o = Origin; return new((p.X - o.X) / Scale, (p.Y - o.Y) / Scale); }
     private Point Snapped(Point p) => Snap ? new(Math.Round(p.X), Math.Round(p.Y)) : p;
     private static IBrush Brush(string color) { try { return new SolidColorBrush(Color.Parse(color)); } catch { return Brushes.Cyan; } }
-    public void Refresh() { InvalidateVisual(); Changed?.Invoke(); }
+    public void Refresh()
+    {
+        var valid = History.Document.Shapes.Select(s => s.Id).ToHashSet(); if (preview is not null) valid.Add(preview.Id);
+        Selection.IntersectWith(valid); InvalidateVisual(); Changed?.Invoke();
+    }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
     public void CancelDrawing() { pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; activeNode = null; InvalidateVisual(); }
     private void FinishPath(bool closed)
@@ -87,7 +91,7 @@ public sealed class DesignCanvas : Control
         finally { bitmap?.Dispose(); }
     }
     public void DeleteSelected() { if (Selection.Count > 0) { Apply(History.Document with { Shapes = History.Document.Shapes.Where(s => !Selection.Contains(s.Id)).ToList() }); Selected = null; Refresh(); } }
-    public void SelectAll() { Selection.Clear(); foreach (var s in History.Document.Shapes.Where(s => History.Document.Layers[s.Layer].Visible)) Selection.Add(s.Id); Refresh(); }
+    public void SelectAll() { var d = History.Document; var ids = d.Shapes.Where(s => d.Layers[s.Layer].Visible).Select(s => s.Id).ToHashSet(); Selection.Clear(); Selection.UnionWith(ShapeGroups.Expand(d, ids)); Refresh(); }
     public override void Render(DrawingContext ctx)
     {
         base.Render(ctx); ctx.FillRectangle(Brush("#0A111B"), new Rect(Bounds.Size));
@@ -104,6 +108,12 @@ public sealed class DesignCanvas : Control
                 for (double y = 0; y <= d.Height; y += step) ctx.DrawLine(grid, new(o.X, o.Y + y * scale), new(bed.Right, o.Y + y * scale));
                 foreach (var removed in bitmaps.Keys.Where(id => !d.Shapes.Any(s => s.Id == id)).ToArray()) { bitmaps[removed].Bitmap?.Dispose(); bitmaps.Remove(removed); }
                 foreach (var stored in d.Shapes.Where(s => d.Layers[s.Layer].Visible)) Draw(nodeVertex >= 0 && preview?.Id == stored.Id ? preview : original is not null && Selection.Contains(stored.Id) ? stored with { X = stored.X + moveDelta.X, Y = stored.Y + moveDelta.Y } : preview?.Id == stored.Id ? preview : stored);
+                foreach (var group in d.Shapes.Where(s => Selection.Contains(s.Id) && s.GroupId is not null).GroupBy(s => s.GroupId))
+                {
+                    if (group.Count() < 2) continue;
+                    var b = ShapeEditing.Bounds(group); var delta = original is not null && Selection.Contains(original.Id) ? moveDelta : default;
+                    ctx.DrawRectangle(null, new Pen(Brushes.Cyan, 1, DashStyle.Dash), new Rect(o.X + (b.X + delta.X) * scale, o.Y + (b.Y + delta.Y) * scale, b.Width * scale, b.Height * scale).Inflate(7));
+                }
                 if (preview is not null && !d.Shapes.Any(s => s.Id == preview.Id)) Draw(preview);
                 for (int i = 1; i < pathDraft.Count; i++) ctx.DrawLine(new Pen(Brushes.Cyan, 1.5), Screen(pathDraft[i - 1]), Screen(pathDraft[i]));
                 if (pathDraft.Count > 0 && draftCursor is PointMm cursor) ctx.DrawLine(new Pen(Brushes.Cyan, 1, DashStyle.Dash), Screen(pathDraft[^1]), Screen(cursor));
@@ -222,8 +232,9 @@ public sealed class DesignCanvas : Control
         if (Tool == "Select")
         {
             original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 5 / Scale));
-            if (e.KeyModifiers.HasFlag(KeyModifiers.Control)) { if (original is not null && !Selection.Add(original.Id)) { Selection.Remove(original.Id); original = null; } }
-            else if (original is null || !Selection.Contains(original.Id)) Selected = original?.Id;
+            var nextSelection = ShapeGroups.Select(History.Document, Selection, original?.Id, e.KeyModifiers.HasFlag(KeyModifiers.Control), e.KeyModifiers.HasFlag(KeyModifiers.Alt));
+            Selection.Clear(); Selection.UnionWith(nextSelection);
+            if (original is not null && !Selection.Contains(original.Id)) original = null;
         }
         else if (History.Document.Layers[ActiveLayer].Kind == LayerKind.Vector && p.X >= 0 && p.Y >= 0 && p.X <= History.Document.Width && p.Y <= History.Document.Height)
         { preview = new(Guid.NewGuid(), Tool == "Rectangle" ? ShapeKind.Rectangle : ShapeKind.Ellipse, p.X, p.Y, .1, .1, ActiveLayer); Selected = preview.Id; }

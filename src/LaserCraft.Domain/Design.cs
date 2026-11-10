@@ -13,7 +13,7 @@ public sealed record RasterAsset(Guid Id, string MimeType, string DataBase64, in
             throw new InvalidDataException("Invalid or oversized embedded raster image.");
     }
 }
-public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0, RasterAsset? Image = null, bool FlipX = false, bool FlipY = false, PathData? Path = null, TextSource? Text = null);
+public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, double Width, double Height, int Layer = 0, RasterAsset? Image = null, bool FlipX = false, bool FlipY = false, PathData? Path = null, TextSource? Text = null, Guid? GroupId = null);
 public enum CutMode { Line, Fill, Image }
 public enum LayerKind { Vector, Image }
 public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector, RasterSettings? Raster = null);
@@ -28,6 +28,7 @@ public sealed record DesignDocument(int Version, string Name, double Width, doub
         if (Shapes.Select(s => s.Id).Distinct().Count() != Shapes.Count) throw new InvalidDataException("Duplicate object IDs.");
         foreach (var s in Shapes)
         {
+            if (s.GroupId == Guid.Empty) throw new InvalidDataException("Group IDs must be nonempty or absent.");
             if (!Enum.IsDefined(s.Kind) || s.Id == Guid.Empty || !double.IsFinite(s.X) || !double.IsFinite(s.Y) || Math.Abs(s.X) > 10000 || Math.Abs(s.Y) > 10000 || !double.IsFinite(s.Width) || !double.IsFinite(s.Height) || s.Width < 0 || s.Height < 0 || (s.Kind != ShapeKind.Path && (s.Width == 0 || s.Height == 0)) || s.Width > 10000 || s.Height > 10000 || s.Layer < 0 || s.Layer >= Layers.Count)
                 throw new InvalidDataException("Invalid shape geometry or layer.");
             if (s.Kind == ShapeKind.Image) (s.Image ?? throw new InvalidDataException("Image object has no source asset.")).Validate();

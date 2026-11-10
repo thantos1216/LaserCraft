@@ -136,6 +136,7 @@ public sealed partial class MainWindow : Window
         if (e.Key == Key.C) { Copy(); e.Handled = true; }
         if (e.Key == Key.V) { Paste(); e.Handled = true; }
         if (e.Key == Key.D) { Duplicate(); e.Handled = true; }
+        if (e.Key == Key.G) { ChangeGrouping(e.KeyModifiers.HasFlag(KeyModifiers.Shift)); e.Handled = true; }
         if (e.Key == Key.S) { await Save(false); e.Handled = true; }
         if (e.Key == Key.Z) { Undo(); e.Handled = true; }
         if (e.Key == Key.Y) { Redo(); e.Handled = true; }

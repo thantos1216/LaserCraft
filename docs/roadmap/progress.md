@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.19 - console and GRBL setting changes
+## Current milestone 0.20 - artwork groups
+
+Added flat Group/Ungroup, whole-group selection/movement, individual Alt selection, hidden-member reporting, group-aware alignment/distribution and independent copy/array group identities. Native saves and geometry/text regeneration preserve membership. Groups retain independent layer settings and do not change burn order. Nested groups, names and locking remain planned.
+
+314 tests pass (303 unit, 11 integration). Desktop checked Ctrl+G, selection through one member, collective 10 mm movement, Ctrl+Shift+G and Undo back to the unchanged sample. See [validation](../testing/milestone-20.md). Physical USB testing remains pending; guided hardware movement/fire and job streaming remain incomplete.
+
+## Milestone 0.19 - console and GRBL setting changes
 
 Added Console command input, Submit/Enter, bounded visible log/history, timeout, raw replies/results and a per-connection opt-in for setting writes/custom G-code. Queries are the default. Commands share the diagnostic gate and await a terminal response. Interrupted writes leave the session unable to send further queries/commands until reconnect; no retry is performed. Simulator settings support write/readback for selected numeric settings. User clarified firmware updates means setting changes, not flashing.
 

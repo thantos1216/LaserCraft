@@ -34,7 +34,7 @@ public static class PathJoining
         }
         else joined = a.AddRange(gap == 0 ? b.Skip(1) : b);
         // Remains open, even if the outer endpoints coincide. Closing is a separate edit.
-        var shape = VectorPaths.Create([new(joined)], selected[0].Layer, selected[0].Id);
+        var shape = VectorPaths.Create([new(joined)], selected[0].Layer, selected[0].Id, selected[0].GroupId);
         var shapes = new List<DesignShape>();
         foreach (var stored in document.Shapes)
         {

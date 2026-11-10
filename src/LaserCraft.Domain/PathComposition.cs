@@ -23,7 +23,7 @@ public static class PathComposition
             {
                 // A degenerate contour can be valid inside a compound object's nonzero frame,
                 // but cannot be represented as a standalone zero-extent object. Reject atomically.
-                var piece = VectorPaths.Create([contours[i]], shape.Layer, i == 0 ? shape.Id : null); pieces.Add(piece); ids.Add(piece.Id);
+                var piece = VectorPaths.Create([contours[i]], shape.Layer, i == 0 ? shape.Id : null, shape.GroupId); pieces.Add(piece); ids.Add(piece.Id);
             }
             replacements[shape.Id] = pieces;
         }
@@ -37,7 +37,7 @@ public static class PathComposition
         var selected = SelectedPaths(document, selection);
         if (selected.Count < 2) throw new InvalidDataException("Select at least two path objects to combine.");
         if (selected.Any(s => s.Layer != selected[0].Layer)) throw new InvalidDataException("Assign the selected paths to the same layer before combining so their cut settings are preserved.");
-        var combined = VectorPaths.Create(selected.SelectMany(s => VectorPaths.World(s)), selected[0].Layer, selected[0].Id);
+        var combined = VectorPaths.Create(selected.SelectMany(s => VectorPaths.World(s)), selected[0].Layer, selected[0].Id, selected[0].GroupId);
         var shapes = new List<DesignShape>();
         foreach (var shape in document.Shapes)
         {

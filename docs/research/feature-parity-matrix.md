@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.19
+# Feature parity matrix - working baseline 0.20
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -16,7 +16,7 @@
 | Node editing and curve conversion | R | Partial: node editing, open/split at node, shape conversion, separate/combine, nearest-endpoint joining with midpoint/bridge preview and closing; tested | Manual endpoint pairing, multi-path joining, curve handles and Bézier conversion |
 | Grid / snap / guides / rulers | R | Partial: grid, 1 mm snap, rulers | Configurable units and guides |
 | Undo / redo | R | Implemented, automated + UI tested | Bound memory, transaction edits |
-| Group / ungroup | R | Planned | Hierarchy and selection tests |
+| Group / ungroup | R | Partial: flat groups, selection/individual override, group-aware arrangement, independent copies and native persistence tested | Nested hierarchy, names and locks |
 | Alignment / distribution | R | Partial: alignment, center-on-bed and horizontal/vertical center/gap distribution, tested | Additional anchor modes |
 | Union / subtract / intersect / weld | R | Planned | Geometry library/license evaluation |
 | Offsets / kerf / smoothing | R | Planned | Degenerate geometry fixtures |

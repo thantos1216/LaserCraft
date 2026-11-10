@@ -47,7 +47,7 @@ public sealed partial class MainWindow
             MenuGroup("File",Item("New",()=>AddDocument(DesignDocument.Empty())),AsyncItem("Open…",Open),AsyncItem("Import SVG…",ImportSvg),AsyncItem("Import image…",ImportImage),AsyncItem("Save",()=>Save(false)),AsyncItem("Save as…",()=>Save(true)),AsyncItem("Export SVG…",Export),Item("Close project",()=>_=CloseDocument()),Item("Exit",Close)),
             MenuGroup("Edit",Item("Undo",Undo),Item("Redo",Redo),Item("Copy",Copy),Item("Cut",()=>{ Copy(); Current.Canvas.DeleteSelected(); }),Item("Paste",Paste),Item("Duplicate",Duplicate),Item("Delete",()=>Current.Canvas.DeleteSelected()),Item("Select all",()=>Current.Canvas.SelectAll())),
             MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Insert node after selected",()=>EditPathNode("Insert")),Item("Delete selected node",()=>EditPathNode("Remove")),Item("Break at selected node",()=>EditPathNode("Break")),Item("Remove selected contour",()=>EditPathNode("Contour")),Item("Separate selected paths",()=>ComposePaths(true)),Item("Combine selected paths",()=>ComposePaths(false)),AsyncItem("Join open endpoints…",JoinPaths),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Editable Bézier handles"),AsyncItem("Create text…",()=>EditText(false)),AsyncItem("Edit selected text…",()=>EditText(true)),AsyncItem("Trace image…",TraceImage)),
-            MenuGroup("Arrange",Item("Flip horizontal",()=>Mirror(true)),Item("Flip vertical",()=>Mirror(false)),AsyncItem("Rotate vectors…",RotateVectors),MenuGroup("Align",new[]{"Left","Right","Top","Bottom","Horizontal center","Vertical center"}.Select(a=>Item(a,()=>Align(a))).ToArray()),MenuGroup("Distribute",Enum.GetValues<DistributionMode>().Select(m=>Item(m switch { DistributionMode.HorizontalCenters=>"Horizontal centers",DistributionMode.VerticalCenters=>"Vertical centers",DistributionMode.HorizontalGaps=>"Horizontal gaps",_=>"Vertical gaps" },()=>Distribute(m))).ToArray()),AsyncItem("Rectangular array…",RectangularArray),Item("Reverse path direction",ReversePaths),Item("Center on bed",CenterOnBed),Unavailable("Group / Ungroup"),Unavailable("Boolean operations"),Unavailable("Nesting")),
+            MenuGroup("Arrange",Item("Flip horizontal",()=>Mirror(true)),Item("Flip vertical",()=>Mirror(false)),AsyncItem("Rotate vectors…",RotateVectors),MenuGroup("Align",new[]{"Left","Right","Top","Bottom","Horizontal center","Vertical center"}.Select(a=>Item(a,()=>Align(a))).ToArray()),MenuGroup("Distribute",Enum.GetValues<DistributionMode>().Select(m=>Item(m switch { DistributionMode.HorizontalCenters=>"Horizontal centers",DistributionMode.VerticalCenters=>"Vertical centers",DistributionMode.HorizontalGaps=>"Horizontal gaps",_=>"Vertical gaps" },()=>Distribute(m))).ToArray()),AsyncItem("Rectangular array…",RectangularArray),Item("Reverse path direction",ReversePaths),Item("Center on bed",CenterOnBed),Item("Group",()=>ChangeGrouping(false)),Item("Ungroup",()=>ChangeGrouping(true)),Unavailable("Boolean operations"),Unavailable("Nesting")),
             MenuGroup("Laser Tools",Item("Preview",Preview),Item("Devices…",()=>_=EditDevices()),Unavailable("Material test"),Unavailable("Rotary setup"),Unavailable("Camera calibration"),Unavailable("Print and cut")),
             MenuGroup("Web Tools",Unavailable("Online integrations")),
             MenuGroup("Window",Item("Cuts / Layers",()=>upperPanels.SelectedIndex=0),Item("Console",()=>upperPanels.SelectedIndex=1),Item("Laser",()=>lowerPanels.SelectedIndex=0),Item("Help",ShowHelp),Item("Fit workspace",()=>Current.Canvas.Fit()),Item("Light / dark",ToggleTheme)),
@@ -63,7 +63,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.19", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.20", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -146,6 +146,7 @@ public sealed partial class MainWindow
     {
         if (clipboard.Length == 0) return; var c = Current.Canvas; var layers = c.History.Document.Layers.ToList();
         var added = clipboard.Select(s => { var source = clipboardLayers[s.Layer]; var target = s.Kind == ShapeKind.Image ? -1 : layers.FindIndex(l => l.Color == source.Color && l.Kind == LayerKind.Vector); if (target < 0) { target = layers.Count; layers.Add(source with { Name = source.Name + " copy" }); } return s with { Id = Guid.NewGuid(), X = s.X + 5, Y = s.Y + 5, Layer = target }; }).ToList();
+        added = ShapeGroups.RemapCopies(added);
         try { c.Apply(c.History.Document with { Shapes = [.. c.History.Document.Shapes, .. added], Layers = layers }); c.Selection.Clear(); foreach (var s in added) c.Selection.Add(s.Id); c.Refresh(); } catch (InvalidDataException ex) { status.Text = ex.Message; }
     }
     private void Duplicate() { Copy(); Paste(); }
@@ -157,7 +158,7 @@ public sealed partial class MainWindow
         c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = s.X + (d.Width - b.Width) / 2 - b.X, Y = s.Y + (d.Height - b.Height) / 2 - b.Y }));
     }
     private void ShowHelp() => lowerPanels.SelectedIndex = 1;
-    private void ShowFeatureStatus() { ShowHelp(); status.Text = "Implemented: shapes, layers, SVG subset, image adjustments/dithering, raster/vector simulation. Disabled commands are planned; hardware execution is unavailable."; }
+    private void ShowFeatureStatus() { ShowHelp(); status.Text = "Implemented: shapes, layers, SVG subset, image adjustments/dithering, raster/vector simulation. Disabled commands are planned; guided job execution is unavailable; manual Console commands require opt-in."; }
     private CancellationTokenSource? previewCancellation;
     private Session? previewOwner;
     private string previewDocument = "", previewScope = "";
@@ -206,7 +207,8 @@ public sealed partial class MainWindow
         if (sessions.Count == 0) return; var c = Current.Canvas; var d = c.History.Document;
         if (previewCancellation is not null && (previewOwner != Current || previewDocument != Snapshot(Current) || previewScope != CurrentSimulationScope)) previewCancellation.Cancel();
         if (simulation is not null && (simulationOwner != Current || simulationDocument != Snapshot(Current) || simulationScope != CurrentSimulationScope)) { StopSimulation(); if (simulationOwner is not null) { simulationOwner.Canvas.ShowPreview = false; simulationOwner.Canvas.Plan = null; } simulation = null; estimate.Text = "Design or selection changed · regenerate preview"; }
-        Title = $"{d.Name}{(IsDirty(Current) ? " *" : "")} · LaserCraft"; selection.Text = c.Selection.Count == 0 ? "No selection" : $"{c.Selection.Count} selected{c.NodeDescription}";
+        var chosen = d.Shapes.Where(s => c.Selection.Contains(s.Id)).ToArray(); var groups = chosen.Where(s => s.GroupId is not null).Select(s => s.GroupId).Distinct().Count(); var hidden = chosen.Count(s => !d.Layers[s.Layer].Visible);
+        Title = $"{d.Name}{(IsDirty(Current) ? " *" : "")} · LaserCraft"; selection.Text = c.Selection.Count == 0 ? "No selection" : $"{c.Selection.Count} selected{(groups > 0 ? $" · {groups} groups" : "")}{(hidden > 0 ? $" · {hidden} hidden" : "")}{c.NodeDescription}";
         updatingInspector = true; snapControl.IsChecked = c.Snap; layerRows.Items.Clear(); palette.Children.Clear();
         var used = Enumerable.Range(0, d.Layers.Count).ToArray();
         foreach (var i in used)

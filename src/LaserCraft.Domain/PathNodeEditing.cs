@@ -20,19 +20,19 @@ public static class PathNodeEditing
         if (!c.Closed && vertex == c.Points.Length - 1) throw new InvalidDataException("The last node has no following segment. Select another node.");
         var a = c.Points[vertex]; var b = c.Points[(vertex + 1) % c.Points.Length];
         var p = point ?? new PointMm((a.X + b.X) / 2, (a.Y + b.Y) / 2);
-        return VectorPaths.Create(paths.SetItem(contour, c with { Points = c.Points.Insert(vertex + 1, p) }), shape.Layer, shape.Id);
+        return VectorPaths.Create(paths.SetItem(contour, c with { Points = c.Points.Insert(vertex + 1, p) }), shape.Layer, shape.Id, shape.GroupId);
     }
     public static DesignShape Remove(DesignShape shape, int contour, int vertex)
     {
         var paths = Checked(shape, contour, vertex); var c = paths[contour];
         if (c.Points.Length <= (c.Closed ? 3 : 2)) throw new InvalidDataException("A closed contour needs three nodes; an open contour needs two. Remove the contour or object instead.");
-        return VectorPaths.Create(paths.SetItem(contour, c with { Points = c.Points.RemoveAt(vertex) }), shape.Layer, shape.Id);
+        return VectorPaths.Create(paths.SetItem(contour, c with { Points = c.Points.RemoveAt(vertex) }), shape.Layer, shape.Id, shape.GroupId);
     }
     public static DesignShape RemoveContour(DesignShape shape, int contour, int vertex)
     {
         var paths = Checked(shape, contour, vertex);
         if (paths.Length == 1) throw new InvalidDataException("This is the last contour. Use Edit / Delete to remove the object.");
-        return VectorPaths.Create(paths.RemoveAt(contour), shape.Layer, shape.Id);
+        return VectorPaths.Create(paths.RemoveAt(contour), shape.Layer, shape.Id, shape.GroupId);
     }
     public static DesignShape Break(DesignShape shape, int contour, int vertex)
     {
@@ -49,6 +49,6 @@ public static class PathNodeEditing
             paths = paths.SetItem(contour, new(c.Points.Take(vertex + 1).ToImmutableArray()))
                 .Insert(contour + 1, new(c.Points.Skip(vertex).ToImmutableArray()));
         }
-        return VectorPaths.Create(paths, shape.Layer, shape.Id);
+        return VectorPaths.Create(paths, shape.Layer, shape.Id, shape.GroupId);
     }
 }

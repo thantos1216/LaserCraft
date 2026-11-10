@@ -8,7 +8,7 @@ public sealed record PathData(ImmutableArray<PathContour> Contours);
 /// <summary>Immutable normalized polylines, shared by editing, import and output.</summary>
 public static class VectorPaths
 {
-    public static DesignShape Create(IEnumerable<PathContour> contours, int layer = 0, Guid? id = null)
+    public static DesignShape Create(IEnumerable<PathContour> contours, int layer = 0, Guid? id = null, Guid? groupId = null)
     {
         var paths = contours.ToImmutableArray();
         if (paths.IsEmpty || paths.Any(c => c is null || c.Points.IsDefaultOrEmpty)) throw new InvalidDataException("A path needs contours and vertices.");
@@ -16,7 +16,8 @@ public static class VectorPaths
         if (points.Length > 100000 || points.Any(p => !double.IsFinite(p.X) || !double.IsFinite(p.Y))) throw new InvalidDataException("Invalid or excessive path vertices.");
         var x = points.Min(p => p.X); var y = points.Min(p => p.Y); var w = points.Max(p => p.X) - x; var h = points.Max(p => p.Y) - y;
         var data = new PathData(paths.Select(c => c with { Points = c.Points.Select(p => new PointMm(w == 0 ? 0 : (p.X - x) / w, h == 0 ? 0 : (p.Y - y) / h)).ToImmutableArray() }).ToImmutableArray());
-        var shape = new DesignShape(id ?? Guid.NewGuid(), ShapeKind.Path, x, y, w, h, layer, Path: data); Validate(shape); return shape;
+        if (groupId == Guid.Empty) throw new InvalidDataException("Group ID must be nonempty or absent.");
+        var shape = new DesignShape(id ?? Guid.NewGuid(), ShapeKind.Path, x, y, w, h, layer, Path: data, GroupId: groupId); Validate(shape); return shape;
     }
     public static void Validate(DesignShape shape)
     {
@@ -46,13 +47,13 @@ public static class VectorPaths
     public static DesignShape MoveNode(DesignShape s, int contour, int vertex, PointMm target)
     {
         var paths = World(s); var c = paths[contour]; paths = paths.SetItem(contour, c with { Points = c.Points.SetItem(vertex, target) });
-        return Create(paths, s.Layer, s.Id);
+        return Create(paths, s.Layer, s.Id, s.GroupId);
     }
     public static DesignShape Convert(DesignShape s) => s.Kind switch
     {
         ShapeKind.Path => s with { Text = null },
-        ShapeKind.Rectangle => Create([new([new(s.X, s.Y), new(s.X + s.Width, s.Y), new(s.X + s.Width, s.Y + s.Height), new(s.X, s.Y + s.Height)], true)], s.Layer, s.Id),
-        ShapeKind.Ellipse => Create([new(Enumerable.Range(0, 128).Select(i => new PointMm(s.X + s.Width / 2 + Math.Cos(i * Math.PI / 64) * s.Width / 2, s.Y + s.Height / 2 + Math.Sin(i * Math.PI / 64) * s.Height / 2)).ToImmutableArray(), true)], s.Layer, s.Id),
+        ShapeKind.Rectangle => Create([new([new(s.X, s.Y), new(s.X + s.Width, s.Y), new(s.X + s.Width, s.Y + s.Height), new(s.X, s.Y + s.Height)], true)], s.Layer, s.Id, s.GroupId),
+        ShapeKind.Ellipse => Create([new(Enumerable.Range(0, 128).Select(i => new PointMm(s.X + s.Width / 2 + Math.Cos(i * Math.PI / 64) * s.Width / 2, s.Y + s.Height / 2 + Math.Sin(i * Math.PI / 64) * s.Height / 2)).ToImmutableArray(), true)], s.Layer, s.Id, s.GroupId),
         _ => throw new InvalidDataException("Images must be traced before they can become vector paths.")
     };
     public static double Distance(PointMm p, PointMm a, PointMm b)

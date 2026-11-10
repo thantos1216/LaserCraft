@@ -1,6 +1,16 @@
 # LaserCraft Help
 
-Version 0.19 - console commands and GRBL setting writes
+Version 0.20 - artwork groups
+
+## Group artwork
+
+Select at least two objects and choose Arrange / Group (Ctrl+G). Click a member's outline to select the whole group; drag moves the selected set together. A cyan box marks combined group bounds. Ctrl-click toggles a group. Alt-click selects one member; Ctrl+Alt-click toggles one member. Individual selections allow edits within a group. Arrange / Ungroup (Ctrl+Shift+G) clears the selected groups, including their other members. Group and Ungroup are each one Undo step.
+
+Groups can contain vectors, cached text and images across layers. Normal group selection includes hidden members; the selection label reports their count. Select All starts with visible objects and includes their grouped companions. Check this count before transforming, reassigning or deleting artwork. Images still require dedicated Image layers. Grouping does not merge layers, change cut settings or override layer burn order.
+
+Alignment and distribution use selected group bounds as units, preserving internal offsets. Distribution requires three units. Alt-selected subsets act only on those selected members. Copies/pastes and each rectangular-array cell receive independent group identities. Path conversion, node edits, tracing and text regeneration retain the source object's membership; joining/combining uses the surviving first object's membership. A group may retain one member after deletions or path operations.
+
+Native .lcraft files retain flat group identities. Grouping selected groups merges them into one flat group; nested hierarchy, group names and locking remain planned. Older LaserCraft versions ignore this metadata and lose it when resaving. SVG exports flattened artwork; group metadata does not affect planned output.
 
 ## Console commands and firmware settings
 
@@ -36,7 +46,7 @@ Vector copies keep their existing cut layers. Every image copy gets a new dedica
 
 Arrays check the existing project limits before allocating copies: 100000 objects, 256 layers, 128 images, 200000 path vertices and 24 MB of encoded embedded image data. Native saves retain the separate 32 MB file limit. Very dense projects can still be unsuitable for interactive editing or physical output.
 
-Arrange / Distribute requires at least three selected objects. Horizontal/Vertical centers sorts by center and evenly spaces those centers, retaining the two outer center anchors. Horizontal/Vertical gaps sorts by leading edge and gives equal nonnegative edge gaps with the first/last objects fixed. Equal-position ties follow document order. Negative available gaps reject the whole operation; center spacing can overlap differently sized objects. The other coordinate, identity, layer, image data and dimensions are retained. One Undo restores positions.
+Arrange / Distribute requires at least three selected objects or group units. Horizontal/Vertical centers sorts by center and evenly spaces those centers, retaining the two outer center anchors. Horizontal/Vertical gaps sorts by leading edge and gives equal nonnegative edge gaps with the first/last objects fixed. Equal-position ties follow document order. Negative available gaps reject the whole operation; center spacing can overlap differently sized objects. The other coordinate, identity, layer, image data and dimensions are retained. One Undo restores positions.
 
 Arrange / Rotate vectors rotates about the combined selection center, with positive degrees clockwise on the canvas. It accepts finite angles from -360 to 360, excluding zero/full turns. Rectangles become closed paths; ellipses become 128-point polylines; original path contours, holes and direction are retained. Identities and cut layers stay the same. This is sampled vector geometry, not native curve handles or a physical accuracy guarantee. Images in the selection reject the operation; raster rotation remains planned. Undo restores original shape types. No automatic bed fit occurs.
 

@@ -38,30 +38,38 @@ public static class Arrangement
         for (int row = 0; row < rows; row++) for (int column = 0; column < columns; column++)
         {
             if (row == 0 && column == 0) continue;
+            var cell = new List<DesignShape>(selected.Length);
             foreach (var source in selected)
             {
                 var layer = source.Layer;
                 if (source.Kind == ShapeKind.Image) { layer = layers.Count; layers.Add(d.Layers[source.Layer] with { Name = d.Layers[source.Layer].Name + $" [{row + 1},{column + 1}]" }); }
                 var copy = source with { Id = Guid.NewGuid(), X = source.X + column * layout.PitchX, Y = source.Y + row * layout.PitchY, Layer = layer };
-                shapes.Add(copy); selection.Add(copy.Id);
+                cell.Add(copy); selection.Add(copy.Id);
             }
+            shapes.AddRange(ShapeGroups.RemapCopies(cell));
         }
         var next = d with { Shapes = shapes, Layers = layers }; next.Validate(); return new(next, selection.AsReadOnly());
     }
     public static DesignDocument Distribute(DesignDocument d, IReadOnlySet<Guid> ids, DistributionMode mode)
     {
-        var selected = Selected(d, ids, 3); if (!Enum.IsDefined(mode)) throw new InvalidDataException("Unknown distribution mode.");
+        Selected(d, ids, 3); var selected = ShapeGroups.Units(d, ids); if (selected.Count < 3) throw new InvalidDataException("Select at least three groups or ungrouped objects to distribute.");
+        if (!Enum.IsDefined(mode)) throw new InvalidDataException("Unknown distribution mode.");
         bool horizontal = mode is DistributionMode.HorizontalCenters or DistributionMode.HorizontalGaps;
         bool gaps = mode is DistributionMode.HorizontalGaps or DistributionMode.VerticalGaps;
-        double Size(DesignShape s) => horizontal ? s.Width : s.Height;
-        double Start(DesignShape s) => horizontal ? s.X : s.Y;
-        double Key(DesignShape s) => Start(s) + (gaps ? 0 : Size(s) / 2);
+        double Size(ShapeUnit s) => horizontal ? s.Bounds.Width : s.Bounds.Height;
+        double Start(ShapeUnit s) => horizontal ? s.Bounds.X : s.Bounds.Y;
+        double Key(ShapeUnit s) => Start(s) + (gaps ? 0 : Size(s) / 2);
         var ordered = selected.OrderBy(Key).ToArray(); var first = ordered[0]; var last = ordered[^1]; var positions = new Dictionary<Guid, double>();
         double step = gaps ? (Start(last) + Size(last) - Start(first) - ordered.Sum(Size)) / (ordered.Length - 1) : (Key(last) - Key(first)) / (ordered.Length - 1);
         if (gaps && step < 0) throw new InvalidDataException("Not enough space for nonnegative equal gaps with the outer objects fixed.");
         var cursor = Start(first) + Size(first) + step;
-        for (int i = 1; i < ordered.Length - 1; i++) { positions[ordered[i].Id] = gaps ? cursor : Key(first) + i * step - Size(ordered[i]) / 2; cursor += Size(ordered[i]) + step; }
-        var next = d with { Shapes = d.Shapes.Select(s => positions.TryGetValue(s.Id, out var value) ? horizontal ? s with { X = value } : s with { Y = value } : s).ToList() }; next.Validate(); return next;
+        for (int i = 1; i < ordered.Length - 1; i++)
+        {
+            var delta = (gaps ? cursor : Key(first) + i * step - Size(ordered[i]) / 2) - Start(ordered[i]);
+            foreach (var member in ordered[i].Members) positions[member.Id] = delta;
+            cursor += Size(ordered[i]) + step;
+        }
+        var next = d with { Shapes = d.Shapes.Select(s => positions.TryGetValue(s.Id, out var value) ? horizontal ? s with { X = s.X + value } : s with { Y = s.Y + value } : s).ToList() }; next.Validate(); return next;
     }
     public static DesignDocument RotateVectors(DesignDocument d, IReadOnlySet<Guid> ids, double clockwiseDegrees)
     {
@@ -75,7 +83,7 @@ public static class Arrangement
         var cos = Math.Cos(angle); var sin = Math.Sin(angle);
         if (clockwiseDegrees % 90 == 0) { cos = Math.Round(cos); sin = Math.Round(sin); }
         PointMm Rotate(PointMm p) => new(cx + (p.X - cx) * cos - (p.Y - cy) * sin, cy + (p.X - cx) * sin + (p.Y - cy) * cos);
-        var replacements = selected.ToDictionary(s => s.Id, s => VectorPaths.Create(VectorPaths.World(VectorPaths.Convert(s)).Select(c => c with { Points = c.Points.Select(Rotate).ToImmutableArray() }), s.Layer, s.Id));
+        var replacements = selected.ToDictionary(s => s.Id, s => VectorPaths.Create(VectorPaths.World(VectorPaths.Convert(s)).Select(c => c with { Points = c.Points.Select(Rotate).ToImmutableArray() }), s.Layer, s.Id, s.GroupId));
         var next = d with { Shapes = d.Shapes.Select(s => replacements.GetValueOrDefault(s.Id, s)).ToList() }; next.Validate(); return next;
     }
     public static DesignDocument ReversePaths(DesignDocument d, IReadOnlySet<Guid> ids)

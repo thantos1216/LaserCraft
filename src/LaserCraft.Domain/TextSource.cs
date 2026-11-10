@@ -22,7 +22,7 @@ public static class TextEditing
         if (existingId is Guid id)
         {
             var old = document.Shapes.SingleOrDefault(s => s.Id == id && s.Text is not null) ?? throw new InvalidDataException("The selected text object is no longer available.");
-            next = prepared with { Id = old.Id, Layer = old.Layer, X = old.X, Y = old.Y, Width = prepared.Width * old.Width / old.Text!.NaturalWidth, Height = prepared.Height * old.Height / old.Text.NaturalHeight, FlipX = old.FlipX, FlipY = old.FlipY };
+            next = prepared with { Id = old.Id, GroupId = old.GroupId, Layer = old.Layer, X = old.X, Y = old.Y, Width = prepared.Width * old.Width / old.Text!.NaturalWidth, Height = prepared.Height * old.Height / old.Text.NaturalHeight, FlipX = old.FlipX, FlipY = old.FlipY };
         }
         var result = document with { Shapes = existingId is null ? [.. document.Shapes, next] : document.Shapes.Select(s => s.Id == existingId ? next : s).ToList() }; result.Validate(); return result;
     }

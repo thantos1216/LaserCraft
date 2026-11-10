@@ -94,7 +94,7 @@ public static class ImageTracing
         if (path.Kind != ShapeKind.Path) throw new InvalidDataException("Trace result is not a vector path.");
         var next = LayerEditing.Add(document, "Trace · " + document.Layers[source.Layer].Name, LayerKind.Vector);
         var layers = next.Layers.ToList(); layers[source.Layer] = layers[source.Layer] with { Output = false };
-        var shapes = next.Shapes.Where(s => !removeSource || s.Id != imageId).Append(path with { Layer = layers.Count - 1 }).ToList();
+        var shapes = next.Shapes.Where(s => !removeSource || s.Id != imageId).Append(path with { Layer = layers.Count - 1, GroupId = source.GroupId }).ToList();
         next = next with { Layers = layers, Shapes = shapes }; next.Validate(); return next;
     }
 }
