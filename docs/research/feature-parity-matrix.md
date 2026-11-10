@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.23
+# Feature parity matrix - working baseline 0.24
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -38,7 +38,7 @@
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Partial: typed local recipes, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories/search, per-device binding, material-test grids and physical calibration |
-| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | Physical USB qualification, startup/reset variants and job queue |
+| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and reviewed one-line test and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | User observed query-only USB connection in 0.14; current motion/cut qualification, startup/reset variants and job queue pending |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
 | G-code generation | R | Partial: offline GRBL 1.1 export, bounds/units/power-off/origin/air tests | Physical qualification, other dialects |

@@ -86,12 +86,40 @@ public sealed class GrblManualTests
     }
     [Theory] [InlineData(0)] [InlineData(59.9)] [InlineData(3000.1)] [InlineData(double.NaN)]
     public void PhysicalFeedLimitsAreValidated(double feed) => Assert.Throws<InvalidDataException>(() => new GrblManualRequest(GrblManualAction.JogX, Feed: feed).Validate());
+    [Theory] [InlineData(GrblManualAction.CutLineX,5,"X5")] [InlineData(GrblManualAction.CutLineY,-5,"Y-5")]
+    public async Task LineTestUsesObservedDecimalSettingsAndEndsOffAbsoluteIdle(GrblManualAction action,double distance,string axis)
+    {
+        var t=new Peer {Settings=["$30=1000.000","$31=0.000","$32=1"],BatchReplies=["ok","ok","ok","ok"]};await using var c=await GrblMonitor.ConnectAsync(t);
+        var result=await c.ExecuteManualAsync(Profile,new(action,distance,600,10,ClearPathConfirmed:true),true,true);
+        Assert.Contains("G21 G91 G94 M4 S0\nG1 "+axis+" F600 S100\nM5 S0\nG90 G0\n",t.Commands);Assert.Equal("?",t.Commands[^1]);Assert.Contains("reported Idle",result.Summary);Assert.False(c.RequiresReconnect);
+    }
+    [Theory] [InlineData("[GC:G20 G90 G94 M5]")] [InlineData("[GC:G21 G91 G94 M5]")] [InlineData("[GC:G21 G90 G93 M5]")] [InlineData("")]
+    public async Task MissingOrUnsuitableModesDoNotSendCut(string modal)
+    {
+        var t=new Peer {ModalReport=modal};await using var c=await GrblMonitor.ConnectAsync(t);await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteManualAsync(Profile,new(GrblManualAction.CutLineX,ClearPathConfirmed:true),true,true));Assert.DoesNotContain(t.Commands,x=>x.StartsWith("G21 G91",StringComparison.Ordinal));
+    }
+    [Fact] public async Task LineNeedsClearanceAndFiringPermissionBeforeWrites()
+    {
+        var t=new Peer();await using var c=await GrblMonitor.ConnectAsync(t);await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteManualAsync(Profile,new(GrblManualAction.CutLineX),true,true));await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteManualAsync(Profile,new(GrblManualAction.CutLineX,ClearPathConfirmed:true),true,false));Assert.Single(t.Commands);
+    }
+    [Theory] [InlineData(0,600,10)] [InlineData(20.1,600,10)] [InlineData(5,59,10)] [InlineData(5,3001,10)] [InlineData(5,600,101)] [InlineData(5,600,0)]
+    public void LineBudgetsAreValidated(double distance,double feed,double power)=>Assert.Throws<InvalidDataException>(()=>new GrblManualRequest(GrblManualAction.CutLineX,distance,feed,power).Validate());
+    [Fact] public async Task NonIdleCompletionIsNotReportedAsASuccessfulCut()
+    {
+        var t=new Peer {BatchReplies=["ok","ok","ok","ok"],CompletionState="Run"};await using var c=await GrblMonitor.ConnectAsync(t);await Assert.ThrowsAsync<IOException>(()=>c.ExecuteManualAsync(Profile,new(GrblManualAction.CutLineX,ClearPathConfirmed:true),true,true));Assert.True(c.RequiresReconnect);
+    }
+    [Fact] public async Task InterruptedLineKeepsOffInAttemptedBatchAndRequiresReconnect()
+    {
+        var t=new Peer {HoldBatch=true};await using var c=await GrblMonitor.ConnectAsync(t);using var cancel=new CancellationTokenSource();var task=c.ExecuteManualAsync(Profile,new(GrblManualAction.CutLineX,ClearPathConfirmed:true),true,true,cancel.Token);await t.BatchWritten.Task;cancel.Cancel();await Assert.ThrowsAnyAsync<OperationCanceledException>(()=>task);Assert.Contains("M5 S0\nG90 G0\n",t.Commands[^1]);Assert.True(c.RequiresReconnect);
+    }
     private sealed class Peer : IGrblTransport
     {
         readonly Channel<string> replies=Channel.CreateUnbounded<string>();
         public List<string> Commands {get;}=[];
         public string State {get;init;}="Idle";
+        public string CompletionState {get;init;}="Idle";
         public string Identity {get;init;}="[VER:1.1h:test]";
+        public string ModalReport {get;init;}="[GC:G21 G90 G94 M5]";
         public string[] Settings {get;init;}=["$30=1000","$31=0","$32=1"];
         public string[] BatchReplies {get;init;}=["ok","ok","ok"];
         public bool HoldBatch {get;init;}
@@ -101,9 +129,10 @@ public sealed class GrblManualTests
         {
             token.ThrowIfCancellationRequested();Commands.Add(command);
             if(command=="$I\n")Push(Identity,"ok");
-            else if(command=="?")Push("<"+State+"|MPos:0,0,0|FS:0,0>");
+            else if(command=="?")Push("<"+(BatchWritten.Task.IsCompleted?CompletionState:State)+"|MPos:0,0,0|FS:0,0>");
             else if(command=="$$\n") {Push(Settings);Push("ok");}
-            else if(command.StartsWith("G1 G94",StringComparison.Ordinal)) {BatchWritten.TrySetResult();if(!HoldBatch)Push(BatchReplies);}
+            else if(command=="$G\n") {if(ModalReport.Length>0)Push(ModalReport);Push("ok");}
+            else if(command.StartsWith("G1 G94",StringComparison.Ordinal)||command.StartsWith("G21 G91",StringComparison.Ordinal)) {BatchWritten.TrySetResult();if(!HoldBatch)Push(BatchReplies);}
             else if(command!="\u0085")Push("ok");
             return ValueTask.CompletedTask;
         }

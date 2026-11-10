@@ -1,5 +1,7 @@
 # LaserCraft
 
+Version 0.24 adds a reviewed, one-pass X/Y line test from the current physical head position, with bounded length/feed/power, preflight settings/modes, queued laser-off and final Idle reporting. User-supplied 0.14 screenshots establish query connectivity only; actual cuts remain unverified. Use the current portable package and [first-test guide](docs/help/USB-CONNECTION-TEST.md).
+
 Version 0.23 enables a local Material Library: capture applied layer settings, replace/delete recipes and apply them to compatible layers with Undo. Includes image-processing settings, optional thickness/notes, validated persistence and one previous-file backup. Recipes are user supplied and uncalibrated; applying them sends no machine commands.
 
 Version 0.22 adds separately opted-in guided GRBL 1.1 X/Y jogging, jog cancel, laser-off and short pulse tests. Protocol/failure handling is tested against scripted and local TCP peers; physical USB and optical output remain unverified. See [supervised USB/control testing](docs/help/USB-CONNECTION-TEST.md). Program streaming, hardware emergency control and full production qualification remain incomplete.

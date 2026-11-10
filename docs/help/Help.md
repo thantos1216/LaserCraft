@@ -1,6 +1,20 @@
 # LaserCraft Help
 
-Version 0.23 - material presets
+Version 0.24 - supervised line cut test
+
+## First supervised line cut / mark test
+
+Use the complete 0.24 portable build. A toolbar reading 0.14 is an older, query-only build; replace the extracted application folder with the new package, keeping all companion files together. Per-user profiles remain under LocalAppData/LaserCraft. Your submitted 0.14 screenshots show successful GRBL identity/status/settings queries, not a motion or cut test.
+
+Connect the actual GRBL 1.1 USB COM profile, with S maximum matching reported $30. Verify unpowered X/Y direction and clearance with small jogs. Position the head over scrap with a clear path in the selected signed direction. Open Move, enable physical control and the separate firing permission, then choose Review line cut test. Select X or Y, signed length, feed and power; read the summary and confirm positioning/protection/physical stop before Run. No command is sent by opening or cancelling the review.
+
+This is one straight pass from CURRENT head position, with no return move, homing or automatic bed fit. Limits: 0.1–20 mm, 60–3000 mm/min and >0–100% power. The default 5 mm / 600 mm/min / 10% is an editable mark/motion example, not a material recipe. For your 5 mm plywood scraps, inspect the mark and qualify settings on scrap; no through-cut guarantee is made. Air state is left unchanged. Do not assume a displayed zero or profile bed establishes a safe position. Your report has $20=0 (soft limits off), $21=1 and $22=1; homing-enabled does not prove that homing occurred.
+
+Preflight requires Idle, sends M5 S0, reads $$ and requires $32=1, $31=0 and $30 matching the profile. It reads $G and requires G21/G90/G94. The bounded four-line program selects incremental millimetres/dynamic M4 with S0, performs one powered G1 axis move, sends M5 S0, then restores G90 G0. All four lines, including off, are queued in one short write before replies are awaited. The test then requires a final Idle report; this is controller-reported completion, not measured physical accuracy or penetration. It leaves G21/G90/G94/G0, M5 S0 and the test feed active. Firmware settings are never changed automatically.
+
+Partial transmission, controller failure or rejected commands can prevent shutdown/mode restoration. Software off/cancel waits behind an exchange; disconnect/closing does not stop hardware. Keep the physical stop/power switch ready, with laser protection, extraction and supervision. On interruption no retry is made; inspect output and save the connection log before reconnecting. This stage is not arbitrary document/job streaming, pause/resume, hardware emergency control or automated material-test grids.
+
+Protocol follows [GRBL laser mode](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Laser-Mode) and [GRBL interface responses](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Interface). No proprietary implementation is used.
 
 ## Material Library
 
@@ -22,7 +36,7 @@ Cancel jog sends GRBL realtime byte 0x85 without an acknowledgement. Read status
 
 For a firing test, place suitable test material, enable the separate firing permission, start at 1% / 100 ms and choose Pulse test. Limit is 5% / 500 ms. The app requires fresh Idle, disables the laser, reads $$ and requires $32=1, $31=0 and $30 exactly matching the profile S maximum. It does not change these settings. Review settings/profile if rejected; do not assume Attzr factory values. Requested power is rounded down to integer S and zero is rejected.
 
-The controller receives one short write containing G1 G94 F60 M3 Svalue, G4 Pseconds and M5 S0 before the application waits for their three replies. The dwell is controller-side; it is nominal, not measured optical duration or a guarantee of automatic shutdown. A partial USB write, controller fault or rejected command can prevent off. There is no hardware watchdog. G1/G94 and F60 remain active afterward (F60 in current program units); units and distance mode are not changed. No automatic rearming/retry occurs. Interrupted/failed pulse exchanges require reconnect; check physical output first and save the connection log. This stage does not implement program streaming, homing or test-cut jobs.
+The controller receives one short write containing G1 G94 F60 M3 Svalue, G4 Pseconds and M5 S0 before the application waits for their three replies. The dwell is controller-side; it is nominal, not measured optical duration or a guarantee of automatic shutdown. A partial USB write, controller fault or rejected command can prevent off. There is no hardware watchdog. G1/G94 and F60 remain active afterward (F60 in current program units); units and distance mode are not changed. No automatic rearming/retry occurs. Interrupted/failed pulse exchanges require reconnect; check physical output first and save the connection log. The separate reviewed line test above is available; arbitrary program streaming and homing remain unimplemented.
 
 Protocol basis: [GRBL 1.1 jogging](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Jogging) and [laser mode](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Laser-Mode). No proprietary implementation is used.
 

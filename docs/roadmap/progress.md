@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.23 - material presets
+## Current milestone 0.24 - supervised one-line cut qualification
+
+User supplied 0.14 screenshots and 48 annotated firmware settings: identity/status/settings queries succeeded; motion/cutting was not established. Added reviewed single-axis, single-pass physical line tests with separate control/fire/clear-path authority, bounded length/feed/power, fresh settings/modal checks, queued off and final Idle reporting. This is not arbitrary job streaming. Defaults are mark examples, not a 5 mm plywood through-cut recipe.
+
+378 tests pass (366 unit, 12 integration), including exact fragmented TCP line sequence and fail-closed modes/permissions/cancellation/completion. Desktop checked the disconnected line-test control is disabled; the review/run workflow has not been physically exercised. See [validation](../testing/milestone-24.md) and [observations](../research/attzr-user-results-24.md). Actual motion, optical output and cuts remain user qualification work.
+
+## Milestone 0.23 - material presets
 
 Enabled Material Library with named/annotated typed recipes, optional thickness, capture from applied layer settings, replacement, confirmed deletion and undoable application. Target layer identity, output/visibility and artwork remain intact. Local versioned persistence validates before save and retains one .bak; failed load blocks writes. No factory recipes or automatic machine commands.
 
