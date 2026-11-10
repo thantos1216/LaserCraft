@@ -1,6 +1,13 @@
 # Progress
 
-## Current milestone 0.18 - editable basic text
+## Current milestone 0.19 - console and GRBL setting changes
+
+Added Console command input, Submit/Enter, bounded visible log/history, timeout, raw replies/results and a per-connection opt-in for setting writes/custom G-code. Queries are the default. Commands share the diagnostic gate and await a terminal response. Interrupted writes leave the session unable to send further queries/commands until reconnect; no retry is performed. Simulator settings support write/readback for selected numeric settings. User clarified firmware updates means setting changes, not flashing.
+
+306 tests pass (295 unit, 11 integration). Coverage includes command framing/permission, push/error/alarm/ack handling, queue serialization, timeout/cancellation, limits/restarts, simulator settings and actual fragmented TCP loopback. Desktop verified query submission, default write rejection, opt-in $32=0/$$ readback, Up history and disconnect disable/reset. See [validation](../testing/milestone-19.md). Raw console can actuate physical hardware, but physical USB/controller behavior is unverified; guided Move/fire, job streaming, hardware emergency controls and full production readiness remain incomplete.
+
+
+## Milestone 0.18 - editable basic text
 
 Added create/edit text dialogs with installed font/style selection, em height, multiline spacing, outline tolerance and prepared preview. Text is represented as cached closed paths with optional immutable source settings, so saved output does not require font resolution. Editing retains identity/layer/anchor and affine resize/mirror factors. Geometry-changing operations detach the source; conversion and Undo are explicit. Basic Latin only; complex shaping, text-on-path, welding and variable text remain planned.
 

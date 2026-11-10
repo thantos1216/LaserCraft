@@ -23,9 +23,9 @@ public static class ControllerCatalog
     public static bool HasConnectionAdapter(ControllerFamily family) => family is ControllerFamily.Grbl or ControllerFamily.GrblHal or ControllerFamily.FluidNc;
     public static string Support(ControllerFamily family) => family switch
     {
-        ControllerFamily.Grbl => "GRBL 1.1 · read-only connection adapter; hardware unverified",
-        ControllerFamily.GrblHal => "grblHAL · experimental GRBL-compatible read-only adapter",
-        ControllerFamily.FluidNc => "FluidNC · experimental GRBL-compatible read-only adapter",
+        ControllerFamily.Grbl => "GRBL 1.1 · queries and opt-in manual console; hardware unverified",
+        ControllerFamily.GrblHal => "grblHAL · experimental GRBL-compatible queries/console",
+        ControllerFamily.FluidNc => "FluidNC · experimental GRBL-compatible queries/console",
         _ => family + " · profile only; connection adapter planned"
     };
 }

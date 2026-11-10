@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.18
+# Feature parity matrix - working baseline 0.19
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -38,7 +38,7 @@
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Planned | Serializable presets and calibration evidence |
-| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: read-only identity/status/settings via serial/TCP; telemetry and S-max comparison; configurable serial startup delay; simulator/UI and real TCP loopback tested | Physical USB qualification, startup/reset variants and job queue |
+| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics and explicitly enabled single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | Physical USB qualification, startup/reset variants and job queue |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
 | G-code generation | R | Partial: offline GRBL 1.1 export, bounds/units/power-off/origin/air tests | Physical qualification, other dialects |
@@ -65,3 +65,7 @@ Per-connection detected COM selection and a 430 × 430 Attzr USB draft are imple
 ## Connection support 0.16
 
 Connection journal export and Windows x64 self-contained packaging are implemented for remote testing. Transport logs retain attempted writes, replies/errors and closure with bounded storage; they do not demonstrate controller execution or physical compatibility. Live command scheduling and machine execution remain planned.
+
+## Console 0.19
+
+Console now has a single-line command box and Submit/Enter. Default query mode and explicit per-connection setting/G-code permission, raw replies, history, timeout and reconnect-after-uncertainty are implemented and tested with simulator/TCP loopback. Raw commands can move/fire or persist settings; physical USB behavior remains unverified. This does not add firmware-image flashing, guided motion/fire, emergency controls, macros or job streaming.

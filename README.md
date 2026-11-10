@@ -2,7 +2,7 @@
 
 Original Windows laser design and engraving studio, under active development.
 
-The current milestone has a compact laser-design workspace, rectangle/ellipse multi-object editing, editable ordered vector/image layers, line/fill preview and offline playback, native save/load, restricted SVG import/export, themes and integrated help. Full functional parity and hardware execution are not implemented.
+The current milestone has a compact laser-design workspace, rectangle/ellipse multi-object editing, editable ordered vector/image layers, line/fill preview and offline playback, native save/load, restricted SVG import/export, themes and integrated help. Full functional parity and integrated hardware job execution remain unfinished; the advanced console supports explicitly enabled manual commands.
 
 ## Build and run
 
@@ -45,3 +45,5 @@ Version 0.16 adds Save connection log for USB/TCP test diagnosis and a transfera
 Version 0.17 adds Arrange commands for rectangular arrays, horizontal/vertical center/gap distribution, collective vector rotation and path-direction reversal. Try samples/arrangement-demo.lcraft. Image copies get independent layers/settings; vector rotation converts primitives to paths and does not yet rotate rasters. Operations support Undo and existing native/SVG/offline output. This remains an alpha without physical execution.
 
 Version 0.18 adds basic editable Latin text: T / Tools / Create text, font family/style, em height, multiline spacing, tolerance and outline preview; Tools / Edit selected text regenerates it. Native projects cache outlines for font-independent reopening/output. Conversion/node edits detach the text link, recoverable with Undo. Complex shaping, text-on-path and variable text remain planned; no fonts are shipped.
+
+Version 0.19 adds Console input and Submit/Enter, command history, bounded log, response timeout and opt-in setting writes/custom G-code. Connect defaults to queries. Manual commands can affect physical hardware; an acknowledgement is not completed motion and disconnect is not a stop. Simulator setting readback and TCP loopback are tested; actual USB/controller behavior remains unverified. Guided Move/fire and program streaming are still unfinished. The requested firmware updates are GRBL setting changes, not image flashing.

@@ -1,0 +1,9 @@
+# Console command contract
+
+2026-11-09. User requested a command field/Submit and clarified firmware updates mean changing GRBL settings. No firmware-image flasher is in scope.
+
+Inputs are one printable ASCII command and explicit per-session write permission. Query-only default permits ?, $, $$, $I, $G, $# and $N. Other commands require opt-in. The shared connection gate prevents concurrent console and diagnostic reads/writes. Outputs retain push lines and terminal acknowledgement/error/alarm or requested status. Response limits are 256 lines / 2048 characters per line; timeout is 1–120 seconds. Transmitted/cancelled commands are never automatically retried. Interrupted exchanges block further commands until reconnect.
+
+Independent protocol implementation uses [GRBL 1.1 Interface](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Interface) and [Commands](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Commands). The default 80-character parser buffer and separately intercepted real-time bytes are documented in [GRBL configuration](https://github.com/gnea/grbl/blob/master/grbl/config.h); the input permits 79 payload characters plus a terminator. No firmware source code is reused. Extended vendor buffers/protocols are not inferred. No additional REA analysis is needed for this documented serial interface.
+
+Acceptance: Enter/button, raw replies, setting readback, permission reset, exact wire bytes, push-message handling, errors/alarms, no retry, interrupted command poisoning, queued-query cancellation and bounded history/logs. Simulator setting changes do not change saved profile values. Raw custom commands may move/fire/change persistent settings and are intentionally not a protected job planner; guided execution, real-time emergency controls and physical qualification remain separate work. Disconnect is not a machine stop.

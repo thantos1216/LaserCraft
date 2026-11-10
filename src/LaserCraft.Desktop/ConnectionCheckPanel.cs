@@ -22,7 +22,7 @@ public sealed partial class MainWindow
             report += "\n\nSource reports\n" + string.Join("\n", settings.Select(s => s.Raw)) + "\n" + modal.Raw + "\n" + sample.Raw;
             var dialog = new Window { Title = "Connection check · read only", Width = 800, Height = 720, MinWidth = 500, MinHeight = 400, WindowStartupLocation = WindowStartupLocation.CenterOwner };
             var root = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto"), Margin = new Thickness(16) };
-            root.Children.Add(Label("Diagnostic comparison only · physical execution remains unavailable. Match does not mean ready to fire or cut."));
+            root.Children.Add(Label("Read-only diagnostic comparison. Manual console is a separate opt-in. Match does not mean ready to fire or cut."));
             var text = new TextBox { IsReadOnly = true, AcceptsReturn = true, TextWrapping = Avalonia.Media.TextWrapping.Wrap, Text = report }; Grid.SetRow(text, 1); root.Children.Add(text);
             var close = Button("Close", () => dialog.Close()); Grid.SetRow(close, 2); root.Children.Add(close); dialog.Content = root;
             Log("Connection check queried $$, $G and ?; no settings or machine state changed."); await dialog.ShowDialog(this);

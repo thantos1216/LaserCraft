@@ -1,6 +1,18 @@
 # LaserCraft Help
 
-Version 0.18 - editable basic text and cached outlines
+Version 0.19 - console commands and GRBL setting writes
+
+## Console commands and firmware settings
+
+Connect to the chosen profile, select Console, type one command and click Submit or press Enter. The transcript shows the attempted TX, returned RX lines and Acknowledged/Rejected/Alarm/Status result. Up/Down recalls up to 100 commands from this connection session. Clear log clears the visible transcript; Save connection log retains the separate bounded transport journal. Input and Submit are disabled while disconnected or another query/command is in progress.
+
+Query mode permits ?, $, $$, $I, $G, $# and $N exactly. For changing GRBL settings, enable Enable setting writes / custom G-code for this connection, then submit the specific assignment, such as $32=1. This checkbox also permits other single-line G-code/system commands, which can move/fire hardware, actuate air or change persistent settings. It resets on disconnect/new Connect and is not saved as a preference. No state-changing command is sent automatically. Settings writes do not update your LaserCraft profile automatically; read $$ afterward to verify the reported value and review the profile where necessary.
+
+One printable ASCII line of 1–79 characters is supported, with a newline appended for ordinary commands. The ? status query is sent as a single byte. Newlines, control/non-ASCII bytes and embedded ?, ! or ~ are rejected even inside comments, because GRBL intercepts real-time characters separately. Hold/resume/reset and firmware-image flashing are not implemented by this input. No multiline programs, macros or job streaming are implied.
+
+The console uses one send/response exchange at a time, sharing the connection gate with diagnostics. It retains push messages until the terminal ok/error/alarm or requested status arrives. ok is acknowledgement, not proof of completed motion, safe positioning or verified settings. Use $$ readback after a setting write. Timeout is 1–120 seconds (default 10). A timeout, cancellation after attempted transmission, restart, malformed/oversized response or lost connection leaves the command outcome uncertain; no retry is performed, and reconnect is required. Disconnect does not cancel motion or turn off a laser. The offline Start/Pause/Stop controls and this console are not hardware emergency stops.
+
+The simulator accepts numeric settings $10, $13, $30, $31, $32, $130 and $131 in session memory, with simple range validation; $$ reads them back. $13 also changes its reported position units. These changes disappear on a new simulator connection and do not alter saved profiles. Other custom G-code returns error:20 rather than pretending to model hardware motion. Real GRBL serial/TCP commands are implemented but physical USB behavior is unverified. Guided motion/fire/job streaming and full production readiness remain unfinished.
 
 ## Create and edit text
 
@@ -14,7 +26,7 @@ Select exactly one text object and choose Tools / Edit selected text to change i
 
 Native .lcraft saves both source text/settings and cached closed polylines. Reopening, display and output use the saved geometry without requiring that font to be installed. Editing requires the named font/style or an explicit replacement. Fonts are not embedded or distributed. Changing fonts/versions and regenerating can change geometry; inspect the preview. Curve tolerance (0.001–1 mm) applies before later resizing; it is not a physical accuracy guarantee. Existing path-vertex and file-size budgets apply.
 
-Tools / Convert selected to paths removes the text link without changing outlines, making ordinary editable nodes. Node edits, rotation, reversal, close/join/separate/combine operations that replace geometry also remove text editability on affected objects. Undo restores it. Moving, numerical resizing, mirroring, alignment, distribution and copies/arrays keep the text source. SVG export writes outlines rather than editable SVG text. Fill follows the current even-odd rule; overlapping glyphs are not automatically welded. Physical laser execution remains unavailable.
+Tools / Convert selected to paths removes the text link without changing outlines, making ordinary editable nodes. Node edits, rotation, reversal, close/join/separate/combine operations that replace geometry also remove text editability on affected objects. Undo restores it. Moving, numerical resizing, mirroring, alignment, distribution and copies/arrays keep the text source. SVG export writes outlines rather than editable SVG text. Fill follows the current even-odd rule; overlapping glyphs are not automatically welded. These editing operations send no machine commands. Advanced Console commands are a separate opt-in.
 
 ## Arrange artwork
 
@@ -62,7 +74,7 @@ Limits: 8 MB per imported encoded image; 16000 pixels per dimension; 40 megapixe
 
 Choose Devices… in the Laser panel or Laser Tools menu. Create a named profile and select the controller family, Simulator/Serial/TCP connection, COM port, baud rate, TCP host/port, bed dimensions, origin and S-value maximum. Serial uses 8 data bits, no parity, 1 stop bit and no flow control; DTR/RTS are optional. Opening some serial ports can reset their controller. Profile settings are stored under LocalAppData/LaserCraft/devices.json, separately from projects.
 
-GRBL has a read-only connection adapter. grblHAL and FluidNC use an experimental GRBL-compatible adapter. Marlin, Smoothieware, Ruida and Trocen can be saved as profiles but do not yet have connection adapters. Selecting a controller family is not a claim of tested machine compatibility. No Atezr hardware has been tested.
+GRBL connects in query mode, with separately enabled manual console writes. grblHAL and FluidNC use an experimental GRBL-compatible adapter. Marlin, Smoothieware, Ruida and Trocen can be saved as profiles but do not yet have connection adapters. Selecting a controller family is not a claim of tested machine compatibility. No Atezr hardware has been tested.
 
 Select a saved profile, then Connect. The application queries firmware identity ($I) and status (?), without homing, jogging, firing or streaming a job. Read status refreshes the report; Disconnect closes the connection. Status coordinates identify MPos or WPos exactly as reported. Missing coordinates stay unknown. A built-in GRBL simulator is the default and works without hardware. Connection cancellation, line limits and response timeouts bound reads; real serial hardware behavior remains unverified.
 
@@ -76,7 +88,7 @@ Select a saved profile, then Connect. The application queries firmware identity 
 
 For TCP, choose TCP and supply the controller's configured host and port; the serial startup delay does not apply. Do not use an arbitrary IP or COM port. A timeout or rejection closes the connection; check the endpoint, baud and whether another program owns the port. No reset, unlock or retry command is sent automatically. Profiles are locked against editing/switching while connecting or connected; disconnect first. Read operations are serialized, and Disconnect can cancel an outstanding read.
 
-Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. The read-only adapter supports only $I, ?, and the explicit $$ query. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Hardware motion, firing, homing, arbitrary console commands and job streaming are not implemented or qualified.
+Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. Diagnostic buttons issue read-only queries. Console now supports explicit queries and opt-in setting/G-code writes. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Guided motion/fire/homing and job streaming are not implemented or qualified.
 
 Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
 
@@ -88,7 +100,7 @@ For a saved Serial profile, choose USB COM for this connection in the Laser pane
 
 Connection check queries firmware settings ($$), parser modes ($G), then status (?). The report compares profile S maximum with $30, laser mode $32, status-report units $13, G-code units/distance/feed/spindle modes, controller state, reported S, and travel vs bed size. Match, Attention and Unknown describe individual comparisons, not permission or readiness to cut. Missing/invalid numeric facts stay unknown. G21 program units and $13 status units are separate facts. Position readouts do not prove homing, usable area, work offsets or origin.
 
-The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Physical jogging, firing and jobs remain unavailable in this build.
+The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Guided physical Move/fire/job controls remain unavailable; the manual Console is separate.
 
 ## Testing a copy on another Windows computer
 
@@ -100,11 +112,11 @@ Save connection log in Laser exports the latest connection attempt as a text sna
 
 Connect a Simulator profile, then select Move. Set distance and feed, then use X/Y buttons to rehearse movement inside the configured bed. Simulated +Y is up. Pulse power and duration rehearse a bounded pulse, limited to 5% and 500 ms; Stop ends it early. The timer turns simulated power off automatically. Read status reports the same simulated position/S value. The transcript holds the latest rehearsal commands; these never enter a serial/TCP transport. Disconnect ends the pulse and disables manual controls.
 
-This is a control rehearsal, not physical execution or a burn prediction. Jog positions update instantly; acceleration and real controller timing are not modeled. Physical jogging, firing, homing and first cuts remain unavailable. Serial/TCP connections support read-only diagnostics only.
+This is a control rehearsal, not physical execution or a burn prediction. Jog positions update instantly; acceleration and real controller timing are not modeled. Guided physical Move/fire/homing and job streaming remain unavailable. The advanced Console can send physical state-changing commands separately.
 
 ## Air assist
 
-Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Cut-plan segments carry the requested state; travel segments do not. The device profile records whether its controller has a configured air-assist output. Choose M8 or M7 in Devices for the wired air-assist output (M8 is the default for existing profiles). GRBL export emits the selected command for air on and M9 for off and rejects enabled air requests when the profile does not support them. The app sends no air commands to a device.
+Each layer has an Air assist on/off checkbox. The state is saved and follows its objects when the layer is reordered. Cut-plan segments carry the requested state; travel segments do not. The device profile records whether its controller has a configured air-assist output. Choose M8 or M7 in Devices for the wired air-assist output (M8 is the default for existing profiles). GRBL export emits the selected command for air on and M9 for off and rejects enabled air requests when the profile does not support them. The layer UI does not actuate air; enabled manual Console commands can do so.
 
 ## Trace an image
 
@@ -186,7 +198,7 @@ Start/Pause/Stop control only offline playback, even while a controller monitor 
 
 ## Files and SVG
 
-Save G-code creates an offline GRBL 1.1 laser-mode file from enabled layers (or Cut selected graphics). Select the intended device profile first. The exporter uses its bed dimensions, corner origin, S-value maximum and configured air-output capability; it supports only the GRBL family for now. Bottom origins reflect Y and right origins reflect X around that bed. Set the controller work zero to the chosen bed corner and match firmware $30 to the S-value maximum. Firmware must already have $32=1; export never changes firmware settings. Files use millimetres, absolute work coordinates, units-per-minute feed, M4 dynamic power, explicit S0 travel, optional M8/M7 air, and final M5/M9. Feed-controlled off spans retain raster overscan speed. It adds an initial laser-off rapid to the plan start, but does not home or return home. Bounds, continuity, finite feeds/powers and nonempty plans are validated. Physical execution and controller-specific qualification remain unavailable. The app does not run or transmit saved programs.
+Save G-code creates an offline GRBL 1.1 laser-mode file from enabled layers (or Cut selected graphics). Select the intended device profile first. The exporter uses its bed dimensions, corner origin, S-value maximum and configured air-output capability; it supports only the GRBL family for now. Bottom origins reflect Y and right origins reflect X around that bed. Set the controller work zero to the chosen bed corner and match firmware $30 to the S-value maximum. Firmware must already have $32=1; export never changes firmware settings. Files use millimetres, absolute work coordinates, units-per-minute feed, M4 dynamic power, explicit S0 travel, optional M8/M7 air, and final M5/M9. Feed-controlled off spans retain raster overscan speed. It adds an initial laser-off rapid to the plan start, but does not home or return home. Bounds, continuity, finite feeds/powers and nonempty plans are validated. The app does not run or transmit saved programs. Manual Console lines are separate; physical/controller-specific qualification remains unfinished.
 
 New opens a document tab. Save / Ctrl+S persists .lcraft; Save as creates another file. A tab dot/title asterisk marks unsaved work. File / Close project saves modified work first; canceling save keeps it open. Closing the entire window asks before discarding changes. A .lcraft path can also be supplied as a startup argument.
 
@@ -204,4 +216,4 @@ Try samples/raster-engraving.lcraft for a working mixed raster/vector preview, s
 
 Window / Light / dark switches the persisted theme. Help is copied from docs/help/Help.md at build time. LaserCraft's original source is MIT-licensed; third-party packages retain their own licenses. No LightBurn source or protected assets are used.
 
-Full parity remains unfinished: native Bézier editing, text, advanced node operations, curve-fitted and centerline tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console is currently a read-only log; arbitrary command entry and macros remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.
+Full parity remains unfinished: native Bézier editing, advanced text/shaping, advanced node operations, curve-fitted and centerline tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and physical job streaming remain planned. Console supports single-line queries and explicitly enabled writes; macros and program streaming remain planned. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.

@@ -33,7 +33,7 @@ public sealed partial class MainWindow
         pulseButton = Button("Simulate pulse", () => ManualAction(sim => { sim.StartPulse((double)(pulsePower.Value ?? 1), (int)(pulseDuration.Value ?? 100)); manualClock.Restart(); lastManualTime = TimeSpan.Zero; manualTimer.Start(); }));
         stopPulseButton = Button("Stop simulated pulse", () => ManualAction(sim => { sim.Stop(); manualTimer.Stop(); })); actions.Children.Add(pulseButton); actions.Children.Add(stopPulseButton); panel.Children.Add(actions);
         panel.Children.Add(manualStatus); panel.Children.Add(Label("Rehearsal command transcript · no hardware writes")); panel.Children.Add(manualTranscript);
-        panel.Children.Add(Label("This is not a live laser test. Physical jogging, firing and job streaming remain unavailable. Rehearsal pulses are limited to 5% / 500 ms; they do not model burn depth or controller timing."));
+        panel.Children.Add(Label("This is not a live laser test. Guided physical Move/fire and job streaming controls remain unavailable; advanced Console commands are separate. Rehearsal pulses are limited to 5% / 500 ms; they do not model burn depth or controller timing."));
         manualTimer.Tick += (_, _) =>
         {
             var sim = monitor?.Simulation; if (sim is null) { manualTimer.Stop(); UpdateManualControls(); return; }
@@ -46,7 +46,7 @@ public sealed partial class MainWindow
     {
         try
         {
-            var sim = monitor?.Simulation ?? throw new InvalidDataException("Connect a Simulator profile to rehearse controls. Physical devices remain read-only.");
+            var sim = monitor?.Simulation ?? throw new InvalidDataException("Connect a Simulator profile to rehearse controls. Physical Move controls are unavailable; the advanced Console is separate.");
             action(sim); UpdateManualControls();
         }
         catch (InvalidDataException ex) { status.Text = ex.Message; }
@@ -57,7 +57,7 @@ public sealed partial class MainWindow
         foreach (var button in jogButtons) button.IsEnabled = sim is not null && !sim.IsPulsing;
         if (pulseButton is not null) pulseButton.IsEnabled = sim is not null && !sim.IsPulsing;
         if (stopPulseButton is not null) stopPulseButton.IsEnabled = sim is not null;
-        if (sim is null) { manualTimer.Stop(); manualStatus.Text = "No manual simulator connected. Serial/TCP connections are read-only."; manualTranscript.Text = ""; return; }
+        if (sim is null) { manualTimer.Stop(); manualStatus.Text = "No manual simulator connected. Physical Move controls are unavailable."; manualTranscript.Text = ""; return; }
         manualStatus.Text = FormattableString.Invariant($"SIMULATED X {sim.Position.X:0.###} · Y {sim.Position.Y:0.###} · S {sim.SValue} · remaining {sim.RemainingPulseSeconds * 1000:0} ms");
         manualTranscript.Text = string.Join(Environment.NewLine, sim.Commands.TakeLast(12));
     }
