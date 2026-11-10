@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.22 - guided GRBL control qualification
+## Current milestone 0.23 - material presets
+
+Enabled Material Library with named/annotated typed recipes, optional thickness, capture from applied layer settings, replacement, confirmed deletion and undoable application. Target layer identity, output/visibility and artwork remain intact. Local versioned persistence validates before save and retains one .bak; failed load blocks writes. No factory recipes or automatic machine commands.
+
+363 tests pass (351 unit, 12 integration), covering settings/type preservation, output/history, raster recipes, malformed/oversized data, duplicate IDs, limits, file round-trip and backup. See [validation](../testing/milestone-23.md). Import/export, categories, device binding and automated material-test grids remain planned. Hardware qualification remains pending the user USB test.
+
+## Milestone 0.22 - guided GRBL control qualification
 
 Added separate per-connection motion/firing permissions, bounded relative X/Y jogs with M5 first, raw-byte jog cancellation, laser-off and short controller-dwell pulse batches. Fresh Idle and reported power/laser-mode settings gate pulse tests; uncertainty requires reconnect without retries. Console/manual exchanges share one owning gate. Serial/TCP encoding preserves 0x85. Hardware emergency control, homing and job streaming remain incomplete.
 

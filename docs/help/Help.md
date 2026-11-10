@@ -1,6 +1,16 @@
 # LaserCraft Help
 
-Version 0.22 - guided GRBL control tests
+Version 0.23 - material presets
+
+## Material Library
+
+Open Material Library beside Laser/Help. First apply your edits in Cuts / Layers, then enter a preset name, optional thickness (0 means unspecified) and notes such as laser model/material. Save layer as new captures the active layer's applied settings: speed, power, Line/Fill/Image mode, passes, air assist, interval and image processing. Unapplied inspector fields are not captured. Presets contain no artwork, machine endpoint, S maximum, homing or position settings. No factory recipes are supplied; qualify your own settings on your machine.
+
+Select a preset to review its type/settings and edit its name, thickness or notes. Replace selected saves the entered metadata and the current active layer's settings under the selected preset's identity. It replaces settings as well as metadata. Save layer as new creates a separate preset. Duplicate names are allowed. Delete selected asks for confirmation and leaves projects unchanged. Library changes are saved immediately and are separate from project Undo.
+
+Choose the target row in Cuts / Layers, return to the library and click Apply to active layer. Image recipes require an Image layer; vector recipes require a Vector layer. Application changes process settings but preserves the target name/color, output switch, visibility, layer position and artwork associations. It is one project Undo step. Thickness/notes are reference metadata and do not calculate power, focus or passes. Recipes use percentages and are not automatically calibrated for another laser.
+
+The local, versioned materials.json is stored under LocalAppData/LaserCraft, separately from projects and portable binaries. Previous contents are retained as materials.json.bak on each successful replacement; this is one previous revision, not full history. Limits are 500 presets and 2 MB, names 128 characters, notes 2000 characters and optional thickness >0–1000 mm. A malformed/unreadable library disables saving instead of overwriting the original; preserve/repair the file or backup and restart. Import/export, search/categories, per-device binding and automated material-test grids remain planned. Applying/saving recipes sends no laser commands.
 
 ## Physical GRBL Move and firing tests
 
