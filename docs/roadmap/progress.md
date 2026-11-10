@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.20 - artwork groups
+## Current milestone 0.21 - drag-box selection
+
+Added directional selection boxes from empty canvas: containment left-to-right, bounds overlap right-to-left, Ctrl additive and Alt individual-member selection. Groups include hidden companions with explicit selection counts. Selection uses stored bounds rather than exact contour intersection and leaves document/history unchanged.
+
+318 tests pass (307 unit, 11 integration). Desktop verified selecting three sample rectangles, enclosing only two, and crossing part of the third; the sample remained clean. See [validation](../testing/milestone-21.md). Physical USB and guided hardware execution qualification remain pending.
+
+## Milestone 0.20 - artwork groups
 
 Added flat Group/Ungroup, whole-group selection/movement, individual Alt selection, hidden-member reporting, group-aware alignment/distribution and independent copy/array group identities. Native saves and geometry/text regeneration preserve membership. Groups retain independent layer settings and do not change burn order. Nested groups, names and locking remain planned.
 

@@ -26,6 +26,9 @@ public sealed class DesignCanvas : Control
     public event Action<string>? Notice;
     public string NodeDescription => CurrentNode && activeNode is { } n ? $" · contour {n.Contour + 1}, node {n.Vertex + 1} / {n.Owner.Path!.Contours[n.Contour].Points.Length}" : "";
     private Point? start;
+    private Point? boxStart, boxEnd;
+    private bool boxAdditive, boxIndividual;
+    private HashSet<Guid> boxPrevious = [];
     private DesignShape? original, preview;
     private readonly List<PointMm> pathDraft = [];
     private PointMm? draftCursor;
@@ -68,7 +71,7 @@ public sealed class DesignCanvas : Control
         Selection.IntersectWith(valid); InvalidateVisual(); Changed?.Invoke();
     }
     public void Fit() { zoom = 1; pan = default; InvalidateVisual(); }
-    public void CancelDrawing() { pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; activeNode = null; InvalidateVisual(); }
+    public void CancelDrawing() { boxStart = boxEnd = null; boxPrevious.Clear(); pathDraft.Clear(); draftCursor = null; preview = null; original = null; start = null; nodeContour = nodeVertex = -1; activeNode = null; InvalidateVisual(); }
     private void FinishPath(bool closed)
     {
         if (pathDraft.Count < (closed ? 3 : 2)) return;
@@ -113,6 +116,11 @@ public sealed class DesignCanvas : Control
                     if (group.Count() < 2) continue;
                     var b = ShapeEditing.Bounds(group); var delta = original is not null && Selection.Contains(original.Id) ? moveDelta : default;
                     ctx.DrawRectangle(null, new Pen(Brushes.Cyan, 1, DashStyle.Dash), new Rect(o.X + (b.X + delta.X) * scale, o.Y + (b.Y + delta.Y) * scale, b.Width * scale, b.Height * scale).Inflate(7));
+                }
+                if (boxStart is Point ba && boxEnd is Point bz && Math.Sqrt(Math.Pow(bz.X - ba.X, 2) + Math.Pow(bz.Y - ba.Y, 2)) * scale >= 3)
+                {
+                    var crossing = bz.X < ba.X; var color = crossing ? Brushes.LimeGreen : Brushes.Cyan;
+                    ctx.DrawRectangle(null, new Pen(color, 1, crossing ? DashStyle.Dash : null), new Rect(o.X + Math.Min(ba.X, bz.X) * scale, o.Y + Math.Min(ba.Y, bz.Y) * scale, Math.Abs(bz.X - ba.X) * scale, Math.Abs(bz.Y - ba.Y) * scale));
                 }
                 if (preview is not null && !d.Shapes.Any(s => s.Id == preview.Id)) Draw(preview);
                 for (int i = 1; i < pathDraft.Count; i++) ctx.DrawLine(new Pen(Brushes.Cyan, 1.5), Screen(pathDraft[i - 1]), Screen(pathDraft[i]));
@@ -232,6 +240,11 @@ public sealed class DesignCanvas : Control
         if (Tool == "Select")
         {
             original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 5 / Scale));
+            if (original is null)
+            {
+                boxStart = boxEnd = World(e.GetPosition(this)); boxPrevious = Selection.ToHashSet();
+                boxAdditive = e.KeyModifiers.HasFlag(KeyModifiers.Control); boxIndividual = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+            }
             var nextSelection = ShapeGroups.Select(History.Document, Selection, original?.Id, e.KeyModifiers.HasFlag(KeyModifiers.Control), e.KeyModifiers.HasFlag(KeyModifiers.Alt));
             Selection.Clear(); Selection.UnionWith(nextSelection);
             if (original is not null && !Selection.Contains(original.Id)) original = null;
@@ -244,6 +257,7 @@ public sealed class DesignCanvas : Control
     {
         if (panStart is Point last) { var current = e.GetPosition(this); pan += current - last; panStart = current; InvalidateVisual(); return; }
         if (Tool == "Lines") { var cursor = Snapped(World(e.GetPosition(this))); draftCursor = new(cursor.X, cursor.Y); InvalidateVisual(); return; }
+        if (boxStart is not null) { boxEnd = World(e.GetPosition(this)); InvalidateVisual(); return; }
         if (start is not Point a) return;
         var p = Snapped(World(e.GetPosition(this)));
         if (original is not null && nodeVertex >= 0)
@@ -260,7 +274,17 @@ public sealed class DesignCanvas : Control
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         if (Tool == "Lines") { panStart = null; e.Pointer.Capture(null); return; }
-        if (nodeVertex >= 0 && preview is not null)
+        if (boxStart is Point ba)
+        {
+            var bz = World(e.GetPosition(this));
+            if (Math.Sqrt(Math.Pow(bz.X - ba.X, 2) + Math.Pow(bz.Y - ba.Y, 2)) * Scale >= 3)
+            {
+                var selected = BoxSelection.Select(History.Document, boxPrevious, new(Math.Min(ba.X, bz.X), Math.Min(ba.Y, bz.Y), Math.Abs(bz.X - ba.X), Math.Abs(bz.Y - ba.Y)), bz.X < ba.X, boxAdditive, boxIndividual);
+                Selection.Clear(); Selection.UnionWith(selected);
+            }
+            boxStart = boxEnd = null; boxPrevious.Clear();
+        }
+        else if (nodeVertex >= 0 && preview is not null)
         {
             try { if (preview != original) History.Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); activeNode = (preview, nodeContour, nodeVertex); } catch (InvalidDataException) { activeNode = null; /* Invalid node moves preserve the original. */ }
         }
@@ -276,7 +300,7 @@ public sealed class DesignCanvas : Control
         }
         preview = null; original = null; nodeContour = nodeVertex = -1; moveDelta = default; start = null; panStart = null; e.Pointer.Capture(null); Refresh();
     }
-    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e) { start = null; panStart = null; original = null; preview = null; nodeContour = nodeVertex = -1; InvalidateVisual(); }
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e) { boxStart = boxEnd = null; boxPrevious.Clear(); start = null; panStart = null; original = null; preview = null; nodeContour = nodeVertex = -1; InvalidateVisual(); }
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e) { zoom = Math.Clamp(zoom * (e.Delta.Y > 0 ? 1.12 : 1 / 1.12), .25, 8); InvalidateVisual(); e.Handled = true; }
     protected override void OnKeyDown(KeyEventArgs e)
     {

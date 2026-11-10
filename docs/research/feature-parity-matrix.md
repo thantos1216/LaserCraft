@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.20
+# Feature parity matrix - working baseline 0.21
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -11,7 +11,7 @@
 | Workspace and keyboard presets | R | Planned | Round-trip user settings |
 | Rectangles and ellipses | D p63-67 | Implemented; rectangle UI checked | Shape dimensions round-trip |
 | Lines / Bezier curves | D p63; SVG 2 path semantics | Partial: polylines/compound contours; cubic/quadratic SVG curves imported as tolerance-controlled polylines, tested | Native Bézier control points and arcs |
-| Selection / translation / sizing | D p63-67 | Partial: Ctrl-click multi-select, collective movement and numeric scaling | Drag handles, rotation and richer hit testing |
+| Selection / translation / sizing | D p63-67 | Partial: Ctrl-click and directional bounds-box selection, group/individual override, collective movement and numeric scaling | Drag handles, rotation and richer hit testing |
 | Rotate / mirror / skew | R | Partial: mirror and collective vector rotation, tested; rectangles/ellipses become polylines | Raster rotation, skew and native curve transforms |
 | Node editing and curve conversion | R | Partial: node editing, open/split at node, shape conversion, separate/combine, nearest-endpoint joining with midpoint/bridge preview and closing; tested | Manual endpoint pairing, multi-path joining, curve handles and Bézier conversion |
 | Grid / snap / guides / rulers | R | Partial: grid, 1 mm snap, rulers | Configurable units and guides |

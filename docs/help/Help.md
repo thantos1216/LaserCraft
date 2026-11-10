@@ -1,6 +1,12 @@
 # LaserCraft Help
 
-Version 0.20 - artwork groups
+Version 0.21 - drag-box selection
+
+## Select artwork with a box
+
+In Select mode, drag from empty canvas space. Drag left-to-right for a cyan window: only fully enclosed object/group bounds are selected. Drag right-to-left for a green dashed crossing box: visible object bounds touching or overlapping the box are selected. This uses stored rectangular bounds, so empty space inside a path or ellipse frame can match. Images use their full frame, including transparent pixels.
+
+Hold Ctrl when starting to add matches. Hold Alt to select individual visible group members. Otherwise a window must enclose the whole group, including hidden companions; crossing a visible member selects its whole group. Hidden standalone objects are excluded. Check the hidden-member selection count before edits. Selection applies on release after a minimum 3-pixel drag, independently of grid snapping, without an Undo entry. Escape cancels and clears selection. Start over artwork to move/select it instead.
 
 ## Group artwork
 
