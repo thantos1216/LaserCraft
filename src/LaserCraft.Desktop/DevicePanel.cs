@@ -61,7 +61,7 @@ public sealed partial class MainWindow
     private void ReloadDeviceChoices(int index = 0) { deviceChoice.ItemsSource = profiles.Select(p => $"{p.Name} · {p.Connection}").ToArray(); deviceChoice.SelectedIndex = Math.Clamp(index, 0, profiles.Count - 1); }
     private async Task ConnectDevice()
     {
-        if (connecting || disconnecting || monitor is not null) return; manualConsole.IsChecked = false; consoleCommand.Text = ""; commandHistory.Clear(); historyIndex = 0; connecting = true; connectionAttempt = CancellationTokenSource.CreateLinkedTokenSource(connectionLifetime.Token); var attempt = connectionAttempt; var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; UpdateConnectionControls();
+        if (connecting || disconnecting || monitor is not null) return; manualConsole.IsChecked = false; physicalControl.IsChecked = false; physicalFire.IsChecked = false; consoleCommand.Text = ""; manualTranscript.Text = ""; commandHistory.Clear(); historyIndex = 0; connecting = true; connectionAttempt = CancellationTokenSource.CreateLinkedTokenSource(connectionLifetime.Token); var attempt = connectionAttempt; var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)]; UpdateConnectionControls();
         connectionStatus.Text = "Connecting to " + profile.Name + "…";
         var journal = connectionJournal = new ConnectionJournal();
         journal.Add("INFO", "LaserCraft " + typeof(MainWindow).Assembly.GetName().Version + "; connection attempt; profile " + profile.Name);
@@ -85,7 +85,7 @@ public sealed partial class MainWindow
     }
     private async Task DisconnectDevice()
     {
-        if (disconnecting) return; manualConsole.IsChecked = false; disconnecting = true; UpdateConnectionControls();
+        if (disconnecting) return; manualConsole.IsChecked = false; physicalControl.IsChecked = false; physicalFire.IsChecked = false; disconnecting = true; UpdateConnectionControls();
         try { if (connectionAttempt is not null) await connectionAttempt.CancelAsync(); if (monitor is not null) { var previous = monitor; monitor = null; await previous.DisposeAsync(); } connectedProfile = null; connectionStatus.Text = "Device disconnected"; }
         finally { disconnecting = false; UpdateConnectionControls(); }
     }

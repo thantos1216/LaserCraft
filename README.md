@@ -1,5 +1,7 @@
 # LaserCraft
 
+Version 0.22 adds separately opted-in guided GRBL 1.1 X/Y jogging, jog cancel, laser-off and short pulse tests. Protocol/failure handling is tested against scripted and local TCP peers; physical USB and optical output remain unverified. See [supervised USB/control testing](docs/help/USB-CONNECTION-TEST.md). Program streaming, hardware emergency control and full production qualification remain incomplete.
+
 Original Windows laser design and engraving studio, under active development.
 
 The current milestone has a compact laser-design workspace, rectangle/ellipse multi-object editing, editable ordered vector/image layers, line/fill preview and offline playback, native save/load, restricted SVG import/export, themes and integrated help. Full functional parity and integrated hardware job execution remain unfinished; the advanced console supports explicitly enabled manual commands.

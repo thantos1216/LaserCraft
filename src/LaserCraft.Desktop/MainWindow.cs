@@ -75,7 +75,7 @@ public sealed partial class MainWindow : Window
     private void RefreshStatus()
     {
         var c = Current.Canvas; var d = c.History.Document;
-        status.Text = $"{d.Name}  ·  {d.Width:0} × {d.Height:0} mm  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
+        status.Text = $"{d.Name}  ·  {d.Width:0} × {d.Height:0} mm  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : physicalControl.IsChecked == true ? "Physical control enabled" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
     }
     private void RefreshLayer() { var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; speed.Value = (decimal)l.Speed; power.Value = (decimal)l.Power; passes.Value = l.Passes; interval.Value = (decimal)l.Interval; mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible; }
     private void ApplyGeometry()

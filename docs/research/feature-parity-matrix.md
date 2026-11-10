@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.21
+# Feature parity matrix - working baseline 0.22
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -38,12 +38,12 @@
 | Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Planned | Serializable presets and calibration evidence |
-| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics and explicitly enabled single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | Physical USB qualification, startup/reset variants and job queue |
+| GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | Physical USB qualification, startup/reset variants and job queue |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
 | G-code generation | R | Partial: offline GRBL 1.1 export, bounds/units/power-off/origin/air tests | Physical qualification, other dialects |
 | Streaming / pause / resume / stop | R | Planned | Queue state machine and disconnect tests |
-| Device setup / machine profiles | R | Implemented profile configuration and persistence, read-only monitor | Device-specific origin/power/air validation |
+| Device setup / machine profiles | R | Implemented profile configuration/persistence, query monitor and opt-in guided GRBL controls | Device-specific origin/power/air validation |
 | Camera calibration / overlay | D p1705 | Planned | Measured calibration error |
 | Print-and-cut / fiducials | R | Planned | Transform accuracy and recovery |
 | Rotary calibration / compensation | R | Planned | Device-specific simulated fixtures |
@@ -56,11 +56,11 @@ Before implementing each planned family, add a requirement with inputs, outputs,
 
 ## Device-control audit 0.14
 
-See [observed LightBurn 2.2 device/Move controls](lightburn-22-device-controls.md). LaserCraft adds always-automatic trace updates, simulator X/Y/pulse rehearsal and offline M7/M8 selection. Live motion/fire/streaming, Z/U, saved/work/finish positions, advanced transfer/buffer/G-code options and full parity remain planned. Simulator verification does not establish physical controller behavior.
+See [observed LightBurn 2.2 device/Move controls](lightburn-22-device-controls.md). LaserCraft adds always-automatic trace updates, simulator X/Y/pulse rehearsal and offline M7/M8 selection. Guided GRBL X/Y/pulse/cancel/off is implemented with scripted/TCP tests; physical verification remains pending. Streaming, Z/U, saved/work/finish positions, advanced transfer/buffer/G-code options and full parity remain planned. Simulator verification does not establish physical controller behavior.
 
 ## USB diagnostics 0.15
 
-Per-connection detected COM selection and a 430 × 430 Attzr USB draft are implemented. Source-preserving $G modal state and read-only settings/status comparisons are tested. Matches do not establish execution readiness, homing or hardware compatibility. USB-driver and physical controller testing remain unavailable; live scheduling and machine execution remain planned.
+Per-connection detected COM selection and a 430 × 430 Attzr USB draft are implemented. Source-preserving $G modal state and read-only settings/status comparisons are tested. Matches do not establish execution readiness, homing or hardware compatibility. USB-driver and physical controller testing remain unavailable; guided GRBL jog/pulse scheduling is tested against a local peer; physical machine execution remains unverified.
 
 ## Connection support 0.16
 
@@ -68,4 +68,4 @@ Connection journal export and Windows x64 self-contained packaging are implement
 
 ## Console 0.19
 
-Console now has a single-line command box and Submit/Enter. Default query mode and explicit per-connection setting/G-code permission, raw replies, history, timeout and reconnect-after-uncertainty are implemented and tested with simulator/TCP loopback. Raw commands can move/fire or persist settings; physical USB behavior remains unverified. This does not add firmware-image flashing, guided motion/fire, emergency controls, macros or job streaming.
+Console now has a single-line command box and Submit/Enter. Default query mode and explicit per-connection setting/G-code permission, raw replies, history, timeout and reconnect-after-uncertainty are implemented and tested with simulator/TCP loopback. Raw commands can move/fire or persist settings; physical USB behavior remains unverified. 0.22 adds separate guided GRBL motion/pulse controls. Firmware-image flashing, hardware emergency controls, macros and job streaming remain unavailable.

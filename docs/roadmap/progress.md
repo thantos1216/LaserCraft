@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.21 - drag-box selection
+## Current milestone 0.22 - guided GRBL control qualification
+
+Added separate per-connection motion/firing permissions, bounded relative X/Y jogs with M5 first, raw-byte jog cancellation, laser-off and short controller-dwell pulse batches. Fresh Idle and reported power/laser-mode settings gate pulse tests; uncertainty requires reconnect without retries. Console/manual exchanges share one owning gate. Serial/TCP encoding preserves 0x85. Hardware emergency control, homing and job streaming remain incomplete.
+
+353 tests pass (341 unit, 12 integration), including fragmented real TCP loopback. Desktop checked disconnected defaults, simulator 1 mm X motion, pulse automatic off and disconnect disable. No physical endpoint was opened or laser commands sent. Physical USB, actual motion and optical pulse behavior remain unverified. See [validation](../testing/milestone-22.md).
+
+## Milestone 0.21 - drag-box selection
 
 Added directional selection boxes from empty canvas: containment left-to-right, bounds overlap right-to-left, Ctrl additive and Alt individual-member selection. Groups include hidden companions with explicit selection counts. Selection uses stored bounds rather than exact contour intersection and leaves document/history unchanged.
 

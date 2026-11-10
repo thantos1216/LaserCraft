@@ -44,7 +44,7 @@ public sealed record GrblStatus(string State, double? X, double? Y, double? Z, s
         return result with { Feed = fs?[0] ?? feed?[0], Spindle = fs?[1], PlannerAvailable = buffers is null ? null : (int)buffers[0], ReceiveAvailable = buffers is null ? null : (int)buffers[1], Pins = Field("Pn"), Accessories = Field("A") };
     }
 }
-public sealed class GrblMonitor : IAsyncDisposable
+public sealed partial class GrblMonitor : IAsyncDisposable
 {
     private readonly IGrblTransport transport;
     private readonly SemaphoreSlim gate = new(1);
@@ -55,6 +55,7 @@ public sealed class GrblMonitor : IAsyncDisposable
     {
         if (Volatile.Read(ref consoleUncertain) != 0) throw new IOException("The console session requires reconnection after an interrupted exchange or alarm. Disconnect and reconnect before further commands; reconnecting does not stop controller motion.");
     }
+    public bool RequiresReconnect => Volatile.Read(ref consoleUncertain) != 0;
     public string Identity { get; private set; } = "";
     public ManualControlSimulation? Simulation { get; }
     private GrblMonitor(IGrblTransport transport, ConnectionJournal? journal)
@@ -151,22 +152,26 @@ public sealed class GrblMonitor : IAsyncDisposable
         {
             if (Volatile.Read(ref disposalStarted) != 0) throw new OperationCanceledException("Connection is closing.", lifetime.Token);
             RequireSynchronizedConsole(); timeout.Token.ThrowIfCancellationRequested();
-            // Once a write is attempted, an interrupted read cannot prove whether it executed.
-            Volatile.Write(ref consoleUncertain, 1); await transport.WriteAsync(command.Wire, timeout.Token);
-            var lines = new List<string>();
-            for (int i = 0; i < 256; i++)
-            {
-                var line = await transport.ReadLineAsync(timeout.Token); if (line.Length > 2048) throw new InvalidDataException("Console response line exceeds 2048 characters."); lines.Add(line);
-                if (line.StartsWith("Grbl", StringComparison.OrdinalIgnoreCase)) throw new IOException("Controller restarted during the console exchange.");
-                GrblConsoleOutcome? outcome = line == "ok" ? GrblConsoleOutcome.Acknowledged : line.StartsWith("error:", StringComparison.Ordinal) ? GrblConsoleOutcome.Rejected : line.StartsWith("ALARM:", StringComparison.Ordinal) ? GrblConsoleOutcome.Alarm : null;
-                if (command.Text == "?" && line.StartsWith('<')) { GrblStatus.Parse(line); outcome = GrblConsoleOutcome.Status; }
-                if (outcome is null) continue;
-                if (outcome == GrblConsoleOutcome.Acknowledged && command.Text == "?") continue;
-                Volatile.Write(ref consoleUncertain, outcome == GrblConsoleOutcome.Alarm ? 1 : 0); return new(outcome.Value, lines.AsReadOnly());
-            }
-            throw new InvalidDataException("Console response exceeded 256 lines without a terminal response.");
+            return await ExchangeConsoleCore(command, timeout.Token);
         }
         finally { gate.Release(); }
+    }
+    private async Task<GrblConsoleResult> ExchangeConsoleCore(GrblConsoleCommand command, CancellationToken token)
+    {
+        // Once a write is attempted, an interrupted read cannot prove whether it executed.
+        Volatile.Write(ref consoleUncertain, 1); await transport.WriteAsync(command.Wire, token);
+        var lines = new List<string>();
+        for (int i = 0; i < 256; i++)
+        {
+            var line = await transport.ReadLineAsync(token); if (line.Length > 2048) throw new InvalidDataException("Console response line exceeds 2048 characters."); lines.Add(line);
+            if (line.StartsWith("Grbl", StringComparison.OrdinalIgnoreCase)) throw new IOException("Controller restarted during the console exchange.");
+            GrblConsoleOutcome? outcome = line == "ok" ? GrblConsoleOutcome.Acknowledged : line.StartsWith("error:", StringComparison.Ordinal) ? GrblConsoleOutcome.Rejected : line.StartsWith("ALARM:", StringComparison.Ordinal) ? GrblConsoleOutcome.Alarm : null;
+            if (command.Text == "?" && line.StartsWith('<')) { GrblStatus.Parse(line); outcome = GrblConsoleOutcome.Status; }
+            if (outcome is null) continue;
+            if (outcome == GrblConsoleOutcome.Acknowledged && command.Text == "?") continue;
+            Volatile.Write(ref consoleUncertain, outcome == GrblConsoleOutcome.Alarm ? 1 : 0); return new(outcome.Value, lines.AsReadOnly());
+        }
+        throw new InvalidDataException("Console response exceeded 256 lines without a terminal response.");
     }
     public async ValueTask DisposeAsync()
     {

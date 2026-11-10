@@ -35,7 +35,7 @@ internal sealed class SerialGrblTransport : IGrblTransport
     private readonly SerialPort port;
     public SerialGrblTransport(DeviceProfile profile)
     {
-        port = new(profile.SerialPort, profile.BaudRate, Parity.None, 8, StopBits.One) { Handshake = Handshake.None, DtrEnable = profile.Dtr, RtsEnable = profile.Rts, ReadTimeout = 200, WriteTimeout = 1000, Encoding = Encoding.ASCII };
+        port = new(profile.SerialPort, profile.BaudRate, Parity.None, 8, StopBits.One) { Handshake = Handshake.None, DtrEnable = profile.Dtr, RtsEnable = profile.Rts, ReadTimeout = 200, WriteTimeout = 1000, Encoding = Encoding.Latin1 };
         try { port.Open(); } catch { port.Dispose(); throw; }
     }
     public async ValueTask WriteAsync(string command, CancellationToken cancellationToken) => await Task.Run(() => { cancellationToken.ThrowIfCancellationRequested(); try { port.Write(command); } catch (TimeoutException ex) { throw new IOException("Serial write timed out. Check the connection and baud rate.", ex); } }, cancellationToken);
@@ -61,7 +61,7 @@ internal sealed class TcpGrblTransport : IGrblTransport
         var client = new TcpClient(); using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken); timeout.CancelAfter(TimeSpan.FromSeconds(5));
         try { await client.ConnectAsync(profile.Host, profile.Port, timeout.Token); return new TcpGrblTransport(client); } catch { client.Dispose(); throw; }
     }
-    public async ValueTask WriteAsync(string command, CancellationToken cancellationToken) => await client.GetStream().WriteAsync(Encoding.ASCII.GetBytes(command), cancellationToken);
+    public async ValueTask WriteAsync(string command, CancellationToken cancellationToken) => await client.GetStream().WriteAsync(Encoding.Latin1.GetBytes(command), cancellationToken);
     public async ValueTask<string> ReadLineAsync(CancellationToken cancellationToken)
     {
         var line = new StringBuilder(); var buffer = new byte[1];

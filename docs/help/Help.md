@@ -1,6 +1,20 @@
 # LaserCraft Help
 
-Version 0.21 - drag-box selection
+Version 0.22 - guided GRBL control tests
+
+## Physical GRBL Move and firing tests
+
+Connect your GRBL 1.1 USB COM profile, then open Move. Connect still sends identity/status queries only. Enable physical GRBL control for this connection to use X/Y, Cancel jog and Laser off. Firing has a separate checkbox; both permissions reset on disconnect/new Connect and are not saved. Other firmware families remain console-only. Actual USB/controller operation is unverified; these controls are for supervised qualification.
+
+Start with 1 mm and 600 mm/min, with space from machine limits and laser protection/physical stop ready. Each click requires a fresh Idle status, sends M5 S0 to disable the laser, then one $J=G21 G91 axis-distance/feed command. Range: 0.001–10 mm per click, 60–3000 mm/min. Direction follows firmware, not canvas origin. No homing, work zero or software travel envelope is assumed; the 430 × 430 profile does not establish a safe position. Observe movement, use Read status and wait for Idle before the next test. Acknowledgement means accepted, not completed.
+
+Cancel jog sends GRBL realtime byte 0x85 without an acknowledgement. Read status to confirm Idle. Laser off queues M5 S0 and waits for acknowledgement. These buttons wait for any current exchange and are not emergency stops. Disconnect/closing the application does not stop hardware; use the physical stop/power switch when necessary.
+
+For a firing test, place suitable test material, enable the separate firing permission, start at 1% / 100 ms and choose Pulse test. Limit is 5% / 500 ms. The app requires fresh Idle, disables the laser, reads $$ and requires $32=1, $31=0 and $30 exactly matching the profile S maximum. It does not change these settings. Review settings/profile if rejected; do not assume Attzr factory values. Requested power is rounded down to integer S and zero is rejected.
+
+The controller receives one short write containing G1 G94 F60 M3 Svalue, G4 Pseconds and M5 S0 before the application waits for their three replies. The dwell is controller-side; it is nominal, not measured optical duration or a guarantee of automatic shutdown. A partial USB write, controller fault or rejected command can prevent off. There is no hardware watchdog. G1/G94 and F60 remain active afterward (F60 in current program units); units and distance mode are not changed. No automatic rearming/retry occurs. Interrupted/failed pulse exchanges require reconnect; check physical output first and save the connection log. This stage does not implement program streaming, homing or test-cut jobs.
+
+Protocol basis: [GRBL 1.1 jogging](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Jogging) and [laser mode](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Laser-Mode). No proprietary implementation is used.
 
 ## Select artwork with a box
 
@@ -28,7 +42,7 @@ One printable ASCII line of 1–79 characters is supported, with a newline appen
 
 The console uses one send/response exchange at a time, sharing the connection gate with diagnostics. It retains push messages until the terminal ok/error/alarm or requested status arrives. ok is acknowledgement, not proof of completed motion, safe positioning or verified settings. Use $$ readback after a setting write. Timeout is 1–120 seconds (default 10). A timeout, cancellation after attempted transmission, restart, malformed/oversized response or lost connection leaves the command outcome uncertain; no retry is performed, and reconnect is required. Disconnect does not cancel motion or turn off a laser. The offline Start/Pause/Stop controls and this console are not hardware emergency stops.
 
-The simulator accepts numeric settings $10, $13, $30, $31, $32, $130 and $131 in session memory, with simple range validation; $$ reads them back. $13 also changes its reported position units. These changes disappear on a new simulator connection and do not alter saved profiles. Other custom G-code returns error:20 rather than pretending to model hardware motion. Real GRBL serial/TCP commands are implemented but physical USB behavior is unverified. Guided motion/fire/job streaming and full production readiness remain unfinished.
+The simulator accepts numeric settings $10, $13, $30, $31, $32, $130 and $131 in session memory, with simple range validation; $$ reads them back. $13 also changes its reported position units. These changes disappear on a new simulator connection and do not alter saved profiles. Other custom G-code returns error:20 rather than pretending to model hardware motion. Real GRBL serial/TCP commands are implemented but physical USB behavior is unverified. Guided GRBL Move/pulse controls are described above; physical qualification, job streaming and full production readiness remain unfinished.
 
 ## Create and edit text
 
@@ -104,7 +118,7 @@ Select a saved profile, then Connect. The application queries firmware identity 
 
 For TCP, choose TCP and supply the controller's configured host and port; the serial startup delay does not apply. Do not use an arbitrary IP or COM port. A timeout or rejection closes the connection; check the endpoint, baud and whether another program owns the port. No reset, unlock or retry command is sent automatically. Profiles are locked against editing/switching while connecting or connected; disconnect first. Read operations are serialized, and Disconnect can cancel an outstanding read.
 
-Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. Diagnostic buttons issue read-only queries. Console now supports explicit queries and opt-in setting/G-code writes. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Guided motion/fire/homing and job streaming are not implemented or qualified.
+Status now includes feed, spindle/S, available planner/receive buffers, active pin flags and accessory flags when reported. Missing fields are not fabricated or retained from an earlier frame. Raw status goes to the Console log. Diagnostic buttons issue read-only queries. Console now supports explicit queries and opt-in setting/G-code writes. Start/Pause/Stop remain offline simulator controls even when a physical monitor is connected. Guided GRBL Move/pulse is opt-in in Move; homing and job streaming remain unimplemented, and hardware behavior is unqualified.
 
 Apply device bed explicitly changes the document dimensions to the selected profile. It does not move a machine. Origin and power range are stored for future job-coordinate/power mapping; the current design model uses a top-left origin. Device profile changes do not silently alter document geometry or cut settings.
 
@@ -116,7 +130,7 @@ For a saved Serial profile, choose USB COM for this connection in the Laser pane
 
 Connection check queries firmware settings ($$), parser modes ($G), then status (?). The report compares profile S maximum with $30, laser mode $32, status-report units $13, G-code units/distance/feed/spindle modes, controller state, reported S, and travel vs bed size. Match, Attention and Unknown describe individual comparisons, not permission or readiness to cut. Missing/invalid numeric facts stay unknown. G21 program units and $13 status units are separate facts. Position readouts do not prove homing, usable area, work offsets or origin.
 
-The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Guided physical Move/fire/job controls remain unavailable; the manual Console is separate.
+The report includes source responses, endpoint and UTC collection interval. These are sequential readings and may become stale; they are not a continuous or atomic machine state. No controller settings, modes or profile values are changed automatically. Cancelled, malformed or rejected queries disconnect the monitor rather than present a successful report. Guided GRBL Move/pulse tests require separate permissions in Move; job streaming remains unavailable.
 
 ## Testing a copy on another Windows computer
 
@@ -128,7 +142,7 @@ Save connection log in Laser exports the latest connection attempt as a text sna
 
 Connect a Simulator profile, then select Move. Set distance and feed, then use X/Y buttons to rehearse movement inside the configured bed. Simulated +Y is up. Pulse power and duration rehearse a bounded pulse, limited to 5% and 500 ms; Stop ends it early. The timer turns simulated power off automatically. Read status reports the same simulated position/S value. The transcript holds the latest rehearsal commands; these never enter a serial/TCP transport. Disconnect ends the pulse and disables manual controls.
 
-This is a control rehearsal, not physical execution or a burn prediction. Jog positions update instantly; acceleration and real controller timing are not modeled. Guided physical Move/fire/homing and job streaming remain unavailable. The advanced Console can send physical state-changing commands separately.
+This is a control rehearsal, not physical execution or a burn prediction. Jog positions update instantly; acceleration and real controller timing are not modeled. Guided GRBL Move/pulse is separate from rehearsal; homing and job streaming remain unavailable. The advanced Console can send physical state-changing commands separately.
 
 ## Air assist
 
