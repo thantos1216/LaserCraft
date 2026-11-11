@@ -1,13 +1,13 @@
 using System.Text.Json;
 namespace LaserCraft.Domain;
 
-public sealed record LaserLayerSettings(double Speed, double Power, CutMode Mode, int Passes, bool AirAssist, double Interval, LayerKind Kind, RasterSettings? Raster)
+public sealed record LaserLayerSettings(double Speed, double Power, CutMode Mode, int Passes, bool AirAssist, double Interval, LayerKind Kind, RasterSettings? Raster,PassOrderMode PassOrder=PassOrderMode.WholeLayer)
 {
-    public static LaserLayerSettings Capture(CutLayer layer) => new(layer.Speed, layer.Power, layer.Mode, layer.Passes, layer.AirAssist, layer.Interval, layer.Kind, layer.Raster);
+    public static LaserLayerSettings Capture(CutLayer layer) => new(layer.Speed, layer.Power, layer.Mode, layer.Passes, layer.AirAssist, layer.Interval, layer.Kind, layer.Raster,layer.PassOrder);
     public CutLayer Apply(CutLayer target)
     {
         if (target.Kind != Kind) throw new InvalidDataException("Image and vector presets require matching layer types.");
-        return target with { Speed = Speed, Power = Power, Mode = Mode, Passes = Passes, AirAssist = AirAssist, Interval = Interval, Raster = Raster };
+        return target with { Speed = Speed, Power = Power, Mode = Mode, Passes = Passes, AirAssist = AirAssist, Interval = Interval, Raster = Raster,PassOrder=PassOrder };
     }
     public void Validate() => (DesignDocument.Empty() with { Layers = [Apply(new("Preset", "#000000", Kind: Kind))] }).Validate();
 }

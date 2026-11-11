@@ -16,6 +16,7 @@ public sealed partial class MainWindow
     {
         var client=monitor;var profile=connectedProfile;if(client is null||profile is null||client.Simulation is not null||connecting||querying||disconnecting)return;
         if(!client.HomingConfirmed){status.Text="Use Home in this connection before document output.";return;}
+        if(!CommitLayerEdits())return;
         var placement=PlacementRequest;var session=Current;var document=session.Canvas.History.Document;var fingerprint=Snapshot(session);var scope=CurrentSimulationScope;var selected=cutSelected.IsChecked==true?session.Canvas.Selection.ToHashSet():null;
         ToolpathPlan plan; MachineTravel travel; querying=true;UpdateConnectionControls();
         try{plan=await Task.Run(()=>ToolpathPlanner.Build(document,selected,RasterImages.EngravingGrid,connectionLifetime.Token),connectionLifetime.Token);plan=JobFootprint.TrimInitialTravel(plan);_ = GrblExport.Write(plan,profile);travel=client.ResolveMachineTravel(profile);}
@@ -26,7 +27,7 @@ public sealed partial class MainWindow
         connectionJournal?.Add("INFO",$"Run {(frameOnly ? "frame" : "document")} request · {plan.Segments.Count} segments · range {profile.CoordinateRange} - placement {placement.Mode}/{placement.Anchor}");
         StopSimulation();querying=true;UpdateConnectionControls();jobStatus.Text="Physical job · preflight";
         var progress=new Progress<(int Sent,int Total)>(p=>{if(monitor!=client||!client.JobActive)return;jobProgress.Value=100d*p.Sent/p.Total;jobStatus.Text=$"Physical job · {p.Sent}/{p.Total} lines acknowledged · {client.JobControllerState} (acknowledgements are not motion completion)";});
-        try{if(!frameOnly && frameBeforeRun.IsChecked==true)await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,true,placement,circular);await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,frameOnly,placement,circular);jobProgress.Value=100;jobStatus.Text=frameOnly?"Laser-off frame acknowledged; controller reported Idle. Inspect placement before burning.":"Job acknowledged; controller reported Idle. Inspect physical result.";Log(jobStatus.Text);}
+        try{if(!frameOnly && frameBeforeRun.IsChecked==true)await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,true,placement,circular);await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,frameOnly,placement,circular);jobProgress.Value=100;jobStatus.Text=frameOnly?"Laser-off frame acknowledged; controller reported Idle. Inspect placement before burning.":"Job complete; starting X/Y return confirmed. Inspect physical result.";Log(jobStatus.Text);}
         catch(Exception ex)when(ex is IOException or InvalidDataException or OperationCanceledException){connectionJournal?.Add("ERROR","Physical document/frame: "+ex.Message);Log("Physical job: "+ex.Message+" · no retry. Inspect output and save log.");jobStatus.Text="Physical job interrupted: "+ex.Message+" Inspect output; completion unknown.";if(monitor==client && (client.RequiresReconnect||ex is IOException or OperationCanceledException))await DisconnectDevice();}
         finally
         {

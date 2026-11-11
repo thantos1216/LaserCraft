@@ -7,6 +7,7 @@ public sealed partial class MainWindow
 {
     private async Task SaveGcode()
     {
+        if(!CommitLayerEdits())return;
         var session = Current; var fingerprint = Snapshot(session); var scope = CurrentSimulationScope;
         var profile = profiles[Math.Max(0, deviceChoice.SelectedIndex)];
         try

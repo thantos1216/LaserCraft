@@ -7,6 +7,7 @@ public sealed partial class MainWindow
     private readonly CheckBox frameBeforeRun=new() { Content="Rectangle frame before Run" };
     private async Task FrameAction(bool circle)
     {
+        if(!CommitLayerEdits())return;
         if(monitor is {Simulation:null}){await RunDocumentJob(true,circle);return;}
         await GeneratePreview(false);
         if(Current.Canvas.Plan is not { } plan || plan.Segments.Count==0)return;

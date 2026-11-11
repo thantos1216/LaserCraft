@@ -144,10 +144,30 @@ public sealed class GrblJobTests
         await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteManualAsync(Profile,new(GrblManualAction.JogX),true));await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);await c.ExecuteManualAsync(Profile,new(GrblManualAction.JogX),true);
         Assert.Contains(journal.Snapshot().Entries,e=>e.Direction=="RX"&&e.Text=="ALARM:3");Assert.DoesNotContain("$X\n",t.Commands);
     }
+    [Theory][InlineData(false)][InlineData(true)]
+    public async Task CompletedJobsReturnLaserOffAndRepeatTheSameCoordinates(bool negative)
+    {
+        var t=new Peer {MachineX=negative?-100:100,MachineY=negative?-100:100};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);
+        var before=t.Commands.Count;await c.ExecuteJobAsync(Profile,Plan(),true);var first=t.Commands.Skip(before).Where(x=>x.StartsWith("G53")).ToArray();before=t.Commands.Count;await c.ExecuteJobAsync(Profile,Plan(),true);Assert.Equal(first,t.Commands.Skip(before).Where(x=>x.StartsWith("G53")));
+        Assert.Equal(negative?"G53 G0 X-100 Y-100 S0\n":"G53 G0 X100 Y100 S0\n",first[^1]);var returnIndex=t.Commands.FindLastIndex(x=>x==first[^1]);Assert.Equal("M9\n",t.Commands[returnIndex-1]);Assert.Equal("M5\n",t.Commands[returnIndex-2]);Assert.Equal("?",t.Commands[^1]);
+    }
+    [Fact]public async Task ReturnFailureDoesNotReportCompletionOrRetry()
+    {
+        var t=new Peer {RejectReturn=true};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);await Assert.ThrowsAsync<IOException>(()=>c.ExecuteJobAsync(Profile,Plan(),true));Assert.True(c.RequiresReconnect);Assert.False(c.JobActive);Assert.Single(t.Commands,x=>x=="G53 G0 X-59 Y-75 S0\n");Assert.Contains("\u0018",t.Commands);
+    }
+    [Theory][InlineData("MPos",1)][InlineData("WPos",0)]
+    public async Task IdleWithoutConfirmedStartingPositionIsNotSuccess(string coordinates,double error)
+    {
+        var t=new Peer {FinalCoordinates=coordinates,FinalPositionError=error};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);var failure=await Assert.ThrowsAsync<IOException>(()=>c.ExecuteJobAsync(Profile,Plan(),true));Assert.Contains("return was not confirmed",failure.Message);Assert.True(c.RequiresReconnect);Assert.False(c.JobActive);
+    }
+    [Fact]public async Task UnreturnableStartRejectsAbsoluteJobBeforeOutput()
+    {
+        var t=new Peer {MachineX=500,MachineY=500};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteJobAsync(Profile,Plan(),true,placement:new(StartFromMode.AbsoluteCoordinates)));Assert.DoesNotContain(t.Commands,x=>x.StartsWith("G53"));
+    }
     private sealed class Peer:IGrblTransport
     {
         readonly Channel<string> replies=Channel.CreateUnbounded<string>();public List<string> Commands {get;}=[];public bool HoldFirstMotion {get;init;}public bool RejectMotion {get;init;}public double MachineX {get;set;}=-59;public double MachineY {get;set;}=-75;public string? Replacement {get;init;}public TaskCompletionSource Motion {get;}=new(TaskCreationOptions.RunContinuationsAsynchronously);
-        public bool ResetAlarmStartup {get;init;} private bool homed; public bool SilenceAfterMotion {get;init;} public string PendingMotionState {get;init;}="Idle"; private bool waitingMotionAck; public int CompletionRunningReports {get;init;} public int CompletionQueries {get;private set;} private bool finishing;
+        public string FinalCoordinates {get;init;}="MPos"; public double FinalPositionError {get;init;} public bool RejectReturn {get;init;} public bool ResetAlarmStartup {get;init;} private bool homed; public bool SilenceAfterMotion {get;init;} public string PendingMotionState {get;init;}="Idle"; private bool waitingMotionAck; public int CompletionRunningReports {get;init;} public int CompletionQueries {get;private set;} private bool finishing;
         public void Reply(string line){if(line=="ok")waitingMotionAck=false;Push(line);}
         void Push(params string[] lines){foreach(var l in lines)replies.Writer.TryWrite(l);}
         public ValueTask WriteAsync(string text,CancellationToken token)
@@ -155,8 +175,9 @@ public sealed class GrblJobTests
             token.ThrowIfCancellationRequested();Commands.Add(text);
             if(text=="$I\n"){if(ResetAlarmStartup)Push("Grbl 1.1h reset","ALARM:3");Push("[VER:1.1h.2022071501:]","ok");}
             else if(text=="$$\n"){foreach(var s in new[]{"$13=0","$22=1","$30=1000","$31=0","$32=1","$130=430","$131=430"})Push(Replacement is not null&&s.Split('=')[0]==Replacement.Split('=')[0]?Replacement:s);Push("ok");}
-            else if(text=="?"){if(!(Motion.Task.IsCompleted&&SilenceAfterMotion)){var state=ResetAlarmStartup&&!homed?"Alarm":waitingMotionAck?PendingMotionState:finishing&&++CompletionQueries<=CompletionRunningReports?"Run":"Idle";Push(FormattableString.Invariant($"<{state}|MPos:{MachineX},{MachineY},0|FS:0,0>"));}}
+            else if(text=="?"){if(!(Motion.Task.IsCompleted&&SilenceAfterMotion)){var state=ResetAlarmStartup&&!homed?"Alarm":waitingMotionAck?PendingMotionState:finishing&&++CompletionQueries<=CompletionRunningReports?"Run":"Idle";Push(FormattableString.Invariant($"<{state}|{(finishing?FinalCoordinates:"MPos")}:{MachineX+(finishing?FinalPositionError:0)},{MachineY},0|FS:0,0>"));}}
             else if(text is "!" or "~" or "\u0018"){}
+            else if(RejectReturn&&finishing&&text.StartsWith("G53"))Push("error:20");
             else if(text.StartsWith("G53",StringComparison.Ordinal)&&!Motion.Task.IsCompleted){waitingMotionAck=HoldFirstMotion;Motion.TrySetResult();if(!HoldFirstMotion)Push(RejectMotion?"error:20":"ok");}
             else {if(text=="$H\n")homed=true;if(text=="M9\n"&&Motion.Task.IsCompleted)finishing=true;Push("ok");}return ValueTask.CompletedTask;
         }

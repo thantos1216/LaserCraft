@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.29
+# Feature parity matrix - working baseline 0.30
+
+0.30: captured-head return after successful output with acknowledgement/Idle/MPos checks; immediate layer edits; whole-layer/per-object pass scheduling for vectors, fills and images; pass column and project/preset persistence; centered vector icons. No return after abort/error. Pass order does not guarantee cooling. User's successful 0.29 cuts are separate from new-feature verification; see [validation](../testing/milestone-30.md).
 
 0.29: orderly pre-close port cleanup, remembered device/control defaults, automatic device bed, direct Run and compact icons, separate Help window, File-menu G-code export, rectangle/circle framing, and main design/Move/layer mm/in units. Advanced dialogs remain explicitly metric. Physical USB recovery is not established by the new logs or automated tests. See [validation](../testing/milestone-29.md).
 

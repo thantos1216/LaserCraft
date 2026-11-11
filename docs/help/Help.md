@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.29 - saved controls, shutdown, framing and units
+Version 0.30 - repeatable return and pass ordering
 
 ## Connect and disconnect
 
@@ -14,11 +14,24 @@ A device-open IOException before any TX line means Windows failed to open/config
 
 The compact Laser icons have tooltips: Pause/resume, Abort, Run, Preview, Rectangle frame, Circle frame and Home. Run prepares the selected enabled output and starts after preflight; there is no review dialog. Preview the design and verify placement, material, power/feed/air and protection before pressing Run. File > Save G-code exports the offline work-coordinate program. Help is accessed from the top Help menu in a separate window.
 
-Frame icons display an offline outline while disconnected and move the connected GRBL with laser OFF while connected. Rectangle follows the output bounds. Circle is centered on those bounds with diameter equal to the larger dimension; it is suitable for round artwork and does not enclose rectangular corners. Circular framing can extend farther along the short axis; its final machine bounds are checked separately. Both frames return to the captured starting head position, with zero S throughout. Rectangle frame before Run optionally frames, returns, waits for Idle and then starts the powered output. Powered output stays at its last endpoint; configurable finish position is not implemented.
+Frame icons display an offline outline while disconnected and move the connected GRBL with laser OFF while connected. Rectangle follows the output bounds. Circle is centered on those bounds with diameter equal to the larger dimension; it is suitable for round artwork and does not enclose rectangular corners. Circular framing can extend farther along the short axis; its final machine bounds are checked separately. Both frames return to the captured starting head position, with zero S throughout. Rectangle frame before Run optionally frames, returns, waits for Idle and then starts the powered output. Successful connected output now returns laser-off to the captured pre-job head X/Y, then confirms Idle/MPos within 0.01 mm before reporting completion. Abort, transport error and interrupted jobs do not attempt a return move. This uses controller-reported position, not measured mechanical accuracy. Offline G-code export cannot capture a live head position and does not add this return.
 
 Start From offers Absolute Coordinates, Current Position and User Origin. Absolute preserves drawing-to-bed placement, with configured device origin and signed machine range. Current Position places the selected drawing-bounds anchor at a fresh head position. Nine drawing anchors are available, including Center. Cut selected graphics limits both output and relative anchor bounds to selected enabled artwork, including overscan. User Origin uses a head position captured with Move > Set User Origin here; moving afterward does not relocate it. Home/reconnect clears the saved origin, even though the preferred Start From mode is saved. Initial canvas travel is excluded from relative placement.
 
 Job success requires all acknowledgements plus final Idle. Status is polled while waiting; ten seconds of silence or sustained Idle without a pending acknowledgement ends as unknown completion, never success. Abort cancels dispatch, requests reset and reopens once without homing, unlocking or resuming. Reset may enter Alarm; use Home before jogging in Alarm. Failed reopen leaves the connection disabled with an error. A physical stop remains necessary if software/USB cannot deliver reset or off.
+
+## Passes and repeat runs (0.30)
+
+Layer speed, power, passes, mode, interval, output/show/air and name edits apply immediately; there is no separate Apply cut settings button. A Pass column shows the effective count. Preview, Run, Frame and Save also validate the current editor values. Blank/invalid values block output rather than silently using older settings. Passes must be a whole number from 1 to 100. Changes are undoable and saved in the project.
+
+Pass order is set per layer:
+
+- Whole layer each pass (default): visit A, B, C, then repeat A, B, C until that layer's pass count is complete. This distributes repeat visits across the layer's artwork.
+- All passes per object: finish every pass on A, then every pass on B, then C. An object means a single design object, including all contours of a compound path, rather than a selection group.
+
+Layer order remains unchanged; this does not interleave passes across different layers. Whole-layer fill preserves the existing combined even-odd fill behavior. Per-object fill processes each object independently, so overlaps/nested separate objects can receive different coverage; keep intended holes as contours in one compound path. Image layers repeat their single image scan. Pass order/count are also stored in material presets. Older projects default to Whole layer each pass. Neither order guarantees cooling and no dwell is inserted; per-object repetition can concentrate heat. Qualify the settings on scrap.
+
+At successful completion the head returns to the machine X/Y captured just before the job, after M5/M9 with S0. All return commands must acknowledge and final Idle must report that position. This applies to Current Position, Absolute Coordinates and User Origin. For repeat alignment, keep the artwork, layer settings, Start From, anchor and material unchanged and do not jog between runs. With Current Position, Run again then uses the restored anchor. If return fails or output is interrupted, completion is unknown: inspect/re-establish position rather than blindly repeating. Preview's ideal duration does not include the live return move.
 
 ## Units and saved defaults
 
@@ -98,7 +111,7 @@ Try samples/arrangement-demo.lcraft (included in the portable package). Ctrl+A s
 
 ## Create layers and control order
 
-New projects start with one vector layer. In Cuts / Layers, choose + Layer, enter a name, and choose Vector or Image. You can optionally assign the current selection when creating it. Each layer has its own name, color, speed, power, passes, output, visibility and air-assist setting. Edit the fields below the list and click Apply cut settings.
+New projects start with one vector layer. In Cuts / Layers, choose + Layer, enter a name, and choose Vector or Image. You can optionally assign the current selection when creating it. Each layer has its own name, color, speed, power, passes, pass order, output, visibility and air-assist setting. Valid field edits apply immediately; the row shows the effective pass count.
 
 Enabled layers run from top to bottom. Select a row and use the up/down buttons to change its job order. Object associations and settings move with the layer. Reordering is undoable. Delete empty removes unused layers; move their objects elsewhere first. At least one layer remains. Existing projects keep their layer lists.
 

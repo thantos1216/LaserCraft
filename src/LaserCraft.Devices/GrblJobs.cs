@@ -57,11 +57,13 @@ public sealed partial class GrblMonitor
             var snapshot=await Command("?");var state=GrblStatus.Parse(snapshot.Lines.Last(l=>l.StartsWith('<')));
             if(state.State!="Idle"||state.Coordinates!="MPos"||state.X is null||state.Y is null)throw new InvalidDataException("Job requires fresh Idle machine position in millimetres.");
             var travel=ResolveMachineTravel(profile);
+            var startingHead=new PointMm(state.X.Value,state.Y.Value);
+            if(!travel.Contains(startingHead,new BoundsMm(0,0,0,0)))throw new InvalidDataException("Starting head position is outside the resolved machine travel; cannot safely return to it.");
             var resolved=JobPlacement.Resolve(plan,profile,travel,new(state.X.Value,state.Y.Value),userOrigin,placement);
             var output=frameOnly ? JobFootprint.Frame(plan,circular:circularFrame) : plan;
             if(frameOnly)JobPlacement.ValidateOffset(output,profile,travel,resolved.Offset);
             var program=GrblExport.WritePlaced(output,profile,resolved);
-            if(frameOnly) program += FormattableString.Invariant($"G53 G0 X{state.X.Value:0.######} Y{state.Y.Value:0.######} S0\n");
+            program += FormattableString.Invariant($"G53 G0 X{state.X.Value:0.######} Y{state.Y.Value:0.######} S0\n");
             var lines=program.Split('\n',StringSplitOptions.RemoveEmptyEntries).Where(l=>!l.StartsWith(';')).ToArray();
             foreach(var line in lines)GrblConsoleCommand.Prepare(line,true);total=lines.Length;
             // One line/ack at a time; this deliberately trades raster throughput for a bounded sender.
@@ -75,7 +77,11 @@ public sealed partial class GrblMonitor
             {
                 while(JobPaused)await Task.Delay(50,stop.Token);
                 var reply=await Command("?");var final=GrblStatus.Parse(reply.Lines.Last(l=>l.StartsWith('<')));
-                if(final.State=="Idle")return;
+                if(final.State=="Idle")
+                {
+                    if(final.Coordinates!="MPos"||final.X is not double x||final.Y is not double y||Math.Abs(x-startingHead.X)>.01||Math.Abs(y-startingHead.Y)>.01)throw new IOException("Job ended Idle but the starting X/Y return was not confirmed. Inspect position; no retry.");
+                    return;
+                }
                 if(final.State is not ("Run" or "Hold:0" or "Hold:1"))throw new IOException("Unexpected completion state: "+final.State);
                 await Task.Delay(100,stop.Token);
             }

@@ -64,7 +64,7 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(BuildUnitsControl()); toolbar.Children.Add(Label("LASERCRAFT  /  0.29", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(BuildUnitsControl()); toolbar.Children.Add(Label("LASERCRAFT  /  0.30", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
         Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(geometryUnits); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
@@ -100,20 +100,27 @@ public sealed partial class MainWindow
     private Control BuildCutsPanel()
     {
         var panel = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto"), Margin = new Thickness(4) };
-        var headers = new Grid { ColumnDefinitions = new ColumnDefinitions("32,*,48,76,42,38,30"), Margin = new Thickness(8, 4) };
-        var names = new[] { "#", "Layer", "Mode", "Spd/Pwr", "Out", "Show", "Air" }; for (int i = 0; i < names.Length; i++) { var t = new TextBlock { Text = names[i], FontSize = 11 }; Grid.SetColumn(t, i); headers.Children.Add(t); }
+        var headers = new Grid { ColumnDefinitions = new ColumnDefinitions(LayerColumns), Margin = new Thickness(8, 4) };
+        var names = new[] { "#", "Layer", "Mode", "Spd/Pwr", "Pass", "Out", "Show", "Air" }; for (int i = 0; i < names.Length; i++) { var t = new TextBlock { Text = names[i], FontSize = 11 }; Grid.SetColumn(t, i); headers.Children.Add(t); }
         panel.Children.Add(headers);
         Grid.SetRow(layerRows, 1); panel.Children.Add(layerRows);
         var settings = new StackPanel { Spacing = 3, Margin = new Thickness(3, 4) }; var layerActions = new WrapPanel(); layerActions.Children.Add(Button("+ Layer", () => _ = NewLayer())); layerActions.Children.Add(Button("↑", () => MoveLayer(-1))); layerActions.Children.Add(Button("↓", () => MoveLayer(1))); layerActions.Children.Add(Button("Delete empty", RemoveLayer)); layerActions.Children.Add(Button("Assign selected", () => AssignLayer(Current.Canvas.ActiveLayer))); layerActions.Children.Add(Button("Image settings…", () => _ = EditImageSettings())); settings.Children.Add(layerActions); settings.Children.Add(layer); var identity = new WrapPanel(); Inline(identity, "Layer name", layerName, 220); Inline(identity, "Layer color", layerColor, 110); layerColor.Click += (_, _) => _ = PickLayerColor(); settings.Children.Add(identity);
-        var values = new WrapPanel(); Inline(values, "Speed mm/min", speed, 100); Inline(values, "Power %", power, 75); Inline(values, "Passes", passes, 65); Inline(values, "Interval mm", interval, 80); values.Children.Add(mode); settings.Children.Add(values);
-        var switches = new WrapPanel(); switches.Children.Add(output); switches.Children.Add(visible); switches.Children.Add(air); switches.Children.Add(Button("Apply cut settings", ApplyLayer)); settings.Children.Add(switches);
+        var values = new WrapPanel(); Inline(values, "Speed mm/min", speed, 100); Inline(values, "Power %", power, 75); Inline(values, "Passes", passes, 65); Inline(values, "Interval mm", interval, 80); values.Children.Add(mode);Inline(values,"Pass order",passOrder,180); settings.Children.Add(values);
+        var switches = new WrapPanel(); switches.Children.Add(output); switches.Children.Add(visible); switches.Children.Add(air); switches.Children.Add(Label("Settings apply automatically")); settings.Children.Add(switches);
         Grid.SetRow(settings, 2); panel.Children.Add(settings); return panel;
     }
+    private const string LayerColumns="28,*,44,76,36,34,34,28";
     private Control BuildLaserPanel()
     {
         var panel = new StackPanel { Spacing = 5, Margin = new Thickness(8) }; panel.Children.Add(jobStatus); panel.Children.Add(jobWorkflow);
         var actions=new WrapPanel();
-        Button CommandIcon(string name,string icon,Func<Task> action){var b=AsyncButton(icon,action);b.MinWidth=34;b.Padding=new Thickness(6);ToolTip.SetTip(b,name);AutomationProperties.SetName(b,name);actions.Children.Add(b);return b;}
+        Button CommandIcon(string name,string icon,Func<Task> action)
+        {
+            var data=icon switch { "Ⅱ"=>"M6,2 L6,18 M14,2 L14,18", "■"=>"M2,2 L18,2 L18,18 L2,18 Z", "▶"=>"M4,2 L18,10 L4,18 Z", "◉"=>"M1,2 L19,2 L19,16 L1,16 Z M7,5 L14,9 L7,13 Z", "□"=>"M2,2 L18,2 L18,18 L2,18 Z", "○"=>"M18,10 A8,8 0,1 0 2,10 A8,8 0,1 0 18,10 Z", _=>"M1,9 L10,1 L19,9 M4,7 L4,19 L8,19 L8,12 L12,12 L12,19 L16,19 L16,7" };
+            var b=AsyncButton("",action);b.Width=40;b.Height=36;b.Padding=new Thickness(6);b.HorizontalContentAlignment=HorizontalAlignment.Center;b.VerticalContentAlignment=VerticalAlignment.Center;
+            var drawing=new Avalonia.Controls.Shapes.Path {Data=Geometry.Parse(data),Width=22,Height=22,StrokeThickness=1.8,Stretch=Stretch.Uniform};drawing.Bind(Avalonia.Controls.Shapes.Shape.StrokeProperty,new Avalonia.Data.Binding("Foreground"){Source=b});if(icon is "■" or "▶")drawing.Bind(Avalonia.Controls.Shapes.Shape.FillProperty,new Avalonia.Data.Binding("Foreground"){Source=b});b.Content=drawing;
+            ToolTip.SetTip(b,name);AutomationProperties.SetName(b,name);actions.Children.Add(b);return b;
+        }
         CommandIcon("Pause / resume","Ⅱ",PausePhysicalOrPreview);CommandIcon("Abort","■",StopPhysicalOrPreview);
         runDocumentButton=CommandIcon("Run","▶",()=>RunDocumentJob());
         CommandIcon("Preview","◉",()=>{Preview();return Task.CompletedTask;});
@@ -175,7 +182,7 @@ public sealed partial class MainWindow
     private bool workspaceClosed;
     private readonly System.Diagnostics.Stopwatch playbackClock = new();
     private double lastPlaybackTick;
-    private void Preview() => StartSimulation();
+    private void Preview() { if(CommitLayerEdits())StartSimulation(); }
     private async Task GeneratePreview(bool startPlayback)
     {
         StopSimulation(); simulation = null; var session = Current; var c = session.Canvas; c.Plan = null;
@@ -221,8 +228,8 @@ public sealed partial class MainWindow
         var used = Enumerable.Range(0, d.Layers.Count).ToArray();
         foreach (var i in used)
         {
-            var l = d.Layers[i]; var row = new Grid { ColumnDefinitions = new ColumnDefinitions("32,*,48,76,42,38,30"), Margin = new Thickness(0, 3) };
-            var cells = new[] { i.ToString("00"), l.Name, l.Mode.ToString(), $"{DisplayValue(l.Speed):0.###}/{l.Power:0}", l.Output ? "●" : "○", l.Visible ? "●" : "○", l.AirAssist ? "●" : "○" };
+            var l = d.Layers[i]; var row = new Grid { ColumnDefinitions = new ColumnDefinitions(LayerColumns), Margin = new Thickness(0, 3) };
+            var cells = new[] { i.ToString("00"), l.Name, l.Mode.ToString(), $"{DisplayValue(l.Speed):0.###}/{l.Power:0}", l.Passes.ToString(), l.Output ? "●" : "○", l.Visible ? "●" : "○", l.AirAssist ? "●" : "○" };
             for (int col = 0; col < cells.Length; col++) { var t = new TextBlock { Text = cells[col], FontSize = 11, VerticalAlignment = VerticalAlignment.Center }; if (col == 0) t.Foreground = new SolidColorBrush(Color.Parse(l.Color)); Grid.SetColumn(t, col); row.Children.Add(t); }
             var item = new ListBoxItem { Content = row, Tag = i, Padding = new Thickness(4), MinHeight = 26 }; ToolTip.SetTip(item, "Select to edit this layer below"); layerRows.Items.Add(item); if (i == c.ActiveLayer) layerRows.SelectedItem = item;
         }

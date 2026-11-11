@@ -37,12 +37,13 @@ public static class ToolpathPlanner
                 raster = rasterDecoder(shapes[0], cut, cancellationToken); raster.Validate();
                 if (raster.Width != columns || raster.Height != rows) throw new InvalidDataException("Raster decoder returned a grid that does not match the image interval.");
             }
+            foreach(var batch in cut.PassOrder==PassOrderMode.PerObject?shapes.Select(shape=>new[]{shape}):new[]{shapes})
             for (int pass = 0; pass < cut.Passes; pass++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (raster is not null) AppendRaster(shapes[0], raster, cut.Raster ?? new());
+                if (raster is not null) AppendRaster(batch[0], raster, cut.Raster ?? new());
                 else if (cut.Mode == CutMode.Line)
-                    foreach (var s in shapes)
+                    foreach (var s in batch)
                     {
                         if (s.Kind == ShapeKind.Path) { foreach (var edge in VectorPaths.Edges(s)) { cancellationToken.ThrowIfCancellationRequested(); Add(edge.From, edge.To); } continue; }
                         var points = s.Kind == ShapeKind.Rectangle
@@ -52,17 +53,17 @@ public static class ToolpathPlanner
                     }
                 else
                 {
-                    var b = ShapeEditing.Bounds(shapes); var rows = Math.Ceiling(b.Height / cut.Interval);
+                    var b = ShapeEditing.Bounds(batch); var rows = Math.Ceiling(b.Height / cut.Interval);
                     if (rows > 100000) throw new InvalidDataException("Fill preview exceeds the 100000-row limit. Increase line interval.");
-                    if (shapes.Any(s => s.Kind == ShapeKind.Path && s.Path!.Contours.Any(c => !c.Closed))) throw new InvalidDataException("Fill requires closed contours. Close the path or choose Line mode.");
-                    var pathEdges = shapes.Where(s => s.Kind == ShapeKind.Path).ToDictionary(s => s.Id, s => VectorPaths.Edges(s).ToArray());
-                    fillWork += (long)rows * shapes.Sum(s => s.Kind == ShapeKind.Path ? pathEdges[s.Id].Length : 1);
+                    if (batch.Any(s => s.Kind == ShapeKind.Path && s.Path!.Contours.Any(c => !c.Closed))) throw new InvalidDataException("Fill requires closed contours. Close the path or choose Line mode.");
+                    var pathEdges = batch.Where(s => s.Kind == ShapeKind.Path).ToDictionary(s => s.Id, s => VectorPaths.Edges(s).ToArray());
+                    fillWork += (long)rows * batch.Sum(s => s.Kind == ShapeKind.Path ? pathEdges[s.Id].Length : 1);
                     if (fillWork > 3_000_000) throw new InvalidDataException("Fill preview is too complex for the current interactive planner. Reduce shapes, passes or scan density.");
                     for (int row = 0; row < rows; row++)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         var y = b.Y + (row + .5) * cut.Interval; var crossings = new List<double>();
-                        foreach (var s in shapes)
+                        foreach (var s in batch)
                         {
                             if (y < s.Y || y >= s.Y + s.Height) continue;
                             if (s.Kind == ShapeKind.Path)

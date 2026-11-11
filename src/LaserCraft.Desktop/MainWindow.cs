@@ -42,7 +42,7 @@ public sealed partial class MainWindow : Window
             if (heading) { block.FontWeight = FontWeight.SemiBold; accentLabels.Add(block); }
             help.Children.Add(block);
         }
-        LoadSettings(); KeyDown += OnShortcut;
+        LoadSettings();InstallLayerBindings(); KeyDown += OnShortcut;
         Closing += (_, e) => { if(allowClose)return;e.Cancel=true;if(shutdownInProgress)return;if(sessions.Any(IsDirty)){_=ConfirmClose();return;}_=ShutdownAndClose(); };
     }
     private bool shutdownInProgress;
@@ -87,15 +87,10 @@ public sealed partial class MainWindow : Window
         var c = Current.Canvas; var d = c.History.Document;
         status.Text = $"{d.Name}  ·  {DisplayValue(d.Width):0.###} × {DisplayValue(d.Height):0.###} {(inches?"in":"mm")}  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : PhysicalControlsAvailable ? "Physical control enabled" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
     }
-    private void RefreshLayer() { var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; SetMillimetres(speed,l.Speed); power.Value = (decimal)l.Power; passes.Value = l.Passes; SetMillimetres(interval,l.Interval); mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible; }
+    private void RefreshLayer() { if(applyingLayerEdits)return;refreshingLayerEditor=true;try{ var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; SetMillimetres(speed,l.Speed); power.Value = (decimal)l.Power; passes.Value = l.Passes; SetMillimetres(interval,l.Interval); mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible;passOrder.SelectedIndex=(int)l.PassOrder; }finally{refreshingLayerEditor=false;} }
     private void ApplyGeometry()
     {
         try { var c = Current.Canvas; var d = c.History.Document; if (c.Selection.Count == 0) return; var b = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); var sx = b.Width == 0 ? 1 : Millimetres(width) / b.Width; var sy = b.Height == 0 ? 1 : Millimetres(height) / b.Height; c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = Millimetres(x) + (s.X - b.X) * sx, Y = Millimetres(y) + (s.Y - b.Y) * sy, Width = s.Width * sx, Height = s.Height * sy })); }
-        catch (Exception ex) { status.Text = ex.Message; }
-    }
-    private void ApplyLayer()
-    {
-        try { var c = Current.Canvas; var d = c.History.Document; var i = Math.Max(0, layer.SelectedIndex); var layers = d.Layers.ToList(); layers[i] = layers[i] with { Speed = Millimetres(speed), Power = (double)(power.Value ?? 20), Passes = (int)(passes.Value ?? 1), Interval = Millimetres(interval), Name = layerName.Text ?? "", Color = layerColorValue, Mode = layers[i].Kind == LayerKind.Image ? CutMode.Image : (CutMode)Math.Max(0, mode.SelectedIndex), AirAssist = air.IsChecked == true, Output = output.IsChecked == true, Visible = visible.IsChecked == true }; c.Apply(d with { Layers = layers }); }
         catch (Exception ex) { status.Text = ex.Message; }
     }
     private static FilePickerFileType ProjectType => new("LaserCraft project") { Patterns = ["*.lcraft"] };
@@ -106,6 +101,7 @@ public sealed partial class MainWindow : Window
     }
     private async Task Save(bool saveAs)
     {
+        if(!CommitLayerEdits())return;
         try
         {
             var s = Current; var path = s.Path;
