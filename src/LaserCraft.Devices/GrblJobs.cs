@@ -28,9 +28,9 @@ public sealed partial class GrblMonitor
         lock(jobControl) { if(jobCancellation is null)return; jobCancellation.Cancel(); }
         await ResetJobAsync();
     }
-    public async Task ExecuteJobAsync(DeviceProfile profile, ToolpathPlan plan, bool reviewedPlacement, IProgress<(int Sent,int Total)>? progress = null, CancellationToken token = default, bool frameOnly = false)
+    public async Task ExecuteJobAsync(DeviceProfile profile, ToolpathPlan plan, bool reviewedPlacement, IProgress<(int Sent,int Total)>? progress = null, CancellationToken token = default, bool frameOnly = false, JobPlacementRequest? placement = null)
     {
-        profile.Validate();
+        profile.Validate();placement ??= new();
         plan = JobFootprint.TrimInitialTravel(plan);
         if (!reviewedPlacement || profile.Controller != ControllerFamily.Grbl || profile.Connection == ConnectionKind.Simulator || !Identity.StartsWith("[VER:1.1",StringComparison.Ordinal) && !Identity.StartsWith("Grbl 1.1",StringComparison.Ordinal)) throw new InvalidDataException("Reviewed physical GRBL 1.1 placement is required.");
         // Validate/export once before acquiring resources; final export uses the fresh machine anchor.
@@ -55,10 +55,9 @@ public sealed partial class GrblMonitor
             if(!EqualsSetting(13,0)||!EqualsSetting(30,profile.MaxPower)||!EqualsSetting(31,0)||!EqualsSetting(32,1)||!EqualsSetting(130,profile.BedWidth)||!EqualsSetting(131,profile.BedHeight))throw new InvalidDataException("Job requires report-mm $13=0, matching profile $30/$130/$131, $31=0 and $32=1. Review settings/profile; nothing changed automatically.");
             var snapshot=await Command("?");var state=GrblStatus.Parse(snapshot.Lines.Last(l=>l.StartsWith('<')));
             if(state.State!="Idle"||state.Coordinates!="MPos"||state.X is null||state.Y is null)throw new InvalidDataException("Job requires fresh Idle machine position in millimetres.");
-            var footprint=JobFootprint.Measure(plan);var width=footprint.Width;var height=footprint.Height;
             var travel=ResolveMachineTravel(profile);
-            if(!travel.Contains(new(state.X.Value,state.Y.Value),footprint))throw new InvalidDataException(FormattableString.Invariant($"Footprint at X{state.X.Value:0.###}/Y{state.Y.Value:0.###} exceeds machine range X[{travel.MinX:0.###},{travel.MaxX:0.###}], Y[{travel.MinY:0.###},{travel.MaxY:0.###}]. Reposition or verify the Device coordinate-range setting; no program sent."));
-            var program=GrblExport.Write(frameOnly ? JobFootprint.Frame(plan) : plan,profile,new(state.X.Value,state.Y.Value));
+            var resolved=JobPlacement.Resolve(plan,profile,travel,new(state.X.Value,state.Y.Value),userOrigin,placement);
+            var program=GrblExport.WritePlaced(frameOnly ? JobFootprint.Frame(plan) : plan,profile,resolved);
             if(frameOnly) program += FormattableString.Invariant($"G53 G0 X{state.X.Value:0.######} Y{state.Y.Value:0.######} S0\n");
             var lines=program.Split('\n',StringSplitOptions.RemoveEmptyEntries).Where(l=>!l.StartsWith(';')).ToArray();
             foreach(var line in lines)GrblConsoleCommand.Prepare(line,true);

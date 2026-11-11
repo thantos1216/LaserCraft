@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.26
+# Feature parity matrix - working baseline 0.27
+
+0.27 adds Absolute Coordinates, Current Position and session-only User Origin for reviewed GRBL output, nine drawing anchors and selected-output bounds. Exact bed positioning and origin capture require Home/Idle; framing shares placement with cutting and can run automatically first. New behavior has domain/fake/TCP coverage. User Origin persistence, configurable finish position, live placement overlay and physical qualification remain pending. See [reference scope](placement-reference-27.md).
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 

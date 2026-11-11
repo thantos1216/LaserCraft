@@ -1,6 +1,20 @@
 # LaserCraft Help
 
-Version 0.26 - coordinate correction and framed jobs
+Version 0.27 - placement modes and exact positioning
+
+## Start From and exact positioning (0.27)
+
+Laser offers Absolute Coordinates, Current Position (default), and User Origin. Job Origin selects one of nine drawing-bounds anchors; Absolute mode ignores it. Cut selected graphics restricts both output and relative placement bounds to the selected enabled output. Bounds include scan/overscan travel and all passes.
+
+- Absolute Coordinates preserves the drawing's location on the configured bed. The canvas is top-left; device Origin maps it into controller axes, and the signed machine range supplies the bed offset. Head position does not relocate the drawing.
+- Current Position places the chosen drawing anchor at the fresh head MPos read immediately before output. With a BottomLeft device origin, the default BottomLeft job anchor reproduces the earlier minimum-X/Y placement. Center places the footprint around the head.
+- User Origin uses the same anchor at a saved machine position. Jog to the intended point and choose Move > Set User Origin here. Moving the head afterward does not change it. Home/reconnect clears it; it is not stored in firmware or across app sessions.
+
+Move > Exact bed position offers Go to bed X/Y, Go to bed 0,0, Read position and Set User Origin here. Bed X/Y are controller-axis distances from the resolved machine minimum within the configured travel. For the default BottomLeft profile X increases right and Y up; verify firmware direction. Negative machine ranges are translated automatically. These laser-off absolute machine jogs use the jog feed (60–3000 mm/min), require Home and fresh Idle/MPos in millimetres, and never issue G10/G92. Acknowledgement means accepted, not arrived: read position after movement. Bed 0,0 may touch a limit; allow clearance. Homing establishes a reference, not a calibrated positioning guarantee.
+
+Frame laser off uses the same placement as cutting. Powered-job review also offers Frame with laser OFF before cutting: frame at 600 mm/min, return to the captured head position, wait for Idle, then preflight the powered job with the same mode/anchor. Failure stops the sequence. Frames use zero S throughout. Powered jobs finish at the last output point; configurable finish position is not implemented.
+
+Preview remains an offline drawing preview rather than a live bed-placement overlay. Save G-code retains work-coordinate export semantics: Start From affects reviewed physical output only. Placed footprints are range-checked before dispatch. New placement modes have domain/fake-controller/local TCP coverage; actual Attzr placement, framing and document-cut qualification remains pending.
 
 ## Positive coordinates and document jobs (0.26)
 

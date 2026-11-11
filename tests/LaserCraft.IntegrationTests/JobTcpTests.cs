@@ -6,8 +6,8 @@ using LaserCraft.Devices;
 namespace LaserCraft.IntegrationTests;
 public sealed class JobTcpTests
 {
-    [Theory][InlineData(-59,-75)][InlineData(101,101)]
-    public async Task DocumentJobUsesPublicTcpAdapterWithFragmentedReplies(double machineX,double machineY)
+    [Theory][InlineData(-59,-75,StartFromMode.CurrentPosition)][InlineData(101,101,StartFromMode.CurrentPosition)][InlineData(-59,-75,StartFromMode.AbsoluteCoordinates)][InlineData(101,101,StartFromMode.AbsoluteCoordinates)][InlineData(101,101,StartFromMode.UserOrigin)]
+    public async Task DocumentJobUsesPublicTcpAdapterWithFragmentedReplies(double machineX,double machineY,StartFromMode mode)
     {
         using var listener=new TcpListener(IPAddress.Loopback,0);listener.Start();using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(15));var token=timeout.Token;var received=new List<string>();
         var server=Task.Run(async()=>{using var peer=await listener.AcceptTcpClientAsync(token);var stream=peer.GetStream();var pending=new StringBuilder();bool moved=false,finished=false;
@@ -18,6 +18,7 @@ public sealed class JobTcpTests
         },token);
         var profile=DeviceProfile.Simulator() with {Connection=ConnectionKind.Tcp,Host="127.0.0.1",Port=((IPEndPoint)listener.LocalEndpoint).Port,BedWidth=430,BedHeight=430};var transport=await TransportFactory.OpenAsync(profile,token);await using var client=await GrblMonitor.ConnectAsync(transport,token);
         await client.ExecuteManualAsync(profile,new(GrblManualAction.Home),true,cancellationToken:token);
-        var plan=ToolpathPlanner.Build(DesignDocument.Empty() with {Width=430,Height=430,Shapes=[new(Guid.NewGuid(),ShapeKind.Rectangle,10,10,5,5)]});await client.ExecuteJobAsync(profile,plan,true,token:token);await server;Assert.Contains(received,l=>l.StartsWith(FormattableString.Invariant($"G53 G0 X{machineX} "),StringComparison.Ordinal));Assert.Equal("?",received[^1]);Assert.False(client.RequiresReconnect);
+        if(mode==StartFromMode.UserOrigin)await client.PositionAsync(profile,captureOrigin:true,token:token);
+        var plan=ToolpathPlanner.Build(DesignDocument.Empty() with {Width=430,Height=430,Shapes=[new(Guid.NewGuid(),ShapeKind.Rectangle,10,10,5,5)]});await client.ExecuteJobAsync(profile,plan,true,token:token,placement:new(mode));await server;var expectedX=mode==StartFromMode.AbsoluteCoordinates?(machineX<0?-420:10):machineX;Assert.Contains(received,l=>l.StartsWith(FormattableString.Invariant($"G53 G0 X{expectedX} "),StringComparison.Ordinal));Assert.Equal("?",received[^1]);Assert.False(client.RequiresReconnect);
     }
 }

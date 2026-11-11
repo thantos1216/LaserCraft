@@ -43,7 +43,7 @@ public sealed partial class GrblMonitor
             }
             if (request.Action == GrblManualAction.Home)
             {
-                Volatile.Write(ref homingConfirmed,0); homedMachinePosition=null;
+                Volatile.Write(ref homingConfirmed,0); homedMachinePosition=null;userOrigin=null;
                 var homeReport = await Exchange("$$");
                 var enabled = homeReport.Lines.Where(l => l.StartsWith("$22=",StringComparison.Ordinal)).Select(GrblSetting.Parse).ToArray();
                 if (enabled.Length != 1 || !double.TryParse(enabled[0].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value != 1) throw new InvalidDataException("Firmware homing $22 is not reported enabled.");

@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.26 - coordinate correction and framing
+## Current milestone 0.27 - job placement and exact positioning
+
+Added Absolute Coordinates / Current Position / session-only User Origin, nine drawing anchors, selected-output placement bounds, exact laser-off machine jogs from bed X/Y, origin capture, and optional frame-before-cut. Frames and powered output share domain placement. Home/reconnect clears saved origin. 413 tests pass (395 unit, 18 integration); build has zero warnings/errors. Offline preview/export, configurable finish position and physical qualification remain separate limitations. See [validation](../testing/milestone-27.md).
+
+## Milestone 0.26 - coordinate correction and framing
 
 Fixed the negative-only document range assumption: the supplied 0.25 log reports Home at MPos 1,1 and later positive positions. Range now resolves per axis from the observed homing sign, with Positive/Negative profile overrides for ambiguous zero reports. Review displays the resolved bounds; document-preflight errors are journaled. Added laser-off framing with return to anchor, portable vector/image sample, workflow hints and standalone shortcut icon.
 

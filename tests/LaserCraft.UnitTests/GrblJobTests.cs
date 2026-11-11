@@ -96,6 +96,21 @@ public sealed class GrblJobTests
         Assert.Equal(positive,MachineTravel.Resolve(Profile with {CoordinateRange=MachineCoordinateRange.Positive},new(0,0)));
         Assert.Equal(new MachineTravel(-430,0,-430,0),MachineTravel.Resolve(Profile with {CoordinateRange=MachineCoordinateRange.Negative},null));
     }
+    [Fact]public async Task PositionAndSavedOriginUseFreshReportsAndNeverChangeWorkOffsets()
+    {
+        var t=new Peer {MachineX=1,MachineY=1};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);
+        t.MachineX=100;t.MachineY=100;Assert.Equal(new PointMm(100,100),await c.PositionAsync(Profile,captureOrigin:true));
+        t.MachineX=200;t.MachineY=200;await c.ExecuteJobAsync(Profile,Plan(),true,placement:new(StartFromMode.UserOrigin));Assert.Contains("G53 G0 X100 Y105 S0\n",t.Commands);
+        await c.PositionAsync(Profile,new(20,30));Assert.Contains("$J=G21 G90 G53 X20 Y30 F600\n",t.Commands);Assert.Contains("M5 S0\n",t.Commands);
+        await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);Assert.Null(c.UserOrigin);Assert.DoesNotContain(t.Commands,s=>s.Contains("G10")||s.Contains("G92"));
+    }
+    [Fact]public async Task AbsoluteJobUsesDrawingCoordinatesAndMissingSavedOriginWritesNoMotion()
+    {
+        var t=new Peer {MachineX=1,MachineY=1};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);
+        await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteJobAsync(Profile,Plan(),true,placement:new(StartFromMode.UserOrigin)));Assert.DoesNotContain(t.Commands,s=>s.StartsWith("G53"));
+        await c.ExecuteJobAsync(Profile,Plan(),true,placement:new(StartFromMode.AbsoluteCoordinates));Assert.Contains("G53 G0 X10 Y420 S0\n",t.Commands);
+        var count=t.Commands.Count;await Assert.ThrowsAsync<InvalidDataException>(()=>c.PositionAsync(Profile,new(431,0)));Assert.DoesNotContain(t.Commands.Skip(count),s=>s.StartsWith("$J=")||s.StartsWith("M5"));
+    }
     private sealed class Peer:IGrblTransport
     {
         readonly Channel<string> replies=Channel.CreateUnbounded<string>();public List<string> Commands {get;}=[];public bool HoldFirstMotion {get;init;}public bool RejectMotion {get;init;}public double MachineX {get;set;}=-59;public double MachineY {get;set;}=-75;public string? Replacement {get;init;}public TaskCompletionSource Motion {get;}=new(TaskCreationOptions.RunContinuationsAsynchronously);

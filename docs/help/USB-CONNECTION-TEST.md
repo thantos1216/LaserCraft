@@ -1,6 +1,8 @@
-# LaserCraft 0.26 physical qualification guide
+# LaserCraft 0.27 physical qualification guide
 
-Extract the complete portable ZIP locally on the Windows computer with the USB laser attached. Confirm toolbar 0.26. Server storage does not forward USB. Close other port users, select the saved GRBL profile and detected COM port. Devices/settings remain per user under LocalAppData/LaserCraft. No drivers are installed automatically.
+New placement controls: choose Start From and Job Origin before reviewing output. Absolute Coordinates preserves drawing bed location. Current Position places a chosen drawing corner/center at the head. User Origin uses Move > Set User Origin here and survives head movement, but Home/reconnect clears it. Move also offers laser-off exact bed X/Y positioning. Coordinates are controller-axis distances from the resolved machine minimum. Use Frame laser off before burning; powered review offers automatic frame-before-cut. Selected-only uses selected output bounds. These new modes require hardware qualification. Offline Preview/Save G-code retain their earlier semantics. Older instructions below describe the default Current Position / BottomLeft anchor workflow.
+
+Extract the complete portable ZIP locally on the Windows computer with the USB laser attached. Confirm toolbar 0.27. Server storage does not forward USB. Close other port users, select the saved GRBL profile and detected COM port. Devices/settings remain per user under LocalAppData/LaserCraft. No drivers are installed automatically.
 
 ## Connect and home
 

@@ -33,6 +33,7 @@ public sealed partial class MainWindow
     }
     private void UpdateConnectionControls()
     {
+        UpdatePlacementControls();
         deviceChoice.IsEnabled = !connecting && !disconnecting && monitor is null;
         if (connectButton is not null) connectButton.IsEnabled = deviceChoice.IsEnabled;
         if (disconnectButton is not null) disconnectButton.IsEnabled = !disconnecting && (connecting || monitor is not null);
@@ -47,7 +48,7 @@ public sealed partial class MainWindow
         if(homeButton is not null)homeButton.IsEnabled=monitor is not null && connectedProfile?.Controller==ControllerFamily.Grbl && monitor.Simulation is null && !connecting && !querying && !disconnecting;
         if(runDocumentButton is not null)runDocumentButton.IsEnabled=homeButton?.IsEnabled==true;
         if(frameDocumentButton is not null)frameDocumentButton.IsEnabled=homeButton?.IsEnabled==true;
-        jobWorkflow.Text = monitor is null ? "Connect a physical GRBL profile to cut shapes or engrave images. Then Home → position → Preview → Frame laser off → Review & Run." : monitor.Simulation is not null ? "Simulator connection: previews/rehearsal only. Select a physical profile for actual output." : !monitor.HomingConfirmed ? "Next: Home in this connection before framing or running the document." : "Next: position inside the bed, Preview, Frame laser off, then Review & Run. Current head anchors minimum X/Y of output.";
+        jobWorkflow.Text = monitor is null ? "Connect a physical GRBL profile to cut shapes or engrave images. Then Home → position → Preview → Frame laser off → Review & Run." : monitor.Simulation is not null ? "Simulator connection: previews/rehearsal only. Select a physical profile for actual output." : !monitor.HomingConfirmed ? "Next: Home in this connection before framing or running the document." : "Next: position inside the bed, Preview, Frame laser off, then Review & Run. Check Start From and Job Origin before reviewing output.";
         UpdateManualControls();
         UpdateConsoleControls();
     }

@@ -57,6 +57,8 @@ public sealed partial class GrblMonitor : IAsyncDisposable
     }
     private int homingConfirmed;
     private LaserCraft.Domain.PointMm? homedMachinePosition;
+    private LaserCraft.Domain.PointMm? userOrigin;
+    public LaserCraft.Domain.PointMm? UserOrigin => userOrigin;
     public bool HomingConfirmed => Volatile.Read(ref homingConfirmed)!=0;
     public bool RequiresReconnect => Volatile.Read(ref consoleUncertain) != 0;
     public string Identity { get; private set; } = "";

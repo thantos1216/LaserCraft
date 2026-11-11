@@ -45,7 +45,7 @@ public sealed partial class MainWindow
         stopPulseButton = AsyncButton("Laser off (M5)", async () => { if (monitor?.Simulation is not null) ManualAction(sim => { sim.Stop(); manualTimer.Stop(); }); else await PhysicalAction(new(GrblManualAction.LaserOff)); });
         cancelJogButton = AsyncButton("Cancel jog", () => PhysicalAction(new(GrblManualAction.CancelJog))); actions.Children.Add(cancelJogButton); actions.Children.Add(pulseButton); actions.Children.Add(stopPulseButton); panel.Children.Add(actions);
         lineTestButton = AsyncButton("Review line cut test…", ReviewLineTest); panel.Children.Add(lineTestButton);
-        panel.Children.Add(manualStatus); panel.Children.Add(Label("Manual-control result / simulator transcript")); panel.Children.Add(manualTranscript);
+        panel.Children.Add(BuildPositionControls()); panel.Children.Add(manualStatus); panel.Children.Add(Label("Manual-control result / simulator transcript")); panel.Children.Add(manualTranscript);
         panel.Children.Add(Label("Physical limits: jog up to selected profile axis travel at 60–3000 mm/min; pulse up to 5% / 500 ms. Pulse reads $30/$31/$32 and queues G1/G94 F60, M3, dwell and M5. Nominal dwell is not measured optical duration; a partial USB write/controller failure can prevent off. Use the physical stop/power switch if needed. Cancel jog and M5 are not emergency stops and wait for any exchange in progress. Use Abort for physical jobs; disconnect only attempts a reset, not a hardware stop. Reviewed vector/image jobs are available in Laser."));
         manualTimer.Tick += (_, _) =>
         {
