@@ -45,8 +45,7 @@ public sealed partial class GrblMonitor
             {
                 Volatile.Write(ref homingConfirmed,0); homedMachinePosition=null;userOrigin=null;
                 var homeReport = await Exchange("$$");
-                var enabled = homeReport.Lines.Where(l => l.StartsWith("$22=",StringComparison.Ordinal)).Select(GrblSetting.Parse).ToArray();
-                if (enabled.Length != 1 || !double.TryParse(enabled[0].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value != 1) throw new InvalidDataException("Firmware homing $22 is not reported enabled.");
+                if (!HomingEnabled(homeReport.Lines.Where(l => l.StartsWith('$')).Select(GrblSetting.Parse))) throw new InvalidDataException("Firmware homing $22 is not reported enabled.");
                 var before = await Exchange("?"); var homingState = GrblStatus.Parse(before.Lines.Last(l => l.StartsWith('<'))).State;
                 if (homingState is not ("Idle" or "Alarm")) throw new InvalidDataException("Home requires Idle or Alarm; reported " + homingState);
                 await Exchange("$H"); var after = await Exchange("?");

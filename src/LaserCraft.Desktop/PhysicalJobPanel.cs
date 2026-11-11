@@ -3,6 +3,7 @@ using LaserCraft.Domain;
 namespace LaserCraft.Desktop;
 public sealed partial class MainWindow
 {
+    private LaserCraft.Devices.GrblMonitor? explicitlyAbortedJob;
     private Task StartPhysicalOrPreview() { if(monitor is not null && monitor.Simulation is null)return ReviewDocumentJob();StartSimulation();return Task.CompletedTask; }
     private async Task PausePhysicalOrPreview()
     {
@@ -10,7 +11,7 @@ public sealed partial class MainWindow
     }
     private async Task StopPhysicalOrPreview()
     {
-        var client=monitor;if(client?.JobActive==true){try{await client.StopJobAsync();jobStatus.Text="Abort/reset requested · inspect output; reconnect required";}catch(Exception ex)when(ex is IOException or OperationCanceledException){Log("Abort transport failure: "+ex.Message);} }else StopSimulation();
+        var client=monitor;if(client?.JobActive==true){explicitlyAbortedJob=client;try{await client.StopJobAsync();jobStatus.Text="Abort/reset requested · restoring connection after sender stops; no automatic homing";}catch(Exception ex)when(ex is IOException or OperationCanceledException){Log("Abort transport failure: "+ex.Message);} }else StopSimulation();
     }
     private async Task ReviewDocumentJob(bool frameOnly = false)
     {
@@ -34,9 +35,20 @@ public sealed partial class MainWindow
         if(monitor!=client||connectedProfile!=profile||Current!=session||Snapshot(session)!=fingerprint||CurrentSimulationScope!=scope||PlacementRequest!=placement||querying){status.Text="Connection, design or selection changed; review again.";return;}
         connectionJournal?.Add("INFO",$"Reviewed {(frameOnly ? "frame" : "document")} request · {plan.Segments.Count} segments · range {profile.CoordinateRange} - placement {placement.Mode}/{placement.Anchor}");
         StopSimulation();querying=true;UpdateConnectionControls();jobStatus.Text="Physical job · preflight";
-        var progress=new Progress<(int Sent,int Total)>(p=>{if(monitor!=client||!client.JobActive)return;jobProgress.Value=100d*p.Sent/p.Total;jobStatus.Text=$"Physical job · {p.Sent}/{p.Total} lines acknowledged (not motion completion)";});
+        var progress=new Progress<(int Sent,int Total)>(p=>{if(monitor!=client||!client.JobActive)return;jobProgress.Value=100d*p.Sent/p.Total;jobStatus.Text=$"Physical job · {p.Sent}/{p.Total} lines acknowledged · {client.JobControllerState} (acknowledgements are not motion completion)";});
         try{if(!frameOnly && frameFirst.IsChecked==true)await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,true,placement);await client.ExecuteJobAsync(profile,plan,true,progress,connectionLifetime.Token,frameOnly,placement);jobProgress.Value=100;jobStatus.Text=frameOnly?"Laser-off frame acknowledged; controller reported Idle. Inspect placement before burning.":"Job acknowledged; controller reported Idle. Inspect physical result.";Log(jobStatus.Text);}
-        catch(Exception ex)when(ex is IOException or InvalidDataException or OperationCanceledException){connectionJournal?.Add("ERROR","Physical document/frame: "+ex.Message);Log("Physical job: "+ex.Message+" · no retry. Inspect output and save log.");jobStatus.Text="Physical job interrupted; inspect output";if(monitor==client && (client.RequiresReconnect||ex is IOException or OperationCanceledException))await DisconnectDevice();}
-        finally{querying=false;UpdateConnectionControls();}
+        catch(Exception ex)when(ex is IOException or InvalidDataException or OperationCanceledException){connectionJournal?.Add("ERROR","Physical document/frame: "+ex.Message);Log("Physical job: "+ex.Message+" · no retry. Inspect output and save log.");jobStatus.Text="Physical job interrupted: "+ex.Message+" Inspect output; completion unknown.";if(monitor==client && (client.RequiresReconnect||ex is IOException or OperationCanceledException))await DisconnectDevice();}
+        finally
+        {
+            querying=false;UpdateConnectionControls();
+            if(explicitlyAbortedJob==client && !workspaceClosed && !connectionLifetime.IsCancellationRequested)
+            {
+                explicitlyAbortedJob=null;
+                if(monitor==client)await DisconnectDevice();
+                Log("Explicit Abort: reopening connection without homing or retrying the cut.");
+                await ConnectDeviceCore(false,true);
+                jobStatus.Text=monitor is not null?"Aborted · connection restored. Read status; Home if Alarm. Cut was not resumed.":"Aborted · reconnect failed; check USB and use Connect. Cut was not resumed.";
+            }
+        }
     }
 }

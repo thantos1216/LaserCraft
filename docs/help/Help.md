@@ -1,6 +1,16 @@
 # LaserCraft Help
 
-Version 0.27 - placement modes and exact positioning
+Version 0.28 - startup homing and job recovery
+
+## Connect, Home and Abort recovery (0.28)
+
+The connection button is now simply Connect. For an identified physical GRBL profile, the app waits one extra second after connection, reads the homing setting, and homes only if firmware $22=1. This is in addition to the serial startup wait configured in Devices. Connect can move the machine; clear its travel first. Disabled/missing homing is reported as skipped without changing firmware. Home is available in both Laser and Move while connected and no operation is busy. Repeat it whenever you need a new machine reference; it clears saved User Origin.
+
+During a document job, one reader owns acknowledgements and real-time status reports. While waiting for a response, the sender requests status about once a second and displays the reported state. Successful completion still requires every program acknowledgement followed by Idle. Idle alone never replaces a missing acknowledgement. Ten seconds without a complete response, or ten seconds of Idle reports without the pending acknowledgement, ends the job as an error with unknown completion. No cut is retried. The ordinary per-command deadline remains 120 seconds while a responsive controller is running.
+
+Explicit Abort cancels dispatch and requests a reset. After sender cleanup, the app reopens the connection once, without automatic homing, unlocking or resuming the cut. The journal is retained. If the reset reports ALARM:3 before its identity reply, connection can complete only after identified firmware and terminal ok; the alarm lock is preserved. Home remains available. If GRBL reports Alarm, use Home before jogging. Reset clears the app's homing/User Origin reference, so document output requires Home again. If USB reopening fails, controls remain disabled and the failure is shown; check the connection and use Connect. An ordinary transport failure does not trigger this automatic reopen.
+
+Your supplied log stopped receiving acknowledgements during the program, then reported a USB device failure during the reset attempt. It does not establish successful completion. These recovery changes do not establish that the physical USB fault is repaired. Verify the new build on the Attzr, save the connection log and inspect actual output. Software Abort is not a physical emergency stop.
 
 ## Start From and exact positioning (0.27)
 
@@ -32,7 +42,7 @@ Document preflight failures are included in Save connection log. A successful fr
 
 For GRBL 1.1 serial/TCP profiles, selecting Connect establishes the connection and applies that profile's bed dimensions to the current document (an undoable edit, without scaling artwork). Physical X/Y/pulse/line controls are available directly after connection; the repeated enable-control/firing checkboxes are removed. Console custom commands still have their own explicit permission. Simulator profiles remain available for regression rehearsal; physical connections use Review & Run for real output.
 
-Home on Connect is visible and checked by default in this app session for physical GRBL profiles. The button reads Connect + Home when selected. This sends $H after identity/settings checks, not on background port detection. Uncheck it before Connect to query without homing. Home is also a dedicated button. Firmware $22 must report 1; homing can take up to 120 seconds. This establishes the firmware reference and leaves work offsets unchanged. Machine coordinates may remain negative; homing does not silently set G54/G92 or a displayed work 0,0. No automatic unlock or firmware-setting writes occur.
+Connect now automatically checks firmware homing after a one-second pause; see the 0.28 workflow above. Home is also a dedicated button in Laser and Move. Firmware $22 must report 1; homing can take up to 120 seconds. This establishes the firmware reference and leaves work offsets unchanged. Machine coordinates may remain negative; homing does not silently set G54/G92 or a displayed work 0,0. No automatic unlock or firmware-setting writes occur.
 
 Move jog distance now permits up to the selected profile axis travel (430 mm for your X/Y profile), with feed 60–3000 mm/min. The UI limits the distance field to the larger profile dimension; each axis is checked separately before transmission. These are command-size limits, not current-position clearance guarantees. Start with small moves to verify direction. Pulse and line tests retain preflight settings checks and clearly labeled action buttons/reviews.
 
@@ -166,7 +176,7 @@ Choose Devices… in the Laser panel or Laser Tools menu. Create a named profile
 
 GRBL connects in query mode, with separately enabled manual console writes. grblHAL and FluidNC use an experimental GRBL-compatible adapter. Marlin, Smoothieware, Ruida and Trocen can be saved as profiles but do not yet have connection adapters. Selecting a controller family is not a claim of tested machine compatibility. No Atezr hardware has been tested.
 
-Select a saved profile, then Connect. The application queries firmware identity ($I) and status (?), and optionally homes when Home on Connect is checked. Running a document remains a separate reviewed action. Read status refreshes the report; Disconnect closes the connection. Status coordinates identify MPos or WPos exactly as reported. Missing coordinates stay unknown. A built-in GRBL simulator is the default and works without hardware. Connection cancellation, line limits and response timeouts bound reads; the user has reported successful 0.24 manual line cuts; new homing/document behavior remains unverified.
+Select a saved profile, then Connect. The application identifies firmware, waits one extra second and automatically homes physical GRBL if $22 is enabled, then reads status. Running a document remains a separate reviewed action. Read status refreshes the report; Disconnect closes the connection. Status coordinates identify MPos or WPos exactly as reported. Missing coordinates stay unknown. A built-in GRBL simulator is the default and works without hardware. Connection cancellation, line limits and response timeouts bound reads; new recovery behavior still requires physical qualification.
 
 ### Test a GRBL connection
 
@@ -186,7 +196,7 @@ Apply device bed explicitly changes the document dimensions to the selected prof
 
 In Devices, Attzr 35 W USB draft prepares a new unsaved USB serial profile with the user-specified 430 × 430 mm bed. Choose a detected COM port and review all settings before Save profile. Its 115200 baud, S1000, bottom-left origin and air settings are starting values, not independently confirmed manufacturer defaults. Saving does not open the port. Close discards the draft.
 
-For a saved Serial profile, choose USB COM for this connection in the Laser panel. Refresh COM ports after plugging in the machine. This enumerates ports without opening them. A detected port must be explicitly selected; LaserCraft does not try arbitrary ports or sweep baud rates. A changed port selection applies to this connection only and does not overwrite the saved profile. Profile/port selection is locked while connecting or connected. Close other software using that port, then uncheck Home on Connect and use Connect for query-only diagnostics.
+For a saved Serial profile, choose USB COM for this connection in the Laser panel. Refresh COM ports after plugging in the machine. This enumerates ports without opening them. A detected port must be explicitly selected; LaserCraft does not try arbitrary ports or sweep baud rates. A changed port selection applies to this connection only and does not overwrite the saved profile. Profile/port selection is locked while connecting or connected. Close other software using that port and clear travel before Connect: it automatically homes when firmware $22 is enabled.
 
 Connection check queries firmware settings ($$), parser modes ($G), then status (?). The report compares profile S maximum with $30, laser mode $32, status-report units $13, G-code units/distance/feed/spindle modes, controller state, reported S, and travel vs bed size. Match, Attention and Unknown describe individual comparisons, not permission or readiness to cut. Missing/invalid numeric facts stay unknown. G21 program units and $13 status units are separate facts. Position readouts do not prove homing, usable area, work offsets or origin.
 

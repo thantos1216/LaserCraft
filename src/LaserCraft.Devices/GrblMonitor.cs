@@ -79,6 +79,9 @@ public sealed partial class GrblMonitor : IAsyncDisposable
             {
                 var line = await transport.ReadLineAsync(timeout.Token);
                 if (line.StartsWith("[VER:", StringComparison.Ordinal) || line.StartsWith("Grbl", StringComparison.OrdinalIgnoreCase)) monitor.Identity = line;
+                // Reset during motion can emit ALARM:3 before the allowed identity reply.
+                // Keep the alarm lock: identity + ok are still required; never send $X here.
+                if (line == "ALARM:3") continue;
                 if (line.StartsWith("error:") || line.StartsWith("ALARM:")) throw new IOException("Controller rejected identity query: " + line);
                 if (line == "ok") { if (monitor.Identity.Length == 0) throw new InvalidDataException("Controller did not identify a GRBL-compatible firmware."); return monitor; }
             }
@@ -162,14 +165,25 @@ public sealed partial class GrblMonitor : IAsyncDisposable
         }
         finally { gate.Release(); }
     }
-    private async Task<GrblConsoleResult> ExchangeConsoleCore(GrblConsoleCommand command, CancellationToken token)
+    private async Task<GrblConsoleResult> ExchangeConsoleCore(GrblConsoleCommand command, CancellationToken token, Action<GrblStatus>? observeStatus=null)
     {
         // Once a write is attempted, an interrupted read cannot prove whether it executed.
         Volatile.Write(ref consoleUncertain, 1); await transport.WriteAsync(command.Wire, token);
         var lines = new List<string>();
+        System.Diagnostics.Stopwatch? idleWithoutAck=null;
         for (int i = 0; i < 256; i++)
         {
-            var line = await transport.ReadLineAsync(token); if (line.Length > 2048) throw new InvalidDataException("Console response line exceeds 2048 characters."); lines.Add(line);
+            var line = observeStatus is null ? await transport.ReadLineAsync(token) : await ReadJobResponseAsync(token); if (line.Length > 2048) throw new InvalidDataException("Console response line exceeds 2048 characters."); lines.Add(line);
+            if(observeStatus is not null && line.StartsWith('<'))
+            {
+                var status=GrblStatus.Parse(line);observeStatus(status);
+                if(command.Text!="?" && status.State=="Idle")
+                {
+                    idleWithoutAck ??= System.Diagnostics.Stopwatch.StartNew();
+                    if(idleWithoutAck.Elapsed>=TimeSpan.FromSeconds(10))throw new IOException("Controller reports Idle but the pending command acknowledgement is missing. Completion is unknown; reconnect. No retry.");
+                }
+                else idleWithoutAck=null;
+            }
             if (line.StartsWith("Grbl", StringComparison.OrdinalIgnoreCase)) throw new IOException("Controller restarted during the console exchange.");
             GrblConsoleOutcome? outcome = line == "ok" ? GrblConsoleOutcome.Acknowledged : line.StartsWith("error:", StringComparison.Ordinal) ? GrblConsoleOutcome.Rejected : line.StartsWith("ALARM:", StringComparison.Ordinal) ? GrblConsoleOutcome.Alarm : null;
             if (command.Text == "?" && line.StartsWith('<')) { GrblStatus.Parse(line); outcome = GrblConsoleOutcome.Status; }

@@ -7,6 +7,7 @@ public sealed partial class GrblMonitor
     private readonly object jobControl = new();
     private int jobActive, jobPaused, jobReset;
     public MachineTravel ResolveMachineTravel(DeviceProfile profile) { if(!HomingConfirmed)throw new InvalidDataException("Home in this connection before resolving machine travel.");return MachineTravel.Resolve(profile,homedMachinePosition); }
+    public string JobControllerState { get; private set; } = "";
     public bool JobActive => Volatile.Read(ref jobActive) != 0;
     public bool JobPaused => Volatile.Read(ref jobPaused) != 0;
     public async Task SetJobPausedAsync(bool paused, CancellationToken token = default)
@@ -37,7 +38,7 @@ public sealed partial class GrblMonitor
         _ = GrblExport.Write(plan,profile);
         if (Interlocked.CompareExchange(ref jobActive,1,0) != 0) throw new InvalidDataException("A physical job is already active.");
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(token,lifetime.Token); lock(jobControl)jobCancellation=stop; Volatile.Write(ref jobPaused,0); Volatile.Write(ref jobReset,0);
-        bool acquired=false, started=false;
+        bool acquired=false, started=false; int sent=0,total=0; JobControllerState="Preflight";
         try
         {
             await gate.WaitAsync(stop.Token); acquired=true; RequireSynchronizedConsole();
@@ -45,7 +46,7 @@ public sealed partial class GrblMonitor
             async Task<GrblConsoleResult> Command(string text)
             {
                 using var deadline=CancellationTokenSource.CreateLinkedTokenSource(stop.Token);deadline.CancelAfter(TimeSpan.FromSeconds(120));
-                var reply=await ExchangeConsoleCore(GrblConsoleCommand.Prepare(text,true),deadline.Token);
+                var reply=await ExchangeConsoleCore(GrblConsoleCommand.Prepare(text,true),deadline.Token,status=>{JobControllerState=status.State;if(total>0)progress?.Report((sent,total));});
                 if(reply.Outcome is GrblConsoleOutcome.Rejected or GrblConsoleOutcome.Alarm) throw new IOException("Job command rejected: "+reply.Lines[^1]);
                 return reply;
             }
@@ -60,12 +61,12 @@ public sealed partial class GrblMonitor
             var program=GrblExport.WritePlaced(frameOnly ? JobFootprint.Frame(plan) : plan,profile,resolved);
             if(frameOnly) program += FormattableString.Invariant($"G53 G0 X{state.X.Value:0.######} Y{state.Y.Value:0.######} S0\n");
             var lines=program.Split('\n',StringSplitOptions.RemoveEmptyEntries).Where(l=>!l.StartsWith(';')).ToArray();
-            foreach(var line in lines)GrblConsoleCommand.Prepare(line,true);
+            foreach(var line in lines)GrblConsoleCommand.Prepare(line,true);total=lines.Length;
             // One line/ack at a time; this deliberately trades raster throughput for a bounded sender.
             for(int i=0;i<lines.Length;i++)
             {
                 while(JobPaused)await Task.Delay(50,stop.Token);
-                stop.Token.ThrowIfCancellationRequested();started=true;await Command(lines[i]);progress?.Report((i+1,lines.Length));
+                stop.Token.ThrowIfCancellationRequested();started=true;JobControllerState="Waiting for acknowledgement";await Command(lines[i]);sent=i+1;progress?.Report((sent,total));
             }
             // M5/M9 terminal acknowledgements are followed by controller-reported completion.
             for(int i=0;i<1200;i++)

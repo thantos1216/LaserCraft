@@ -11,7 +11,7 @@ public sealed partial class MainWindow
     private readonly TextBlock manualStatus = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private readonly TextBox manualTranscript = new() { IsReadOnly = true, AcceptsReturn = true, Height = 100, FontFamily = Avalonia.Media.FontFamily.Parse("Consolas") };
     private readonly List<Button> jogButtons = [];
-    private Button? pulseButton, stopPulseButton, cancelJogButton, lineTestButton;
+    private Button? moveHomeButton, pulseButton, stopPulseButton, cancelJogButton, lineTestButton;
     private bool PhysicalControlsAvailable => monitor is { Simulation: null } && connectedProfile?.Controller == ControllerFamily.Grbl && !connecting && !disconnecting;
     private readonly DispatcherTimer manualTimer = new() { Interval = TimeSpan.FromMilliseconds(25) };
     private readonly System.Diagnostics.Stopwatch manualClock = new();
@@ -22,6 +22,7 @@ public sealed partial class MainWindow
         var panel = new StackPanel { Spacing = 4, Margin = new Avalonia.Thickness(10) };
         panel.Children.Add(Label("Manual control · simulator or GRBL 1.1", 16));
         panel.Children.Add(Label("Connect below. Simulator rehearses only. Connected GRBL 1.1 controls are available directly. Jog is relative in millimetres; axis direction follows firmware, not canvas origin. Start at 1 mm with clearance from all limits. No homing/position bounds are assumed."));
+        panel.Children.Add(moveHomeButton=AsyncButton("Home",()=>PhysicalAction(new(GrblManualAction.Home))));
         // Connected GRBL controls are available directly; physical firing is explicit in the action buttons/review.
         var jogOptions = new WrapPanel(); Inline(jogOptions, "Distance · mm", jogDistance, 120); Inline(jogOptions, "Feed · mm/min", jogFeed, 120); panel.Children.Add(jogOptions);
         var pad = new Grid { RowDefinitions = new RowDefinitions("Auto,Auto,Auto"), ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto"), HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left };
@@ -96,6 +97,7 @@ public sealed partial class MainWindow
         foreach (var button in jogButtons) button.IsEnabled = enabled;
         if (pulseButton is not null) pulseButton.IsEnabled = enabled && (sim is not null || PhysicalControlsAvailable);
         if (stopPulseButton is not null) stopPulseButton.IsEnabled = !busy && (sim is not null || physical && PhysicalControlsAvailable);
+        if (moveHomeButton is not null) moveHomeButton.IsEnabled = !busy && physical && PhysicalControlsAvailable;
         if (lineTestButton is not null) lineTestButton.IsEnabled = !busy && physical && PhysicalControlsAvailable;
         if (cancelJogButton is not null) cancelJogButton.IsEnabled = !busy && physical && PhysicalControlsAvailable;
         if (sim is null) { manualTimer.Stop(); if (!querying) manualStatus.Text = physical ? "Physical GRBL connection · one action at a time. Read status after each jog. New homing/job workflows require hardware qualification." : "Connect a simulator or GRBL 1.1 profile. Controls default to disabled."; return; }

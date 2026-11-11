@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.27 - job placement and exact positioning
+## Current milestone 0.28 - startup and response recovery
+
+Connect waits one second and automatically homes only if $22 is enabled; Home is available in Laser and Move. Job waits now poll status with one reader, fail on ten-second silence or Idle-without-ack, and retain acknowledgement/Idle success requirements. Explicit Abort reopens once without homing, unlocking or resuming; startup ALARM:3 can precede a required identity/ok reply. The supplied log shows an acknowledgement stall followed by a USB device error; physical cause remains unknown. See [validation](../testing/milestone-28.md).
+
+## Milestone 0.27 - job placement and exact positioning
 
 Added Absolute Coordinates / Current Position / session-only User Origin, nine drawing anchors, selected-output placement bounds, exact laser-off machine jogs from bed X/Y, origin capture, and optional frame-before-cut. Frames and powered output share domain placement. Home/reconnect clears saved origin. 413 tests pass (395 unit, 18 integration); build has zero warnings/errors. Offline preview/export, configurable finish position and physical qualification remain separate limitations. See [validation](../testing/milestone-27.md).
 
