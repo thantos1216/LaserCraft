@@ -9,3 +9,6 @@
 - No physical endpoint was opened/moved/fired by the developer. Coordinate/framing fix and complete document burn/cut behavior still need user hardware qualification. Desktop/package results recorded below after completion.
 
 - Desktop development publish: custom icon and 0.26 visible; native sample opens as two layers/objects. Devices shows FromHoming range selector; dialog closed without saving. Preview prepared 145 segments / 176.0 mm cut / 39.5 s ideal. No controller connected and no physical action clicked. Final disconnected-frame-button disable was compiled without a separate desktop rerun. Package verification is recorded below when completed.
+
+- Portable ZIP built from clean source commit a74f63f2d36a9188f1055cc1a7f797dfd23be036. All 235 archived manifest entries matched length/SHA-256; sourceDirty=false, version 0.26.0, self-contained win-x64, no shared framework requested. Updated Help, standalone ICO and vector/image sample are included. Final archive was not separately GUI-launched; desktop used the development publish.
+- Archive: artifacts/LaserCraft-0.26.0-win-x64-portable.zip; 75623305 bytes; SHA-256 4761F85AE72C2AC7F1E48B72CCBAF379F283E2D3FCBFA31D0D4C02A70104B2C1. This verification-only update follows the packaged source commit.
