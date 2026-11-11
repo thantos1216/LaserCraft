@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.28 - startup and response recovery
+## Current milestone 0.29 - shutdown, persisted controls and compact workflow
+
+Window close now awaits connection-startup cancellation and monitor disposal before exiting, with a one-second serial-release interval. Supplied logs fail before any TX during Windows port open; physical USB cause remains unknown. Device/default persistence, automatic profile bed, hidden simulator, menu Help/G-code export, direct Run, compact icons, circle/rectangle frames and main-workspace mm/in conversion are implemented. Advanced dialogs retain explicit metric fields. See [validation](../testing/milestone-29.md).
+
+## Milestone 0.28 - startup and response recovery
 
 Connect waits one second and automatically homes only if $22 is enabled; Home is available in Laser and Move. Job waits now poll status with one reader, fail on ten-second silence or Idle-without-ack, and retain acknowledgement/Idle success requirements. Explicit Abort reopens once without homing, unlocking or resuming; startup ALARM:3 can precede a required identity/ok reply. The supplied log shows an acknowledgement stall followed by a USB device error; physical cause remains unknown. See [validation](../testing/milestone-28.md).
 

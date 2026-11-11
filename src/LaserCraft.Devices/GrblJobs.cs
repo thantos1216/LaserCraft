@@ -29,7 +29,7 @@ public sealed partial class GrblMonitor
         lock(jobControl) { if(jobCancellation is null)return; jobCancellation.Cancel(); }
         await ResetJobAsync();
     }
-    public async Task ExecuteJobAsync(DeviceProfile profile, ToolpathPlan plan, bool reviewedPlacement, IProgress<(int Sent,int Total)>? progress = null, CancellationToken token = default, bool frameOnly = false, JobPlacementRequest? placement = null)
+    public async Task ExecuteJobAsync(DeviceProfile profile, ToolpathPlan plan, bool reviewedPlacement, IProgress<(int Sent,int Total)>? progress = null, CancellationToken token = default, bool frameOnly = false, JobPlacementRequest? placement = null,bool circularFrame=false)
     {
         profile.Validate();placement ??= new();
         plan = JobFootprint.TrimInitialTravel(plan);
@@ -58,7 +58,9 @@ public sealed partial class GrblMonitor
             if(state.State!="Idle"||state.Coordinates!="MPos"||state.X is null||state.Y is null)throw new InvalidDataException("Job requires fresh Idle machine position in millimetres.");
             var travel=ResolveMachineTravel(profile);
             var resolved=JobPlacement.Resolve(plan,profile,travel,new(state.X.Value,state.Y.Value),userOrigin,placement);
-            var program=GrblExport.WritePlaced(frameOnly ? JobFootprint.Frame(plan) : plan,profile,resolved);
+            var output=frameOnly ? JobFootprint.Frame(plan,circular:circularFrame) : plan;
+            if(frameOnly)JobPlacement.ValidateOffset(output,profile,travel,resolved.Offset);
+            var program=GrblExport.WritePlaced(output,profile,resolved);
             if(frameOnly) program += FormattableString.Invariant($"G53 G0 X{state.X.Value:0.######} Y{state.Y.Value:0.######} S0\n");
             var lines=program.Split('\n',StringSplitOptions.RemoveEmptyEntries).Where(l=>!l.StartsWith(';')).ToArray();
             foreach(var line in lines)GrblConsoleCommand.Prepare(line,true);total=lines.Length;

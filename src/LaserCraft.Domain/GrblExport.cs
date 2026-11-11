@@ -49,7 +49,7 @@ public static class GrblExport
 
         void ValidatePoint(PointMm p)
         {
-            if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) || p.X < 0 || p.Y < 0 || p.X > profile.BedWidth || p.Y > profile.BedHeight)
+            if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) || (machineOffset is null && (p.X < 0 || p.Y < 0 || p.X > profile.BedWidth || p.Y > profile.BedHeight)))
                 throw new InvalidDataException("Output exceeds the selected device bed.");
         }
         PointMm Map(PointMm p) { var mapped = MapBase(p); if(machineOffset is PointMm offset)return new(mapped.X+offset.X,mapped.Y+offset.Y); return machineAnchor is PointMm anchor ? new(anchor.X + mapped.X - minX, anchor.Y + mapped.Y - minY) : mapped; }

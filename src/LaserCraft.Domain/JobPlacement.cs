@@ -14,7 +14,7 @@ public static class JobPlacement
     public static ResolvedJobPlacement Resolve(ToolpathPlan plan,DeviceProfile p,MachineTravel travel,PointMm current,PointMm? userOrigin,JobPlacementRequest request)
     {
         p.Validate();if(!Enum.IsDefined(request.Mode)||!Enum.IsDefined(request.Anchor))throw new InvalidDataException("Unknown job placement mode/anchor.");
-        var bounds=JobFootprint.Measure(plan);var mapped=plan.Segments.SelectMany(s=>new[]{MapToBed(p,s.From),MapToBed(p,s.To)}).ToArray();var x=mapped.Min(v=>v.X);var y=mapped.Min(v=>v.Y);var width=mapped.Max(v=>v.X)-x;var height=mapped.Max(v=>v.Y)-y;
+        var bounds=JobFootprint.Measure(plan);
         PointMm offset;
         if(request.Mode==StartFromMode.AbsoluteCoordinates)offset=new(travel.MinX,travel.MinY);
         else
@@ -23,6 +23,11 @@ public static class JobPlacement
             if(!double.IsFinite(target.X)||!double.IsFinite(target.Y))throw new InvalidDataException("Invalid placement reference.");
             var index=(int)request.Anchor;var anchor=MapToBed(p,new(bounds.X+(index%3)*bounds.Width/2,bounds.Y+(index/3)*bounds.Height/2));offset=new(target.X-anchor.X,target.Y-anchor.Y);
         }
+        return ValidateOffset(plan,p,travel,offset);
+    }
+    public static ResolvedJobPlacement ValidateOffset(ToolpathPlan plan,DeviceProfile p,MachineTravel travel,PointMm offset)
+    {
+        _=JobFootprint.Measure(plan);var mapped=plan.Segments.SelectMany(s=>new[]{MapToBed(p,s.From),MapToBed(p,s.To)}).ToArray();var x=mapped.Min(v=>v.X);var y=mapped.Min(v=>v.Y);var width=mapped.Max(v=>v.X)-x;var height=mapped.Max(v=>v.Y)-y;
         var output=new BoundsMm(x+offset.X,y+offset.Y,width,height);
         if(!travel.Contains(new(output.X,output.Y),output))throw new InvalidDataException(FormattableString.Invariant($"Placed footprint X[{output.X:0.###},{output.X+width:0.###}], Y[{output.Y:0.###},{output.Y+height:0.###}] exceeds machine travel. Check Start From, origin and placement."));
         return new(offset,output);

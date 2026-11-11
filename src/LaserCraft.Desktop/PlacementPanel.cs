@@ -19,13 +19,13 @@ public sealed partial class MainWindow
     {
         var panel=new StackPanel { Spacing=4 };panel.Children.Add(Label("Exact bed position - Home first",16));var row=new WrapPanel();Inline(row,"Bed X - mm",positionX,110);Inline(row,"Bed Y - mm",positionY,110);panel.Children.Add(row);var actions=new WrapPanel();
         void Add(string title,Func<Task> action){var b=AsyncButton(title,action);positionButtons.Add(b);actions.Children.Add(b);}
-        Add("Go to bed X/Y",()=>PositionAction(new((double)(positionX.Value??0),(double)(positionY.Value??0))));Add("Go to bed 0,0",()=>PositionAction(new(0,0)));Add("Set User Origin here",()=>PositionAction(null,true));Add("Read position",()=>PositionAction());
+        Add("Go to bed X/Y",()=>PositionAction(new(Millimetres(positionX),Millimetres(positionY))));Add("Go to bed 0,0",()=>PositionAction(new(0,0)));Add("Set User Origin here",()=>PositionAction(null,true));Add("Read position",()=>PositionAction());
         panel.Children.Add(actions);panel.Children.Add(Label("Bed coordinates are measured from the configured device origin. Absolute machine jogs use laser OFF and the jog feed above. 0,0 may be at a limit; allow clearance. User Origin is session-only, cleared by Home/reconnect. No firmware work offsets change."));return panel;
     }
     private async Task PositionAction(PointMm? target=null,bool capture=false)
     {
         var client=monitor;var profile=connectedProfile;if(client is null||profile is null||querying||connecting||disconnecting)return;querying=true;UpdateConnectionControls();
-        try{var p=await client.PositionAsync(profile,target,(double)(jogFeed.Value??600),capture,connectionLifetime.Token);manualTranscript.Text=FormattableString.Invariant($"{(capture?"Saved User Origin":target is null?"Reported machine position":"Commanded target (acknowledged; read position after movement)")}: X {p.X:0.######}, Y {p.Y:0.######}");Log(manualTranscript.Text);}
+        try{var p=await client.PositionAsync(profile,target,Millimetres(jogFeed),capture,connectionLifetime.Token);manualTranscript.Text=FormattableString.Invariant($"{(capture?"Saved User Origin":target is null?"Reported machine position":"Commanded target (acknowledged; read position after movement)")}: X {p.X:0.######}, Y {p.Y:0.######}");Log(manualTranscript.Text);}
         catch(Exception ex)when(ex is IOException or InvalidDataException or OperationCanceledException){Log("Position: "+ex.Message);manualTranscript.Text=ex.Message;if(client.RequiresReconnect||ex is IOException or OperationCanceledException)await DisconnectDevice();}
         finally{querying=false;UpdateConnectionControls();}
     }

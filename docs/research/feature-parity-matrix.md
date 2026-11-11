@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.28
+# Feature parity matrix - working baseline 0.29
+
+0.29: orderly pre-close port cleanup, remembered device/control defaults, automatic device bed, direct Run and compact icons, separate Help window, File-menu G-code export, rectangle/circle framing, and main design/Move/layer mm/in units. Advanced dialogs remain explicitly metric. Physical USB recovery is not established by the new logs or automated tests. See [validation](../testing/milestone-29.md).
 
 0.28: capability-checked delayed automatic homing, persistent connected Home controls, live status during job waits, bounded silence/missing-ack failures, and explicit-Abort connection recovery without automatic motion. Automated coverage; physical Attzr confirmation pending. See [validation](../testing/milestone-28.md).
 

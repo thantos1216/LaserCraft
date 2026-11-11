@@ -43,7 +43,15 @@ public sealed partial class MainWindow : Window
             help.Children.Add(block);
         }
         LoadSettings(); KeyDown += OnShortcut;
-        Closing += (_, e) => { if(monitor?.JobActive==true){e.Cancel=true;status.Text="Abort the physical job and inspect output before closing.";return;} if (!allowClose && sessions.Any(IsDirty)) { e.Cancel = true; _ = ConfirmClose(); } };
+        Closing += (_, e) => { if(allowClose)return;e.Cancel=true;if(shutdownInProgress)return;if(sessions.Any(IsDirty)){_=ConfirmClose();return;}_=ShutdownAndClose(); };
+    }
+    private bool shutdownInProgress;
+    private async Task ShutdownAndClose()
+    {
+        if(shutdownInProgress)return;shutdownInProgress=true;explicitlyAbortedJob=null;SavePreferences();
+        try{if(connectionAttempt is not null)await connectionAttempt.CancelAsync();await connectionLifetime.CancelAsync();if(connectionOperation is not null)await connectionOperation;await DisconnectDevice();}
+        catch(Exception ex)when(ex is IOException or OperationCanceledException or ObjectDisposedException){connectionJournal?.Add("ERROR","Shutdown: "+ex.Message);}
+        finally{allowClose=true;Close();}
     }
     private bool allowClose;
     private async Task ConfirmClose()
@@ -52,14 +60,15 @@ public sealed partial class MainWindow : Window
         var dialog = new Window { Title = "Unsaved projects", Width = 420, Height = 180, WindowStartupLocation = WindowStartupLocation.CenterOwner, CanResize = false };
         var panel = new StackPanel { Margin = new Thickness(24) }; panel.Children.Add(Label("There are unsaved projects. Close and discard changes?", 15));
         var buttons = new WrapPanel(); buttons.Children.Add(Button("Keep editing", () => dialog.Close(false))); buttons.Children.Add(Button("Discard and close", () => dialog.Close(true))); panel.Children.Add(buttons); dialog.Content = panel;
-        if (await dialog.ShowDialog<bool>(this)) { allowClose = true; Close(); }
+        if (await dialog.ShowDialog<bool>(this)) await ShutdownAndClose();
     }
     private static string Snapshot(Session s) => JsonSerializer.Serialize(s.Canvas.History.Document);
     private static bool IsDirty(Session s) => Snapshot(s) != s.Saved;
     private void AddDocument(DesignDocument d, string? path = null)
     {
+        var device=connectedProfile??profiles.ElementAtOrDefault(deviceChoice.SelectedIndex);if(device is not null && device.Connection!=ConnectionKind.Simulator)d=d with {Width=device.BedWidth,Height=device.BedHeight};
         d.Validate(); RasterImages.Verify(d);
-        var s = new Session { Path = path }; s.Canvas.History.Reset(d); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
+        var s = new Session { Path = path };s.Canvas.Inches=inches; s.Canvas.History.Reset(d); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
         s.Canvas.Changed += Refresh; s.Canvas.Notice += message => status.Text = message; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
     }
     private void Refresh()
@@ -69,24 +78,24 @@ public sealed partial class MainWindow : Window
         var present = d.Shapes.Select(s => s.Id).ToHashSet(); c.Selection.RemoveWhere(id => !present.Contains(id));
         updatingInspector = true; c.ActiveLayer = Math.Clamp(c.ActiveLayer, 0, d.Layers.Count - 1); layer.ItemsSource = d.Layers.Select((l, i) => $"{i:00}  {l.Name}").ToArray(); layer.SelectedIndex = c.ActiveLayer; updatingInspector = false;
         selection.Text = shape is null ? "Select an object to edit its dimensions." : $"{shape.Kind} · layer {shape.Layer + 1}";
-        if (c.Selection.Count > 0) { var bounds = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); x.Value = (decimal)bounds.X; y.Value = (decimal)bounds.Y; width.Value = (decimal)bounds.Width; height.Value = (decimal)bounds.Height; }
+        if (c.Selection.Count > 0) { var bounds = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); SetMillimetres(x,bounds.X); SetMillimetres(y,bounds.Y); SetMillimetres(width,bounds.Width); SetMillimetres(height,bounds.Height); }
         RefreshWorkspace();
         RefreshStatus(); RefreshLayer();
     }
     private void RefreshStatus()
     {
         var c = Current.Canvas; var d = c.History.Document;
-        status.Text = $"{d.Name}  ·  {d.Width:0} × {d.Height:0} mm  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : PhysicalControlsAvailable ? "Physical control enabled" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
+        status.Text = $"{d.Name}  ·  {DisplayValue(d.Width):0.###} × {DisplayValue(d.Height):0.###} {(inches?"in":"mm")}  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : PhysicalControlsAvailable ? "Physical control enabled" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
     }
-    private void RefreshLayer() { var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; speed.Value = (decimal)l.Speed; power.Value = (decimal)l.Power; passes.Value = l.Passes; interval.Value = (decimal)l.Interval; mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible; }
+    private void RefreshLayer() { var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; SetMillimetres(speed,l.Speed); power.Value = (decimal)l.Power; passes.Value = l.Passes; SetMillimetres(interval,l.Interval); mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible; }
     private void ApplyGeometry()
     {
-        try { var c = Current.Canvas; var d = c.History.Document; if (c.Selection.Count == 0) return; var b = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); var sx = b.Width == 0 ? 1 : (double)(width.Value ?? 1) / b.Width; var sy = b.Height == 0 ? 1 : (double)(height.Value ?? 1) / b.Height; c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = (double)(x.Value ?? 0) + (s.X - b.X) * sx, Y = (double)(y.Value ?? 0) + (s.Y - b.Y) * sy, Width = s.Width * sx, Height = s.Height * sy })); }
+        try { var c = Current.Canvas; var d = c.History.Document; if (c.Selection.Count == 0) return; var b = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); var sx = b.Width == 0 ? 1 : Millimetres(width) / b.Width; var sy = b.Height == 0 ? 1 : Millimetres(height) / b.Height; c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = Millimetres(x) + (s.X - b.X) * sx, Y = Millimetres(y) + (s.Y - b.Y) * sy, Width = s.Width * sx, Height = s.Height * sy })); }
         catch (Exception ex) { status.Text = ex.Message; }
     }
     private void ApplyLayer()
     {
-        try { var c = Current.Canvas; var d = c.History.Document; var i = Math.Max(0, layer.SelectedIndex); var layers = d.Layers.ToList(); layers[i] = layers[i] with { Speed = (double)(speed.Value ?? 1200), Power = (double)(power.Value ?? 20), Passes = (int)(passes.Value ?? 1), Interval = (double)(interval.Value ?? .1m), Name = layerName.Text ?? "", Color = layerColorValue, Mode = layers[i].Kind == LayerKind.Image ? CutMode.Image : (CutMode)Math.Max(0, mode.SelectedIndex), AirAssist = air.IsChecked == true, Output = output.IsChecked == true, Visible = visible.IsChecked == true }; c.Apply(d with { Layers = layers }); }
+        try { var c = Current.Canvas; var d = c.History.Document; var i = Math.Max(0, layer.SelectedIndex); var layers = d.Layers.ToList(); layers[i] = layers[i] with { Speed = Millimetres(speed), Power = (double)(power.Value ?? 20), Passes = (int)(passes.Value ?? 1), Interval = Millimetres(interval), Name = layerName.Text ?? "", Color = layerColorValue, Mode = layers[i].Kind == LayerKind.Image ? CutMode.Image : (CutMode)Math.Max(0, mode.SelectedIndex), AirAssist = air.IsChecked == true, Output = output.IsChecked == true, Visible = visible.IsChecked == true }; c.Apply(d with { Layers = layers }); }
         catch (Exception ex) { status.Text = ex.Message; }
     }
     private static FilePickerFileType ProjectType => new("LaserCraft project") { Patterns = ["*.lcraft"] };
@@ -114,12 +123,11 @@ public sealed partial class MainWindow : Window
     {
         if (Avalonia.Application.Current is not { } app) return;
         app.RequestedThemeVariant = app.ActualThemeVariant == ThemeVariant.Dark ? ThemeVariant.Light : ThemeVariant.Dark; ApplyPalette();
-        try { Directory.CreateDirectory(StateFolder); File.WriteAllText(settingsPath, JsonSerializer.Serialize(new { Light = app.RequestedThemeVariant == ThemeVariant.Light })); } catch (IOException ex) { status.Text = "Theme could not be saved: " + ex.Message; }
+        SavePreferences();
     }
     private void LoadSettings()
     {
-        try { if (File.Exists(settingsPath) && JsonDocument.Parse(File.ReadAllText(settingsPath)).RootElement.GetProperty("Light").GetBoolean()) Avalonia.Application.Current!.RequestedThemeVariant = ThemeVariant.Light; }
-        catch (Exception ex) when (ex is IOException or JsonException or KeyNotFoundException or InvalidOperationException) { status.Text = "Using default theme; saved settings could not be read."; }
+        RestorePreferences();
         ApplyPalette();
     }
     private void ApplyPalette()

@@ -79,6 +79,7 @@ public sealed class DesignCanvas : Control
         catch (InvalidDataException) { /* Keep the draft so Escape or a different finish can recover. */ }
     }
     public void Apply(DesignDocument d) { History.Apply(d); Refresh(); }
+    public bool Inches {get;set;}
     public void ReleaseImages() { foreach (var artwork in bitmaps.Values) artwork.Bitmap?.Dispose(); bitmaps.Clear(); }
     private async void PrepareArtwork(DesignShape shape, CutLayer layer, Artwork entry)
     {
@@ -144,8 +145,8 @@ public sealed class DesignCanvas : Control
             }
         }
         var rulerBrush = Brush("#9EB3C7");
-        for (double tick = 0; tick <= d.Width; tick += 50) Text(tick.ToString("0"), o.X + tick * scale - 6, o.Y - 20);
-        for (double tick = 0; tick <= d.Height; tick += 50) Text(tick.ToString("0"), o.X - 30, o.Y + tick * scale - 6);
+        for (double tick = 0; tick <= d.Width; tick += Inches?25.4:50) Text((Inches?tick/25.4:tick).ToString("0.###"), o.X + tick * scale - 6, o.Y - 20);
+        for (double tick = 0; tick <= d.Height; tick += Inches?25.4:50) Text((Inches?tick/25.4:tick).ToString("0.###"), o.X - 30, o.Y + tick * scale - 6);
         void Text(string text, double x, double y) => ctx.DrawText(new FormattedText(text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 10, rulerBrush), new(x, y));
         Point Screen(PointMm p) => new(o.X + p.X * scale, o.Y + p.Y * scale);
         void Draw(DesignShape s)

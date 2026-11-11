@@ -20,9 +20,9 @@ public sealed partial class MainWindow
     private readonly WrapPanel palette = new() { Orientation = Orientation.Horizontal };
     private readonly TabControl upperPanels = new(), lowerPanels = new();
     private readonly TextBlock jobWorkflow = new() { TextWrapping = TextWrapping.Wrap };
-    private readonly TextBlock jobStatus = new() { Text = "Offline job simulator · no machine execution", FontSize = 12 }, estimate = new() { FontSize = 12 };
+    private readonly TextBlock jobStatus = new() { Text = "Offline preview · no machine execution", FontSize = 12 }, estimate = new() { FontSize = 12 };
     private readonly ProgressBar jobProgress = new() { Minimum = 0, Maximum = 100, Height = 4, Margin = new Thickness(4, 8) };
-    private readonly TextBox console = new() { IsReadOnly = true, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Text = "LaserCraft simulator ready. No serial or network transport is active.", FontSize = 12 };
+    private readonly TextBox console = new() { IsReadOnly = true, AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, Text = "LaserCraft ready. No serial or network transport is active.", FontSize = 12 };
     private readonly CheckBox cutSelected = new() { Content = "Cut selected graphics", MinHeight = 24 }, snapControl = new() { Content = "Snap · 1 mm", IsChecked = true, MinHeight = 24 };
     private readonly NumericUpDown playbackSpeed = Number(1, 100);
     private JobSimulation? simulation;
@@ -45,11 +45,11 @@ public sealed partial class MainWindow
         var menu = new Menu
         {
             ItemsSource = new[]{
-            MenuGroup("File",Item("New",()=>AddDocument(DesignDocument.Empty())),AsyncItem("Open…",Open),AsyncItem("Import SVG…",ImportSvg),AsyncItem("Import image…",ImportImage),AsyncItem("Save",()=>Save(false)),AsyncItem("Save as…",()=>Save(true)),AsyncItem("Export SVG…",Export),Item("Close project",()=>_=CloseDocument()),Item("Exit",Close)),
+            MenuGroup("File",Item("New",()=>AddDocument(DesignDocument.Empty())),AsyncItem("Open…",Open),AsyncItem("Import SVG…",ImportSvg),AsyncItem("Import image…",ImportImage),AsyncItem("Save",()=>Save(false)),AsyncItem("Save as…",()=>Save(true)),AsyncItem("Export SVG…",Export),AsyncItem("Save G-code…",SaveGcode),Item("Close project",()=>_=CloseDocument()),Item("Exit",Close)),
             MenuGroup("Edit",Item("Undo",Undo),Item("Redo",Redo),Item("Copy",Copy),Item("Cut",()=>{ Copy(); Current.Canvas.DeleteSelected(); }),Item("Paste",Paste),Item("Duplicate",Duplicate),Item("Delete",()=>Current.Canvas.DeleteSelected()),Item("Select all",()=>Current.Canvas.SelectAll())),
             MenuGroup("Tools",Item("Select",()=>SetTool("Select")),Item("Rectangle",()=>SetTool("Rectangle")),Item("Ellipse",()=>SetTool("Ellipse")),Item("Draw lines",()=>SetTool("Lines")),Item("Edit nodes",()=>SetTool("Nodes")),Item("Insert node after selected",()=>EditPathNode("Insert")),Item("Delete selected node",()=>EditPathNode("Remove")),Item("Break at selected node",()=>EditPathNode("Break")),Item("Remove selected contour",()=>EditPathNode("Contour")),Item("Separate selected paths",()=>ComposePaths(true)),Item("Combine selected paths",()=>ComposePaths(false)),AsyncItem("Join open endpoints…",JoinPaths),Item("Convert selected to paths",ConvertToPaths),Item("Close selected paths",ClosePaths),Unavailable("Editable Bézier handles"),AsyncItem("Create text…",()=>EditText(false)),AsyncItem("Edit selected text…",()=>EditText(true)),AsyncItem("Trace image…",TraceImage)),
             MenuGroup("Arrange",Item("Flip horizontal",()=>Mirror(true)),Item("Flip vertical",()=>Mirror(false)),AsyncItem("Rotate vectors…",RotateVectors),MenuGroup("Align",new[]{"Left","Right","Top","Bottom","Horizontal center","Vertical center"}.Select(a=>Item(a,()=>Align(a))).ToArray()),MenuGroup("Distribute",Enum.GetValues<DistributionMode>().Select(m=>Item(m switch { DistributionMode.HorizontalCenters=>"Horizontal centers",DistributionMode.VerticalCenters=>"Vertical centers",DistributionMode.HorizontalGaps=>"Horizontal gaps",_=>"Vertical gaps" },()=>Distribute(m))).ToArray()),AsyncItem("Rectangular array…",RectangularArray),Item("Reverse path direction",ReversePaths),Item("Center on bed",CenterOnBed),Item("Group",()=>ChangeGrouping(false)),Item("Ungroup",()=>ChangeGrouping(true)),Unavailable("Boolean operations"),Unavailable("Nesting")),
-            MenuGroup("Laser Tools",Item("Preview",Preview),Item("Devices…",()=>_=EditDevices()),Unavailable("Material test"),Unavailable("Rotary setup"),Unavailable("Camera calibration"),Unavailable("Print and cut")),
+            MenuGroup("Laser Tools",Item("Preview",Preview),Item("Devices…",()=>_=EditDevices()),AsyncItem("Connection diagnostics…",ReadConnectionCheck),Unavailable("Material test"),Unavailable("Rotary setup"),Unavailable("Camera calibration"),Unavailable("Print and cut")),
             MenuGroup("Web Tools",Unavailable("Online integrations")),
             MenuGroup("Window",Item("Cuts / Layers",()=>upperPanels.SelectedIndex=0),Item("Console",()=>upperPanels.SelectedIndex=1),Item("Laser",()=>lowerPanels.SelectedIndex=0),Item("Help",ShowHelp),Item("Fit workspace",()=>Current.Canvas.Fit()),Item("Light / dark",ToggleTheme)),
             MenuGroup("Language",Unavailable("English (current)")),MenuGroup("Help",Item("LaserCraft Help",ShowHelp),Item("Feature status",ShowFeatureStatus)) }
@@ -64,10 +64,10 @@ public sealed partial class MainWindow
         Separator(toolbar); toolbar.Children.Add(IconButton("Copy", "M2,2 L12,2 L12,13 L2,13 Z M6,6 L16,6 L16,17 L6,17 Z", Copy)); toolbar.Children.Add(IconButton("Paste", "M5,3 L2,3 L2,17 L16,17 L16,3 L13,3 M6,1 L12,1 L12,5 L6,5 Z", Paste)); toolbar.Children.Add(IconButton("Delete", "M2,4 L16,4 M6,4 L6,1 L12,1 L12,4 M4,4 L5,17 L13,17 L14,4 M8,7 L8,14 M11,7 L11,14", () => Current.Canvas.DeleteSelected()));
         Separator(toolbar); toolbar.Children.Add(IconButton("Fit workspace", "M1,6 L1,1 L6,1 M12,1 L17,1 L17,6 M17,12 L17,17 L12,17 M6,17 L1,17 L1,12", () => Current.Canvas.Fit()));
         toolbar.Children.Add(IconButton("Preview", "M1,2 L17,2 L17,14 L1,14 Z M7,5 L12,8 L7,11 Z M6,17 L12,17", Preview));
-        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(Label("LASERCRAFT  /  0.28", 12));
+        toolbar.Children.Add(Button("Light / dark", ToggleTheme)); toolbar.Children.Add(BuildUnitsControl()); toolbar.Children.Add(Label("LASERCRAFT  /  0.29", 12));
         Grid.SetRow(toolbar, 1); root.Children.Add(toolbar);
         var transforms = new WrapPanel { Margin = new Thickness(0, 2, 0, 5) };
-        Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(Label("mm")); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
+        Inline(transforms, "X", x, 90); Inline(transforms, "Y", y, 90); Inline(transforms, "Width", width, 90); Inline(transforms, "Height", height, 90); transforms.Children.Add(geometryUnits); transforms.Children.Add(Button("Apply", ApplyGeometry)); transforms.Children.Add(Button("Center on bed", CenterOnBed)); transforms.Children.Add(snapControl); transforms.Children.Add(selection);
         snapControl.IsCheckedChanged += (_, _) => { if (!updatingInspector && sessions.Count > 0) Current.Canvas.Snap = snapControl.IsChecked == true; };
         Grid.SetRow(transforms, 2); root.Children.Add(transforms);
         var workspace = new Grid { ColumnDefinitions = new ColumnDefinitions("40,*,5,520") };
@@ -86,7 +86,7 @@ public sealed partial class MainWindow
         upperPanels.Items.Add(new TabItem { Header = "Move", Content = BuildMovePanel() });
         foreach (var name in new[] { "Macros", "Cameras / Overlays", "Variable Text", "Pages" }) { var tab = new TabItem { Header = name, IsEnabled = false }; ToolTip.SetTip(tab, name + " is planned; no implementation in this build."); upperPanels.Items.Add(tab); }
         right.Children.Add(upperPanels); var hsplit = new GridSplitter { ResizeDirection = GridResizeDirection.Rows, VerticalAlignment = VerticalAlignment.Stretch, HorizontalAlignment = HorizontalAlignment.Stretch }; Grid.SetRow(hsplit, 1); right.Children.Add(hsplit);
-        lowerPanels.Items.Add(new TabItem { Header = "Laser", Content = BuildLaserPanel() }); lowerPanels.Items.Add(new TabItem { Header = "Help", Content = new ScrollViewer { Content = help, Margin = new Thickness(12) } });
+        lowerPanels.Items.Add(new TabItem { Header = "Laser", Content = BuildLaserPanel() });
         var materials = new TabItem { Header = "Material Library", Content = BuildMaterialLibrary() }; lowerPanels.Items.Add(materials); Grid.SetRow(lowerPanels, 2); right.Children.Add(lowerPanels);
         Grid.SetColumn(right, 3); workspace.Children.Add(right); Grid.SetRow(workspace, 3); root.Children.Add(workspace);
         palette.Margin = new Thickness(42, 5, 0, 2); Grid.SetRow(palette, 4); root.Children.Add(palette); status.Margin = new Thickness(5, 2); Grid.SetRow(status, 5); root.Children.Add(status); Content = root;
@@ -112,16 +112,20 @@ public sealed partial class MainWindow
     private Control BuildLaserPanel()
     {
         var panel = new StackPanel { Spacing = 5, Margin = new Thickness(8) }; panel.Children.Add(jobStatus); panel.Children.Add(jobWorkflow);
-        var controls = new UniformGrid { Columns = 3 }; controls.Children.Add(AsyncButton("Ⅱ Pause / Resume", PausePhysicalOrPreview)); controls.Children.Add(AsyncButton("■ Abort", StopPhysicalOrPreview)); controls.Children.Add(AsyncButton("▶ Review & Run", StartPhysicalOrPreview)); panel.Children.Add(controls);
-        var actions = new WrapPanel(); actions.Children.Add(Button("Preview", Preview)); actions.Children.Add(Button("Frame preview", FramePreview));
-        actions.Children.Add(AsyncButton("Save G-code", SaveGcode));
-        actions.Children.Add(runDocumentButton = AsyncButton("Run document…", () => ReviewDocumentJob())); actions.Children.Add(frameDocumentButton = AsyncButton("Frame laser off…",()=>ReviewDocumentJob(true))); actions.Children.Add(homeButton = AsyncButton("Home",()=>PhysicalAction(new(LaserCraft.Devices.GrblManualAction.Home))));
+        var actions=new WrapPanel();
+        Button CommandIcon(string name,string icon,Func<Task> action){var b=AsyncButton(icon,action);b.MinWidth=34;b.Padding=new Thickness(6);ToolTip.SetTip(b,name);AutomationProperties.SetName(b,name);actions.Children.Add(b);return b;}
+        CommandIcon("Pause / resume","Ⅱ",PausePhysicalOrPreview);CommandIcon("Abort","■",StopPhysicalOrPreview);
+        runDocumentButton=CommandIcon("Run","▶",()=>RunDocumentJob());
+        CommandIcon("Preview","◉",()=>{Preview();return Task.CompletedTask;});
+        frameDocumentButton=CommandIcon("Rectangle frame (laser off)","□",()=>FrameAction(false));
+        circleFrameButton=CommandIcon("Circle frame (laser off)","○",()=>FrameAction(true));
+        homeButton=CommandIcon("Home","⌂",()=>PhysicalAction(new(LaserCraft.Devices.GrblManualAction.Home)));
         panel.Children.Add(actions); panel.Children.Add(BuildPlacementPanel()); panel.Children.Add(BuildConnectionPanel());
         var view = new WrapPanel(); playbackSpeed.Value = 10; Inline(view, "Playback speed ×", playbackSpeed, 85); var travel = new CheckBox { Content = "Show travel", IsChecked = true, Margin = new Thickness(8) }; travel.IsCheckedChanged += (_, _) => { Current.Canvas.ShowTravel = travel.IsChecked == true; Current.Canvas.InvalidateVisual(); }; view.Children.Add(travel); view.Children.Add(Button("Return to design", StopSimulation)); panel.Children.Add(view);
-        panel.Children.Add(cutSelected); panel.Children.Add(estimate); panel.Children.Add(jobProgress); panel.Children.Add(Label("Preview shows power-weighted black marks and the moving beam on a white bed. Design coordinates: top-left origin. Ideal timing excludes acceleration, controller delays and material effects."));
+        panel.Children.Add(frameBeforeRun); panel.Children.Add(cutSelected); panel.Children.Add(estimate); panel.Children.Add(jobProgress); panel.Children.Add(Label("Preview shows power-weighted black marks and the moving beam on a white bed. Design coordinates: top-left origin. Ideal timing excludes acceleration, controller delays and material effects."));
         return new ScrollViewer { Content = panel };
     }
-    private static void Inline(Panel p, string name, Control control, double width) { var column = new StackPanel { Margin = new Thickness(3, 0), Spacing = 2 }; column.Children.Add(new TextBlock { Text = name, FontSize = 11 }); control.Width = width; control.MinHeight = 26; column.Children.Add(control); p.Children.Add(column); }
+    private void Inline(Panel p, string name, Control control, double width) { var column = new StackPanel { Margin = new Thickness(3, 0), Spacing = 2 }; var caption=new TextBlock { Text = name, FontSize = 11 };column.Children.Add(caption);if(control is NumericUpDown n && UnitInputs.Contains(n))unitLabels.Add((caption,name)); control.Width = width; control.MinHeight = 26; column.Children.Add(control); p.Children.Add(column); }
     private bool layerRefreshQueued;
     private void QueueLayerRefresh()
     {
@@ -158,7 +162,11 @@ public sealed partial class MainWindow
         var c = Current.Canvas; if (c.Selection.Count == 0) return; var d = c.History.Document; var b = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id)));
         c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = s.X + (d.Width - b.Width) / 2 - b.X, Y = s.Y + (d.Height - b.Height) / 2 - b.Y }));
     }
-    private void ShowHelp() => lowerPanels.SelectedIndex = 1;
+    private Window? helpWindow;
+    private void ShowHelp()
+    {
+        if(helpWindow is not null){helpWindow.Activate();return;}var scroll=new ScrollViewer {Content=help,Margin=new Thickness(16)};var window=helpWindow=new Window {Title="LaserCraft Help",Width=850,Height=700,Content=scroll};window.Closed+=(_,_)=>{scroll.Content=null;helpWindow=null;};window.Show(this);
+    }
     private void ShowFeatureStatus() { ShowHelp(); status.Text = "Implemented: shapes, layers, SVG subset, image adjustments/dithering, raster/vector simulation. Disabled commands are planned; guided job execution is unavailable; manual Console commands require opt-in."; }
     private CancellationTokenSource? previewCancellation;
     private Session? previewOwner;
@@ -167,7 +175,7 @@ public sealed partial class MainWindow
     private bool workspaceClosed;
     private readonly System.Diagnostics.Stopwatch playbackClock = new();
     private double lastPlaybackTick;
-    private void Preview() => _ = GeneratePreview(false);
+    private void Preview() => StartSimulation();
     private async Task GeneratePreview(bool startPlayback)
     {
         StopSimulation(); simulation = null; var session = Current; var c = session.Canvas; c.Plan = null;
@@ -200,8 +208,7 @@ public sealed partial class MainWindow
     }
     private void PauseSimulation() { simulation?.Pause(); playbackClock.Stop(); simulationTimer.Stop(); UpdateSimulation(); }
     private void StopSimulation() { previewCancellation?.Cancel(); playbackClock.Reset(); lastPlaybackTick = 0; simulationTimer.Stop(); simulation?.Stop(); if (sessions.Count > 0) { Current.Canvas.ShowPreview = false; Current.Canvas.InvalidateVisual(); } UpdateSimulation(); }
-    private void UpdateSimulation() { if(monitor?.JobActive==true)return; jobStatus.Text = monitor is not null && monitor.Simulation is null && simulation?.State is not (SimulationState.Running or SimulationState.Paused) ? "Physical GRBL connected · Review & Run sends the document" : "PREVIEW · " + (simulation?.State.ToString() ?? "Ready") + " · no machine execution"; jobProgress.Value = simulation is null || simulation.Plan.Seconds == 0 ? 0 : simulation.Elapsed / simulation.Plan.Seconds * 100; }
-    private async void FramePreview() { await GeneratePreview(false); if (Current.Canvas.Plan is { } p && p.Segments.Count > 0) { Current.Canvas.Fit(); status.Text = "Output bounds checked against the bed. Frame preview only; no machine motion."; } }
+    private void UpdateSimulation() { if(monitor?.JobActive==true)return; jobStatus.Text = monitor is not null && monitor.Simulation is null && simulation?.State is not (SimulationState.Running or SimulationState.Paused) ? "Physical GRBL connected · Run sends the document" : "PREVIEW · " + (simulation?.State.ToString() ?? "Ready") + " · no machine execution"; jobProgress.Value = simulation is null || simulation.Plan.Seconds == 0 ? 0 : simulation.Elapsed / simulation.Plan.Seconds * 100; }
     private void Log(string text) { var next = console.Text + $"\n{DateTime.Now:HH:mm:ss}  {text}"; console.Text = next.Length > 64000 ? "[Older console text trimmed]\n" + next[^60000..] : next; console.CaretIndex = console.Text.Length; }
     private void RefreshWorkspace()
     {
@@ -215,7 +222,7 @@ public sealed partial class MainWindow
         foreach (var i in used)
         {
             var l = d.Layers[i]; var row = new Grid { ColumnDefinitions = new ColumnDefinitions("32,*,48,76,42,38,30"), Margin = new Thickness(0, 3) };
-            var cells = new[] { i.ToString("00"), l.Name, l.Mode.ToString(), $"{l.Speed:0}/{l.Power:0}", l.Output ? "●" : "○", l.Visible ? "●" : "○", l.AirAssist ? "●" : "○" };
+            var cells = new[] { i.ToString("00"), l.Name, l.Mode.ToString(), $"{DisplayValue(l.Speed):0.###}/{l.Power:0}", l.Output ? "●" : "○", l.Visible ? "●" : "○", l.AirAssist ? "●" : "○" };
             for (int col = 0; col < cells.Length; col++) { var t = new TextBlock { Text = cells[col], FontSize = 11, VerticalAlignment = VerticalAlignment.Center }; if (col == 0) t.Foreground = new SolidColorBrush(Color.Parse(l.Color)); Grid.SetColumn(t, col); row.Children.Add(t); }
             var item = new ListBoxItem { Content = row, Tag = i, Padding = new Thickness(4), MinHeight = 26 }; ToolTip.SetTip(item, "Select to edit this layer below"); layerRows.Items.Add(item); if (i == c.ActiveLayer) layerRows.SelectedItem = item;
         }
