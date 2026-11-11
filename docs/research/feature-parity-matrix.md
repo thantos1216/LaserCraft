@@ -1,4 +1,4 @@
-# Feature parity matrix - working baseline 0.25
+# Feature parity matrix - working baseline 0.26
 
 2026-11-07. This is a categorized implementation backlog, not a claim of complete parity. D = documented in the supplied manual; R = requested in the specification but exact baseline behavior still needs research. The VM console shows LightBurn 2.2.01 (Trial); workspace panel presence was observed, detailed behavioral testing remains pending. Page references are physical PDF pages; see the full page index for further discovery.
 
@@ -42,7 +42,7 @@
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |
 | G-code generation | R | Partial: offline GRBL 1.1 export, bounds/units/power-off/origin/air tests | Physical qualification, other dialects |
-| Streaming / pause / resume / stop | R | Initial reviewed vector/raster snapshot streamer, machine-anchor placement, hold/resume and reset abort; scripted/TCP tested | Physical qualification, dense-raster throughput, richer placement/recovery |
+| Streaming / pause / resume / stop | R | Initial reviewed vector/raster snapshot streamer, machine-anchor placement with signed range/override, laser-off framing/return, hold/resume and reset abort; scripted/TCP tested | Physical qualification, dense-raster throughput, richer placement/recovery |
 | Device setup / machine profiles | R | Implemented profile configuration/persistence, query monitor and opt-in guided GRBL controls | Device-specific origin/power/air validation |
 | Camera calibration / overlay | D p1705 | Planned | Measured calibration error |
 | Print-and-cut / fiducials | R | Planned | Transform accuracy and recovery |

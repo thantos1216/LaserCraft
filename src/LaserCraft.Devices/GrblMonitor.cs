@@ -56,6 +56,7 @@ public sealed partial class GrblMonitor : IAsyncDisposable
         if (Volatile.Read(ref consoleUncertain) != 0) throw new IOException("The console session requires reconnection after an interrupted exchange or alarm. Disconnect and reconnect before further commands; reconnecting does not stop controller motion.");
     }
     private int homingConfirmed;
+    private LaserCraft.Domain.PointMm? homedMachinePosition;
     public bool HomingConfirmed => Volatile.Read(ref homingConfirmed)!=0;
     public bool RequiresReconnect => Volatile.Read(ref consoleUncertain) != 0;
     public string Identity { get; private set; } = "";

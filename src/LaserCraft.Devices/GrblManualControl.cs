@@ -43,14 +43,16 @@ public sealed partial class GrblMonitor
             }
             if (request.Action == GrblManualAction.Home)
             {
-                Volatile.Write(ref homingConfirmed,0);
+                Volatile.Write(ref homingConfirmed,0); homedMachinePosition=null;
                 var homeReport = await Exchange("$$");
                 var enabled = homeReport.Lines.Where(l => l.StartsWith("$22=",StringComparison.Ordinal)).Select(GrblSetting.Parse).ToArray();
                 if (enabled.Length != 1 || !double.TryParse(enabled[0].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value != 1) throw new InvalidDataException("Firmware homing $22 is not reported enabled.");
                 var before = await Exchange("?"); var homingState = GrblStatus.Parse(before.Lines.Last(l => l.StartsWith('<'))).State;
                 if (homingState is not ("Idle" or "Alarm")) throw new InvalidDataException("Home requires Idle or Alarm; reported " + homingState);
                 await Exchange("$H"); var after = await Exchange("?");
-                if (GrblStatus.Parse(after.Lines.Last(l => l.StartsWith('<'))).State != "Idle") throw new IOException("Home did not finish Idle.");
+                var homeStatus=GrblStatus.Parse(after.Lines.Last(l => l.StartsWith('<')));
+                if (homeStatus.State != "Idle") throw new IOException("Home did not finish Idle.");
+                homedMachinePosition=homeStatus.Coordinates=="MPos" && homeStatus.X is double hx && homeStatus.Y is double hy ? new(hx,hy) : null;
                 Volatile.Write(ref homingConfirmed,1);
                 return new(transcript.AsReadOnly(), "Homing acknowledged and Idle reported. Firmware reference established; work offsets unchanged, displayed machine coordinates may be negative.");
             }

@@ -25,6 +25,7 @@
     <None Include="..\..\samples\nasa-blue-marble.jpg" Link="samples\nasa-blue-marble.jpg" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\endpoint-joining.lcraft" Link="samples\endpoint-joining.lcraft" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\bezier-curves.svg" Link="samples\bezier-curves.svg" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\vector-and-image-demo.lcraft" Link="samples\vector-and-image-demo.lcraft" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\samples\arrangement-demo.lcraft" Link="samples\arrangement-demo.lcraft" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

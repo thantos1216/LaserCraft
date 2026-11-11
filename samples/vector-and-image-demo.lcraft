@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "Name": "Vector and image qualification example",
+  "Width": 430,
+  "Height": 430,
+  "Shapes": [
+    {
+      "Id": "71002600-0000-4000-8000-000000000001",
+      "Kind": 0,
+      "X": 10,
+      "Y": 10,
+      "Width": 10,
+      "Height": 10,
+      "Layer": 0
+    },
+    {
+      "Id": "71002600-0000-4000-8000-000000000002",
+      "Kind": 2,
+      "X": 25,
+      "Y": 10,
+      "Width": 10,
+      "Height": 10,
+      "Layer": 1,
+      "Image": {
+        "Id": "71002600-0000-4000-8000-000000000003",
+        "MimeType": "image/png",
+        "DataBase64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAAAAADhZOFXAAAAF0lEQVR4nGP4DwUM/xkYiGGAACoDLAUAnP8p10K6DC8AAAAASUVORK5CYII=",
+        "PixelWidth": 8,
+        "PixelHeight": 8
+      }
+    }
+  ],
+  "Layers": [
+    {
+      "Name": "Vector mark example",
+      "Color": "#19D3CF",
+      "Speed": 600,
+      "Power": 10,
+      "Mode": 0,
+      "Passes": 1,
+      "Output": true,
+      "Visible": true,
+      "AirAssist": false,
+      "Interval": 0.25,
+      "Kind": 0,
+      "Raster": {
+        "Mode": 0,
+        "Threshold": 128
+      }
+    },
+    {
+      "Name": "Image mark example",
+      "Color": "#FFAD56",
+      "Speed": 600,
+      "Power": 10,
+      "Mode": 2,
+      "Passes": 1,
+      "Output": true,
+      "Visible": true,
+      "AirAssist": false,
+      "Interval": 0.25,
+      "Kind": 1,
+      "Raster": {
+        "Mode": 0,
+        "Threshold": 128
+      }
+    }
+  ]
+}

@@ -69,9 +69,36 @@ public sealed class GrblJobTests
     {
         var t=new Peer();await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);Assert.True(c.HomingConfirmed);await c.SubmitConsoleAsync("M5",true);Assert.False(c.HomingConfirmed);await Assert.ThrowsAsync<InvalidDataException>(()=>c.ExecuteJobAsync(Profile,Plan(),true));
     }
+    [Fact]public async Task FramingSendsOnlyZeroPowerAndReturnsToCapturedAnchor()
+    {
+        var t=new Peer();await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);
+        var before=t.Commands.Count;await c.ExecuteJobAsync(Profile,Plan(),true,frameOnly:true);var sent=t.Commands.Skip(before).ToArray();
+        Assert.Contains("G53 G0 X-59 Y-75 S0\n",sent);Assert.All(sent.Where(l=>l.Contains(" S")),l=>Assert.EndsWith(" S0\n",l));Assert.DoesNotContain("M8\n",sent);Assert.DoesNotContain("M7\n",sent);Assert.Equal("?",sent[^1]);Assert.True(c.HomingConfirmed);
+    }
+    [Fact]public void FrameKeepsFootprintAndRejectsInvalidFeed()
+    {
+        var plan=JobFootprint.TrimInitialTravel(Plan());var frame=JobFootprint.Frame(plan);Assert.Equal(JobFootprint.Measure(plan),JobFootprint.Measure(frame));Assert.All(frame.Segments,s=>{Assert.Equal(0,s.Power);Assert.False(s.AirAssist);});Assert.Throws<InvalidDataException>(()=>JobFootprint.Frame(plan,0));Assert.Throws<InvalidDataException>(()=>JobFootprint.Measure(new ToolpathPlan([])));
+    }
+    [Theory][InlineData(false)][InlineData(true)]
+    public async Task PositiveHomingAndLoggedPositionPermitPoweredJobAndFrame(bool frame)
+    {
+        var t=new Peer {MachineX=1,MachineY=1};await using var c=await GrblMonitor.ConnectAsync(t);await c.ExecuteManualAsync(Profile,new(GrblManualAction.Home),true);
+        t.MachineX=101;t.MachineY=101;var before=t.Commands.Count;await c.ExecuteJobAsync(Profile,Plan(),true,frameOnly:frame);var sent=t.Commands.Skip(before).ToArray();
+        Assert.Contains(sent,l=>l.StartsWith("G53 G1 X106",StringComparison.Ordinal));Assert.Equal("?",sent[^1]);Assert.False(c.RequiresReconnect);
+        if(frame){Assert.Contains("G53 G0 X101 Y101 S0\n",sent);Assert.All(sent.Where(l=>l.Contains(" S")),l=>Assert.EndsWith(" S0\n",l));}else Assert.Contains(sent,l=>l.EndsWith(" S200\n",StringComparison.Ordinal));
+    }
+    [Fact]public void HomingSignResolvesPositiveNegativeMixedAndExplicitOverride()
+    {
+        var positive=MachineTravel.Resolve(Profile,new(1,1));Assert.Equal(new MachineTravel(0,430,0,430),positive);Assert.True(positive.Contains(new(101,101),new(0,0,25,10)));Assert.False(positive.Contains(new(420,420),new(0,0,25,10)));
+        Assert.Equal(new MachineTravel(-430,0,-430,0),MachineTravel.Resolve(Profile,new(-1,-1)));
+        Assert.Equal(new MachineTravel(0,430,-430,0),MachineTravel.Resolve(Profile,new(1,-1)));
+        Assert.Throws<InvalidDataException>(()=>MachineTravel.Resolve(Profile,new(0,0)));Assert.Throws<InvalidDataException>(()=>MachineTravel.Resolve(Profile,null));
+        Assert.Equal(positive,MachineTravel.Resolve(Profile with {CoordinateRange=MachineCoordinateRange.Positive},new(0,0)));
+        Assert.Equal(new MachineTravel(-430,0,-430,0),MachineTravel.Resolve(Profile with {CoordinateRange=MachineCoordinateRange.Negative},null));
+    }
     private sealed class Peer:IGrblTransport
     {
-        readonly Channel<string> replies=Channel.CreateUnbounded<string>();public List<string> Commands {get;}=[];public bool HoldFirstMotion {get;init;}public bool RejectMotion {get;init;}public double MachineX {get;init;}=-59;public double MachineY {get;init;}=-75;public string? Replacement {get;init;}public TaskCompletionSource Motion {get;}=new(TaskCreationOptions.RunContinuationsAsynchronously);
+        readonly Channel<string> replies=Channel.CreateUnbounded<string>();public List<string> Commands {get;}=[];public bool HoldFirstMotion {get;init;}public bool RejectMotion {get;init;}public double MachineX {get;set;}=-59;public double MachineY {get;set;}=-75;public string? Replacement {get;init;}public TaskCompletionSource Motion {get;}=new(TaskCreationOptions.RunContinuationsAsynchronously);
         public void Reply(string line)=>Push(line);
         void Push(params string[] lines){foreach(var l in lines)replies.Writer.TryWrite(l);}
         public ValueTask WriteAsync(string text,CancellationToken token)

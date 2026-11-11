@@ -12,9 +12,11 @@ if ((Test-Path -LiteralPath $publishPath) -or (Test-Path -LiteralPath $archivePa
 & dotnet publish (Join-Path $projectRoot 'src/LaserCraft.Desktop/LaserCraft.Desktop.csproj') -c Release -r win-x64 --self-contained true -o $publishPath --nologo
 if ($LASTEXITCODE -ne 0) { throw 'Portable publish failed; no archive created.' }
 Copy-Item -LiteralPath (Join-Path $projectRoot 'docs/help/USB-CONNECTION-TEST.md') -Destination (Join-Path $publishPath 'USB-CONNECTION-TEST.md')
+Copy-Item -LiteralPath (Join-Path $projectRoot 'src/LaserCraft.Desktop/Assets/LaserCraft.ico') -Destination (Join-Path $publishPath 'LaserCraft.ico')
 $samplePath = Join-Path $publishPath 'samples'
 New-Item -ItemType Directory -Path $samplePath | Out-Null
 Copy-Item -LiteralPath (Join-Path $projectRoot 'samples/arrangement-demo.lcraft') -Destination $samplePath
+Copy-Item -LiteralPath (Join-Path $projectRoot 'samples/vector-and-image-demo.lcraft') -Destination $samplePath
 $commit = (& git -C $projectRoot rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw 'Could not record source commit.' }
 $dirty = [bool](& git -C $projectRoot status --porcelain)

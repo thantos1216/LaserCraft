@@ -1,0 +1,11 @@
+# Milestone 0.26 validation
+
+2026-11-11. Positive-coordinate correction and framed vector/image workflow.
+
+- Release suite: 388 unit + 15 integration tests pass. New cases cover homing at 1,1 then current position 101,101 for both powered and frame programs, negative/mixed/positive ranges, ambiguous zero/missing home, explicit overrides, frame zero S/no air/return and unchanged homing evidence. Public TCP adapter tests now exercise both positive and negative MPos with fragmented replies. Existing job/manual/abort/cancellation regressions pass.
+- The native portable sample decodes its embedded original PNG through RasterImages, prepares both powered vector/image layers, verifies a 25 × 10 mm footprint and zero-power frame export. Marking example settings are not material calibration.
+- User log LaserCraft-connection-20261111-000958.txt SHA-256 8C36C85E6344FB2B3A193779C4766C5A7DAC924AFF0D96796FDFC3566641C402 records 0.25, COM5/115200, 430 × 430/S1000 profile, Home followed by Idle/MPos1,1 and later MPos101,101. Source inspection confirms the former negative-only check rejects those positions. The rejection cause is source-derived; that older journal did not retain the document UI's rejection message. New failures are added to the journal.
+- REA Docker CLI providers check succeeded; metadata is retained in ignored tmp/rea-providers-27.json. Native UI operations report unsupported_host/macOS required. No live LightBurn/VM window was returned by Windows inventory. Official publisher documentation was reviewed instead; see research note. No proprietary code/assets were copied and no binary behavior equivalence is claimed.
+- No physical endpoint was opened/moved/fired by the developer. Coordinate/framing fix and complete document burn/cut behavior still need user hardware qualification. Desktop/package results recorded below after completion.
+
+- Desktop development publish: custom icon and 0.26 visible; native sample opens as two layers/objects. Devices shows FromHoming range selector; dialog closed without saving. Preview prepared 145 segments / 176.0 mm cut / 39.5 s ideal. No controller connected and no physical action clicked. Final disconnected-frame-button disable was compiled without a separate desktop rerun. Package verification is recorded below when completed.

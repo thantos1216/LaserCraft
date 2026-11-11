@@ -1,5 +1,7 @@
 # LaserCraft
 
+Version 0.26 fixes document rejection on positive-coordinate controllers, resolves per-axis travel from homing with profile overrides, and adds zero-power framing/return, a vector/image qualification sample and a standalone Windows shortcut icon. Review now shows resolved travel. Actual document/framing hardware qualification remains pending.
+
 Version 0.25 adds Home/Home on Connect, automatic profile-bed application, larger profile-bounded jogs, direct connected controls, original app icon and reviewed physical vector/image jobs with realtime hold/resume and abort/reset. Document jobs use current machine position as the minimum X/Y footprint anchor. New workflows require hardware qualification; see [current test guide](docs/help/USB-CONNECTION-TEST.md).
 
 Version 0.24 adds a reviewed, one-pass X/Y line test from the current physical head position, with bounded length/feed/power, preflight settings/modes, queued laser-off and final Idle reporting. User-supplied 0.14 screenshots establish query connectivity only; actual cuts remain unverified. Use the current portable package and [first-test guide](docs/help/USB-CONNECTION-TEST.md).

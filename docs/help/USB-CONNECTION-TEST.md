@@ -1,6 +1,6 @@
-# LaserCraft 0.25 physical qualification guide
+# LaserCraft 0.26 physical qualification guide
 
-Extract the complete portable ZIP locally on the Windows computer with the USB laser attached. Confirm toolbar 0.25. Server storage does not forward USB. Close other port users, select the saved GRBL profile and detected COM port. Devices/settings remain per user under LocalAppData/LaserCraft. No drivers are installed automatically.
+Extract the complete portable ZIP locally on the Windows computer with the USB laser attached. Confirm toolbar 0.26. Server storage does not forward USB. Close other port users, select the saved GRBL profile and detected COM port. Devices/settings remain per user under LocalAppData/LaserCraft. No drivers are installed automatically.
 
 ## Connect and home
 
@@ -18,5 +18,10 @@ The prior enable-control/firing checkboxes are removed. Move buttons are availab
 Preflight requires GRBL 1.1 Idle/MPos, $13=0, $31=0/$32=1 and $30/$130/$131 matching the profile. It does not change firmware settings. One-line-at-a-time streaming prioritizes bounded response ownership over dense raster speed. New homing/document workflows need your hardware test; a successful line test alone does not qualify them.
 
 Disconnect during a job attempts abort/reset; closing is blocked while a physical job runs. A failed connection/controller can prevent reset/off, so keep the physical stop/power switch ready. Software controls are not hardware emergency stops. Save connection log after success or failure, including selected settings and observed motion/output; the bounded journal may drop old entries. Nothing is uploaded automatically. Include BUILD-INFO.json when reporting a result.
+## Corrected coordinates and framing (0.26)
 
-Document placement restriction in 0.25: Home must succeed in the current connection before document output. Reconnect, job reset or custom console writes invalidate that evidence. This first streaming mode requires a homed negative machine range: X from -profile width to 0, Y from -profile height to 0. Preflight checks the entire translated footprint against those ranges. After homing near machine zero, jog sufficiently inside the bed before running a job extending +X/+Y. Controllers configured for positive machine ranges are not supported by this mode yet. These checks do not prove physical calibration or absence of fixtures/obstructions.
+Your 0.25 log reports Home at MPos 1,1, then 101,101. The previous negative-only restriction was incorrect for this configuration. Keep Device coordinate range at FromHoming: successful Home now establishes each axis range from its reported sign. Positive ranges are [0,travel]; negative ranges [-travel,0]. Zero/missing homed positions need a verified Positive/Negative override in Devices. No work offsets or firmware settings are written.
+
+Open samples/vector-and-image-demo.lcraft, review its independent layers and Preview. Sample power/feed values are marking examples, not a through-cut recipe. Position the head, choose Frame laser off, review clearance and confirm. Frame uses S0 throughout, ends air off and returns to the captured starting position. Then use Run document / Review & Run for powered output. Save the connection log after any failure; document-preflight errors are now included.
+
+The package includes LaserCraft.ico for a Windows shortcut. Use the new extracted LaserCraft.Desktop.exe; update old pinned shortcut paths/icons if necessary.

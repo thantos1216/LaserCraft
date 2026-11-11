@@ -1,6 +1,12 @@
 # Progress
 
-## Current milestone 0.25 - connected production workflow foundation
+## Current milestone 0.26 - coordinate correction and framing
+
+Fixed the negative-only document range assumption: the supplied 0.25 log reports Home at MPos 1,1 and later positive positions. Range now resolves per axis from the observed homing sign, with Positive/Negative profile overrides for ambiguous zero reports. Review displays the resolved bounds; document-preflight errors are journaled. Added laser-off framing with return to anchor, portable vector/image sample, workflow hints and standalone shortcut icon.
+
+403 tests pass (388 unit, 15 integration), including positive/negative TCP streaming, the reported home1 → position101 case, mixed-axis/zero/override bounds, zero-power frame/return and real PNG-to-planner sample. See [validation](../testing/milestone-26.md). REA provider check reported native UI unsupported on this host; official LightBurn coordinate docs were reviewed, without proprietary code/assets. Physical document/frame confirmation remains pending.
+
+## Milestone 0.25 - connected production workflow foundation
 
 User reported successful 0.24 line cuts; retained log confirms acknowledged 20 mm/S800 and final Idle, plus jog-limit rejections. Added Home/Home on Connect, automatic profile-bed application, larger axis-bounded jogs, direct connected controls, original icon and reviewed vector/raster document streaming. Jobs require current-session homing and a homed negative-range footprint check, and use a fresh current machine anchor, explicit G53 coordinates, one-line/ack ownership, realtime hold/resume and abort/reset. Existing simulator remains a separate regression/preview path.
 
