@@ -126,6 +126,11 @@ public sealed class JobSimulation(ToolpathPlan plan)
     public void Start() { if (State != SimulationState.Paused) Elapsed = 0; State = Plan.Segments.Count == 0 ? SimulationState.Completed : SimulationState.Running; }
     public void Pause() { if (State == SimulationState.Running) State = SimulationState.Paused; }
     public void Stop() { Elapsed = 0; State = SimulationState.Stopped; }
+    public void Seek(double seconds)
+    {
+        if(!double.IsFinite(seconds))throw new ArgumentOutOfRangeException(nameof(seconds));
+        Elapsed=Math.Clamp(seconds,0,Plan.Seconds);State=Elapsed>=Plan.Seconds?SimulationState.Completed:SimulationState.Paused;
+    }
     public void Advance(double seconds)
     {
         if (!double.IsFinite(seconds) || seconds < 0) throw new ArgumentOutOfRangeException(nameof(seconds));

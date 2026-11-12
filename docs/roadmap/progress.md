@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.30 - repeat alignment and pass scheduling
+## Current milestone 0.31 - workspace and independent preview
+
+Moved connection controls/report to the top-right header, combined sidebar tabs with compact Laser controls, and removed embedded playback clutter. Explicit All enabled artwork / Selected objects only scope clarifies default output. A separate read-only preview snapshot supports processed raster/vector paths, playback, seek, full output and Back to Design; export no longer opens a preview. Normal-size disconnected native UI checked, with 444 automated tests passing. User reports successful cuts and project settings retention; new package hardware qualification and small-window/DPI checks remain pending. See [validation](../testing/milestone-31.md).
+
+## Milestone 0.30 - repeat alignment and pass scheduling
 
 Successful connected jobs return laser-off to captured pre-job X/Y and require final Idle/MPos confirmation. Layer edits now apply immediately, fixing the supplied screenshot/log mismatch between pending 60/80/5 editor values and actual 1200/20/one-pass output. Added per-layer whole-layer/per-object pass ordering, a Pass column, project/preset persistence and centered 22 px vector command icons in 40 × 36 buttons. User reported successful 0.29 cuts; new return/pass behavior still requires physical qualification. See [validation](../testing/milestone-30.md).
 

@@ -15,6 +15,7 @@ public sealed partial class MainWindow
     private bool querying, disconnecting;
     private DeviceProfile? connectedProfile;
     private ConnectionJournal? connectionJournal;
+    private Button? pauseJobButton,abortJobButton;
     private Button? homeButton, runDocumentButton, frameDocumentButton;
     private Button? connectButton, disconnectButton, readStatusButton, readSettingsButton;
     private readonly ComboBox connectionPort = new() { MinWidth = 120, PlaceholderText = "Choose COM port" };
@@ -33,6 +34,9 @@ public sealed partial class MainWindow
     private void UpdateConnectionControls()
     {
         UpdatePlacementControls();
+        RefreshConnectionSummary();
+        if(pauseJobButton is not null)pauseJobButton.IsEnabled=monitor is {Simulation:null} && (querying||monitor.JobActive) && !connecting&&!disconnecting;
+        if(abortJobButton is not null)abortJobButton.IsEnabled=pauseJobButton?.IsEnabled==true;
         deviceChoice.IsEnabled = !connecting && !disconnecting && monitor is null;
         if (connectButton is not null) connectButton.IsEnabled = deviceChoice.IsEnabled;
         if (disconnectButton is not null) disconnectButton.IsEnabled = !disconnecting && (connecting || monitor is not null);
@@ -45,7 +49,6 @@ public sealed partial class MainWindow
         if(runDocumentButton is not null)runDocumentButton.IsEnabled=homeButton?.IsEnabled==true;
         if(frameDocumentButton is not null)frameDocumentButton.IsEnabled=!querying&&!connecting&&!disconnecting;
         if(circleFrameButton is not null)circleFrameButton.IsEnabled=frameDocumentButton?.IsEnabled==true;
-        jobWorkflow.Text = monitor is null ? "Connect a physical GRBL profile to cut shapes or engrave images. Then Home → position → Preview → Frame laser off → Run." : monitor.Simulation is not null ? "Simulator connection: previews/rehearsal only. Select a physical profile for actual output." : !monitor.HomingConfirmed ? "Next: Home in this connection before framing or running the document." : "Next: position inside the bed, Preview, Frame laser off, then Run. Check Start From and Job Origin before reviewing output.";
         UpdateManualControls();
         UpdateConsoleControls();
     }
@@ -58,12 +61,13 @@ public sealed partial class MainWindow
         profiles=profiles.Where(p=>p.Connection!=ConnectionKind.Simulator).ToList();if(profiles.Count==0){profiles.Add(new DeviceProfile(Guid.NewGuid(),"Attzr 35 W",Connection:ConnectionKind.Serial,SerialPort:"COM1",BedWidth:430,BedHeight:430));ProfileStore.Save(ProfilesPath,profiles);}
         deviceChoice.SelectionChanged += (_, _) => { if(preferencesLoaded)SavePreferences();connectionPort.SelectedItem = null; RefreshConnectionPorts(); if(preferencesLoaded){RestoreDeviceDefaults();ApplyProfileBed();} UpdateConnectionControls(); };
         ReloadDeviceChoices();
-        var panel = new StackPanel { Spacing = 4 }; var row = new WrapPanel(); row.Children.Add(deviceChoice); row.Children.Add(Button("Devices…", () => _ = EditDevices())); row.Children.Add(connectButton = AsyncButton("Connect", ConnectDevice)); row.Children.Add(disconnectButton = AsyncButton("Disconnect", DisconnectDevice)); row.Children.Add(readStatusButton = AsyncButton("Read status", ReadDeviceStatus)); row.Children.Add(readSettingsButton = AsyncButton("Read firmware settings…", ReadFirmwareSettings)); panel.Children.Add(row); panel.Children.Add(Label("Connect waits 1 second, then homes if firmware $22=1 (machine moves). Home is also available while connected.")); panel.Children.Add(connectionStatus); UpdateConnectionControls();
-        var usb = new WrapPanel(); usb.Children.Add(Label("USB COM for this connection")); usb.Children.Add(connectionPort); usb.Children.Add(refreshConnectionPorts = Button("Refresh COM ports", RefreshConnectionPorts)); panel.Children.Insert(0, usb);
-        UpdateConnectionControls();
-        row.Children.Add(AsyncButton("Save connection log…", SaveConnectionLog));
+        deviceChoice.MinWidth=0;deviceChoice.Width=170;connectionPort.MinWidth=0;connectionPort.Width=90;
+        Avalonia.Automation.AutomationProperties.SetName(deviceChoice,"Laser device");Avalonia.Automation.AutomationProperties.SetName(connectionPort,"USB COM port");
+        var panel=new StackPanel {Spacing=3};var row=new WrapPanel();row.Children.Add(deviceChoice);row.Children.Add(connectionPort);row.Children.Add(refreshConnectionPorts=Button("↻",RefreshConnectionPorts));ToolTip.SetTip(refreshConnectionPorts,"Refresh COM ports");row.Children.Add(Button("Devices…",()=>_=EditDevices()));panel.Children.Add(row);
+        var actions=new WrapPanel();actions.Children.Add(connectButton=AsyncButton("Connect",ConnectDevice));actions.Children.Add(disconnectButton=AsyncButton("Disconnect",DisconnectDevice));actions.Children.Add(readStatusButton=AsyncButton("Status",ReadDeviceStatus));actions.Children.Add(readSettingsButton=AsyncButton("Settings",ReadFirmwareSettings));actions.Children.Add(AsyncButton("Log…",SaveConnectionLog));actions.Children.Add(Button("Details…",ShowConnectionDetails));panel.Children.Add(actions);panel.Children.Add(connectionSummary);
+        ToolTip.SetTip(connectButton,"Connect waits one extra second, then homes if firmware $22=1. Clear machine travel first.");UpdateConnectionControls();
         Closed += (_, _) => { foreach (var s in sessions) s.Canvas.ReleaseImages(); };
-        return panel;
+        return new Border {Child=panel,Padding=new Avalonia.Thickness(6),Margin=new Avalonia.Thickness(8,0,0,4),BorderThickness=new Avalonia.Thickness(1),BorderBrush=Avalonia.Media.Brushes.SlateGray,CornerRadius=new Avalonia.CornerRadius(5)};
     }
     private void ReloadDeviceChoices(int index = 0) { deviceChoice.ItemsSource = profiles.Select(p => $"{p.Name} · {p.Connection}").ToArray(); deviceChoice.SelectedIndex = Math.Clamp(index, 0, profiles.Count - 1); }
     private Task? connectionOperation;
@@ -82,7 +86,7 @@ public sealed partial class MainWindow
             var transport = await TransportFactory.OpenAsync(profile, attempt.Token); monitor = await GrblMonitor.ConnectAsync(transport, attempt.Token, journal); attempt.Token.ThrowIfCancellationRequested();
             connectedProfile = profile;
             var physical = profile.Connection != ConnectionKind.Simulator && profile.Controller == ControllerFamily.Grbl;
-            if (sessions.Count > 0) { StopSimulation(); var canvas=Current.Canvas; var d=canvas.History.Document; if(d.Width!=profile.BedWidth||d.Height!=profile.BedHeight)canvas.Apply(d with {Width=profile.BedWidth,Height=profile.BedHeight});canvas.Fit(); }
+            if (sessions.Count > 0) { CancelPreviewPreparation(); var canvas=Current.Canvas; var d=canvas.History.Document; if(d.Width!=profile.BedWidth||d.Height!=profile.BedHeight)canvas.Apply(d with {Width=profile.BedWidth,Height=profile.BedHeight});canvas.Fit(); }
             connectionStatus.Text = $"{profile.Name} · {monitor.Identity} · connected"; Log("Connected: " + profile.Name);
             if(physical && automaticHome) { Log("Connection settled: waiting 1 second before checking automatic homing ($22).");connectionStatus.Text="Connected · startup pause / checking homing capability…";var result=await monitor.HomeAfterConnectAsync(profile,attempt.Token);Log(result.Summary); }
             await ReadDeviceStatus();

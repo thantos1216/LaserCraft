@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.30
+# Feature parity matrix - working baseline 0.31
+
+0.31: top-right connection box, combined sidebar and independent read-only output preview with seek/playback and complete processed image/vector paths; explicit all/selected output scope. Disconnected native normal-size UI and automated tests checked; small-window/DPI, dense-photo responsiveness and physical package qualification remain pending. See [validation](../testing/milestone-31.md).
 
 0.30: captured-head return after successful output with acknowledgement/Idle/MPos checks; immediate layer edits; whole-layer/per-object pass scheduling for vectors, fills and images; pass column and project/preset persistence; centered vector icons. No return after abort/error. Pass order does not guarantee cooling. User's successful 0.29 cuts are separate from new-feature verification; see [validation](../testing/milestone-30.md).
 
@@ -43,7 +45,7 @@
 | Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, Stucki, Jarvis, Atkinson, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
 | DPI / scan interval / overscan | R | Partial: interval/effective DPI, bidirectional scan and bounded off-power overscan | Scan angles, device acceleration and calibration |
 | Outline / centerline tracing | D p1705; official 2.2 TraceImage reference; host 1.3.01 observation | Partial: brightness range, noise blur, polyline smoothing/reduction, local-contrast sketch, speckle filtering, live zoomable preview; one NASA photograph integration fixture | Bézier fitting, centerlines, region selection, broader photographic quality/scale qualification; algorithm equivalence unverified |
-| Cut preview / time estimate | R | Partial: path/travel overlay and ideal estimate; simulation states tested | Acceleration, controller timing and physical validation |
+| Cut preview / time estimate | R | Partial: independent read-only snapshot window, processed raster/vector paths, playback/seek and ideal estimate; tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
 | Material libraries / test grids | R | Partial: typed local recipes, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories/search, per-device binding, material-test grids and physical calibration |
 | GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and reviewed one-line test and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | User observed query-only USB connection in 0.14; user-reported 0.24 line cut succeeded; new homing/document qualification and startup/reset variants pending |

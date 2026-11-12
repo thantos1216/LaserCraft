@@ -17,6 +17,7 @@ public sealed class DesignCanvas : Control
     public HashSet<Guid> Selection { get; } = [];
     public Guid? Selected { get => Selection.Count == 1 ? Selection.First() : null; set { Selection.Clear(); if (value is Guid id) Selection.Add(id); } }
     public bool ShowPreview { get; set; }
+    public int PreviewSegmentLimit {get;set;}=25000;
     public ToolpathPlan? Plan { get; set; }
     public double PreviewSeconds { get; set; } = double.PositiveInfinity;
     public string Tool { get; set; } = "Select";
@@ -131,7 +132,7 @@ public sealed class DesignCanvas : Control
             if (ShowPreview && Plan is not null)
             {
                 double elapsed = 0; PointMm? head = null;
-                var stride = Math.Max(1, (int)Math.Ceiling(Plan.Segments.Count / 25000.0)); var segmentIndex = 0;
+                var stride = Math.Max(1, (int)Math.Ceiling(Plan.Segments.Count / (double)Math.Max(1,PreviewSegmentLimit))); var segmentIndex = 0;
                 foreach (var segment in Plan.Segments)
                 {
                     if (elapsed >= PreviewSeconds) break;
@@ -305,6 +306,7 @@ public sealed class DesignCanvas : Control
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e) { zoom = Math.Clamp(zoom * (e.Delta.Y > 0 ? 1.12 : 1 / 1.12), .25, 8); InvalidateVisual(); e.Handled = true; }
     protected override void OnKeyDown(KeyEventArgs e)
     {
+        if(ShowPreview)return;
         if (Tool == "Lines" && e.Key == Key.Enter) { FinishPath(false); e.Handled = true; }
         else if (Tool == "Lines" && e.Key == Key.C && e.KeyModifiers == KeyModifiers.None) { FinishPath(true); e.Handled = true; }
         else if (Tool == "Lines" && e.Key == Key.Back && pathDraft.Count > 0) { pathDraft.RemoveAt(pathDraft.Count - 1); InvalidateVisual(); e.Handled = true; }

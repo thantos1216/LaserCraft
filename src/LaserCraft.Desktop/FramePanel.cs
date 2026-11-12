@@ -9,10 +9,6 @@ public sealed partial class MainWindow
     {
         if(!CommitLayerEdits())return;
         if(monitor is {Simulation:null}){await RunDocumentJob(true,circle);return;}
-        await GeneratePreview(false);
-        if(Current.Canvas.Plan is not { } plan || plan.Segments.Count==0)return;
-        var frame=JobFootprint.Frame(JobFootprint.TrimInitialTravel(plan),circular:circle);
-        Current.Canvas.Plan=new(frame.Segments.Select(s=>s with {Travel=true}).ToArray());Current.Canvas.ShowTravel=true;Current.Canvas.ShowPreview=true;Current.Canvas.PreviewSeconds=double.PositiveInfinity;Current.Canvas.InvalidateVisual();
-        jobStatus.Text=circle?"Circle frame preview · no motion":"Rectangle frame preview · no motion";
+        await OpenPreviewAsync(circle);
     }
 }

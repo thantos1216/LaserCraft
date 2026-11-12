@@ -13,7 +13,7 @@ public sealed partial class MainWindow
     {
         var panel=new StackPanel { Spacing=4 };var row=new WrapPanel();Inline(row,"Start From",startFrom,180);Inline(row,"Job Origin (drawing anchor)",jobAnchor,180);panel.Children.Add(row);panel.Children.Add(originStatus);
         startFrom.SelectionChanged+=(_,_)=>jobAnchor.IsEnabled=startFrom.SelectedIndex!=0;
-        panel.Children.Add(Label("Absolute uses drawing bed placement. Current Position places the chosen drawing anchor at the head. User Origin uses a saved head position. Selected-only uses selected output bounds."));return panel;
+        ToolTip.SetTip(startFrom,"Absolute: drawing bed location. Current Position: chosen anchor at the head. User Origin: saved position. Output scope controls which artwork is included.");return panel;
     }
     private Control BuildPositionControls()
     {
