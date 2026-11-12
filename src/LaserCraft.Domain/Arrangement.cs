@@ -18,18 +18,24 @@ public static class Arrangement
         var selected = Selected(d, ids);
         if (rows < 1 || columns < 1 || rows > 100000 || columns > 100000 || (long)rows * columns > 100000 || (long)rows * columns == 1 || !double.IsFinite(gapX) || !double.IsFinite(gapY) || gapX < 0 || gapY < 0)
             throw new InvalidDataException("Use at least two cells, positive row/column counts and finite nonnegative gaps; the project permits at most 100000 objects.");
-        var copies = (long)rows * columns - 1; var added = copies * selected.Length;
-        if (d.Shapes.Count + added > 100000) throw new InvalidDataException("Array exceeds the 100000 object limit.");
-        var images = selected.Where(s => s.Kind == ShapeKind.Image).ToArray(); var layers = copies * images.Length;
-        if (d.Layers.Count + layers > 256 || d.Shapes.Count(s => s.Kind == ShapeKind.Image) + layers > 128) throw new InvalidDataException("Each image copy needs a layer; the array exceeds 256 layers or 128 images.");
-        long Vertices(DesignShape s) => s.Path?.Contours.Sum(c => (long)c.Points.Length) ?? 0;
-        if (d.Shapes.Sum(Vertices) + copies * selected.Sum(Vertices) > 200000) throw new InvalidDataException("Array exceeds the 200000 project path-vertex budget.");
-        if (d.Shapes.Sum(s => (long)(s.Image?.DataBase64.Length ?? 0)) + copies * images.Sum(s => (long)s.Image!.DataBase64.Length) > 24000000) throw new InvalidDataException("Array exceeds the embedded image data budget.");
+        var copies = (long)rows * columns - 1; var (added, layers) = CheckCopyBudget(d, selected, copies);
         var b = ShapeEditing.Bounds(selected); var px = b.Width + gapX; var py = b.Height + gapY;
         if ((columns > 1 && px <= 0) || (rows > 1 && py <= 0)) throw new InvalidDataException("Repeated axes need a nonzero cell pitch. Add a gap for zero-extent paths.");
         var dx = (columns - 1) * px; var dy = (rows - 1) * py;
         if (!double.IsFinite(dx) || !double.IsFinite(dy) || selected.Any(s => s.X + dx > 10000 || s.Y + dy > 10000)) throw new InvalidDataException("Array positions exceed the project coordinate range.");
         return new(rows, columns, px, py, (int)added, (int)layers, new(b.X, b.Y, b.Width + dx, b.Height + dy));
+    }
+    internal static (int Objects,int Layers) CheckCopyBudget(DesignDocument d, DesignShape[] selected, long copies, bool rotate = false)
+    {
+        var added = copies * selected.Length;
+        if (copies < 1 || d.Shapes.Count + added > 100000) throw new InvalidDataException("Array exceeds the 100000 object limit.");
+        var images = selected.Where(s => s.Kind == ShapeKind.Image).ToArray(); var layers = copies * images.Length;
+        if (d.Layers.Count + layers > 256 || d.Shapes.Count(s => s.Kind == ShapeKind.Image) + layers > 128) throw new InvalidDataException("Each image copy needs a layer; the array exceeds 256 layers or 128 images.");
+        long Vertices(DesignShape s) => s.Path?.Contours.Sum(c => (long)c.Points.Length) ?? 0;
+        long CopyVertices(DesignShape s) => rotate ? s.Kind == ShapeKind.Rectangle ? 4 : s.Kind == ShapeKind.Ellipse ? 128 : Vertices(s) : Vertices(s);
+        if (d.Shapes.Sum(Vertices) + copies * selected.Sum(CopyVertices) > 200000) throw new InvalidDataException("Array exceeds the 200000 project path-vertex budget.");
+        if (d.Shapes.Sum(s => (long)(s.Image?.DataBase64.Length ?? 0)) + copies * images.Sum(s => (long)s.Image!.DataBase64.Length) > 24000000) throw new InvalidDataException("Array exceeds the embedded image data budget.");
+        return ((int)added, (int)layers);
     }
     public static ArrangementResult RectangularArray(DesignDocument d, IReadOnlySet<Guid> ids, int rows, int columns, double gapX, double gapY)
     {

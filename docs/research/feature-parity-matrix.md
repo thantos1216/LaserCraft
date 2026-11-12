@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.31
+# Feature parity matrix - working baseline 0.32
+
+0.32: circular/full/partial-arc arrays with optional vector rotation, independent image layers, live bounds and Undo; native disconnected and automated checks. No raster rotation, overlap removal or new output scheduling. See [validation](../testing/milestone-32.md).
 
 0.31: top-right connection box, combined sidebar and independent read-only output preview with seek/playback and complete processed image/vector paths; explicit all/selected output scope. Disconnected native normal-size UI and automated tests checked; small-window/DPI, dense-photo responsiveness and physical package qualification remain pending. See [validation](../testing/milestone-31.md).
 
@@ -31,7 +33,7 @@
 | Union / subtract / intersect / weld | R | Planned | Geometry library/license evaluation |
 | Offsets / kerf / smoothing | R | Planned | Degenerate geometry fixtures |
 | Text / text-to-path / text-on-path | R | Partial: editable basic Latin source with cached closed paths, font/style/size/line spacing/tolerance, conversion and persistence tested | Complex-script shaping, kerning/ligatures, text-on-path, welding and variable text |
-| Arrays / nesting | R | Rectangular arrays with dedicated image-copy layers and expansion checks, tested | Circular arrays, nesting and overlap constraints |
+| Arrays / nesting | R | Rectangular and circular/partial-arc arrays with optional vector rotation, dedicated image-copy layers and expansion checks, tested | Nesting, raster rotation and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
 | Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |
 | Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses and closed compound paths, tested | Offset fill, angles, overscan and controller planning |

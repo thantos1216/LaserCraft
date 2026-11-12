@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.31 - compact workspace and separate output preview
+Version 0.32 - circular arrays
 
 ## Connect and disconnect
 
@@ -92,6 +92,16 @@ Select exactly one text object and choose Tools / Edit selected text to change i
 Native .lcraft saves both source text/settings and cached closed polylines. Reopening, display and output use the saved geometry without requiring that font to be installed. Editing requires the named font/style or an explicit replacement. Fonts are not embedded or distributed. Changing fonts/versions and regenerating can change geometry; inspect the preview. Curve tolerance (0.001–1 mm) applies before later resizing; it is not a physical accuracy guarantee. Existing path-vertex and file-size budgets apply.
 
 Tools / Convert selected to paths removes the text link without changing outlines, making ordinary editable nodes. Node edits, rotation, reversal, close/join/separate/combine operations that replace geometry also remove text editability on affected objects. Undo restores it. Moving, numerical resizing, mirroring, alignment, distribution and copies/arrays keep the text source. SVG export writes outlines rather than editable SVG text. Fill follows the current even-odd rule; overlapping glyphs are not automatically welded. These editing operations send no machine commands. Advanced Console commands are a separate opt-in.
+
+## Circular arrays (0.32)
+
+Select artwork and choose Arrange / Circular array. Cells is the total including originals; the originals stay in place. Center X/Y uses the current mm/in display units and defaults to the bed center. The combined selection center determines the orbit radius and initial angle: move the original artwork to change that radius. Each copy repeats the entire selection as a cell.
+
+Sweep sets the angular extent. Positive angles turn clockwise on the canvas; negative angles reverse it. A full +360° or -360° circle divides by the cell count and excludes a duplicate endpoint. Partial arcs divide by count minus one and include both ends. For example, four cells over 360° are at 0/90/180/270°, while three over 180° are at 0/90/180°. A center at the selection center produces overlapping fixed-orientation copies; no overlap removal is performed.
+
+With Rotate vector cells off, copies retain orientation, size, editable text and image mirrors. With it on, vectors rotate around the specified center; rectangles become paths and ellipses become 128-point polylines. Rotated text copies become ordinary paths, while originals remain editable. Raster rotation is not supported: disable rotation to array images. Every image copy receives its own layer with copied engraving settings and unchanged embedded pixels. Vector copies retain their layers. Groups get independent identities in each cell.
+
+Count, angle and bounds update automatically. Create applies one Undo step and selects originals plus copies. Cancel changes nothing. Project object, layer, image, embedded-data, coordinate and expanded-vertex limits are checked before copying. Off-bed bounds warn rather than moving or scaling the array; Preview/Run keep their normal bounds checks. Overlaps can cause repeated burning, so inspect output. Layer order still determines burn order; arrays do not add a cell-by-cell burn schedule or automatic cooling. Array creation sends no machine commands.
 
 ## Arrange artwork
 

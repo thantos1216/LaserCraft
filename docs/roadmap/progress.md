@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.31 - workspace and independent preview
+## Current milestone 0.32 - circular arrays
+
+Added full-circle and partial-arc arrays, mm/in center inputs, fixed-orientation or rotated-vector cells, independent image layers, live bounds and one-step Undo. Copy budgets are shared with rectangular arrays and account for rotated shape expansion. Disconnected native four-cell creation/dynamic count/Undo checked; 454 tests pass. Raster rotation, automatic overlap removal and cell-by-cell output remain unimplemented. See [validation](../testing/milestone-32.md).
+
+## Milestone 0.31 - workspace and independent preview
 
 Moved connection controls/report to the top-right header, combined sidebar tabs with compact Laser controls, and removed embedded playback clutter. Explicit All enabled artwork / Selected objects only scope clarifies default output. A separate read-only preview snapshot supports processed raster/vector paths, playback, seek, full output and Back to Design; export no longer opens a preview. Normal-size disconnected native UI checked, with 444 automated tests passing. User reports successful cuts and project settings retention; new package hardware qualification and small-window/DPI checks remain pending. See [validation](../testing/milestone-31.md).
 
