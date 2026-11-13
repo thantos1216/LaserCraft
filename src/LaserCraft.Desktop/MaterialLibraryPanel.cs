@@ -7,6 +7,9 @@ public sealed partial class MainWindow
 {
     private MaterialLibrary materialLibrary = MaterialLibrary.Empty();
     private bool materialLibraryWritable = true;
+    private readonly TextBox materialSearch = new() { PlaceholderText = "Search names and notes", MaxLength = 256 };
+    private readonly ComboBox materialType = new() { ItemsSource = new[]{"All types","Vector","Image"}, SelectedIndex = 0 };
+    private readonly TextBlock materialCount = new();
     private readonly ListBox materialList = new() { Height = 120 };
     private readonly TextBox materialName = new() { PlaceholderText = "Preset name", MaxLength = 128 };
     private readonly TextBox materialNotes = new() { PlaceholderText = "Laser/material notes", MaxLength = 2000, AcceptsReturn = true, Height = 58 };
@@ -17,6 +20,8 @@ public sealed partial class MainWindow
     {
         var panel = new StackPanel { Spacing = 4, Margin = new Avalonia.Thickness(10) };
         panel.Children.Add(Label("Material presets", 16)); panel.Children.Add(Label("Save the active layer's applied settings. Apply to the active Cuts / Layers row; artwork and layer identity stay unchanged. Presets are user recipes, not validated manufacturer settings."));
+        var filter = new WrapPanel(); filter.Children.Add(materialSearch); materialSearch.Width=250; filter.Children.Add(materialType); panel.Children.Add(filter); panel.Children.Add(materialCount);
+        materialSearch.TextChanged+=(_,_)=>RefreshMaterials(); materialType.SelectionChanged+=(_,_)=>RefreshMaterials();
         panel.Children.Add(materialList); panel.Children.Add(materialName); var row = new WrapPanel(); Inline(row, "Thickness mm · 0 = unspecified", materialThickness, 190); panel.Children.Add(row); panel.Children.Add(materialNotes);
         var actions = new WrapPanel(); actions.Children.Add(Button("Save layer as new", () => SaveMaterial(false))); actions.Children.Add(Button("Replace selected", () => SaveMaterial(true))); actions.Children.Add(Button("Apply to active layer", ApplyMaterial)); actions.Children.Add(AsyncButton("Delete selected", DeleteMaterial)); panel.Children.Add(actions); panel.Children.Add(materialMessage);
         materialList.SelectionChanged += (_, _) =>
@@ -32,16 +37,22 @@ public sealed partial class MainWindow
     private static string DescribeMaterial(MaterialPreset p) => FormattableString.Invariant($"{p.Settings.Kind} / {p.Settings.Mode} · {p.Settings.Speed:0.###} mm/min · {p.Settings.Power:0.###}% · {p.Settings.Passes} passes · air {(p.Settings.AirAssist ? "on" : "off")} · interval {p.Settings.Interval:0.###} mm. Review suitability for your laser before output.");
     private void RefreshMaterials(Guid? selected = null)
     {
+        if(!materialLibraryWritable)return;
+        selected ??= ((materialList.SelectedItem as ListBoxItem)?.Tag as MaterialPreset)?.Id;
+        var matches=MaterialSearch.Find(materialLibrary,materialSearch.Text,materialType.SelectedIndex==1?LayerKind.Vector:materialType.SelectedIndex==2?LayerKind.Image:null);
         materialList.Items.Clear();
-        foreach (var preset in materialLibrary.Presets.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase))
+        materialCount.Text=$"{matches.Count} of {materialLibrary.Presets.Count} presets";
+        foreach (var preset in matches)
         { var item = new ListBoxItem { Content = preset.Name + " · " + preset.Settings.Kind, Tag = preset }; materialList.Items.Add(item); if (preset.Id == selected) materialList.SelectedItem = item; }
-        if (materialLibrary.Presets.Count == 0) materialMessage.Text = "No presets yet. Apply your layer edits in Cuts / Layers first, then save them here.";
+        if (materialLibrary.Presets.Count == 0) materialMessage.Text = "No presets yet. Edit the active layer in Cuts / Layers, then save it here.";
+        else if(matches.Count==0)materialMessage.Text="No matching presets; clear search or choose All types. Existing presets are unchanged.";
     }
     private void SaveMaterial(bool replace)
     {
         if (!materialLibraryWritable || sessions.Count == 0) return;
         try
         {
+            if(!CommitLayerEdits())throw new InvalidDataException("Correct the active layer settings before saving a recipe.");
             var old = (materialList.SelectedItem as ListBoxItem)?.Tag as MaterialPreset;
             if (replace && old is null) throw new InvalidDataException("Select a preset to replace first.");
             var d = Current.Canvas.History.Document; var thickness = (double)(materialThickness.Value ?? 0);

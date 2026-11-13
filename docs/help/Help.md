@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.32 - circular arrays
+Version 0.33 - live image preparation and material search
 
 ## Connect and disconnect
 
@@ -43,13 +43,15 @@ Move provides relative X/Y jogs, Home, bounded Pulse, Laser off, Cancel jog, exa
 
 ## Material Library
 
+Search names and notes to filter recipes as you type. Every whitespace-separated word must match somewhere in the name or notes, without regard to case. Choose All types, Vector or Image to combine a type filter with search. The count shows matching/total presets. Filtering does not change recipes; a hidden selection cannot be applied or replaced. Clear the search/filter to find it again. Search is temporary to this window and is not saved. Saving a layer recipe first validates its current editor values.
+
 Open the Materials sidebar tab. After editing settings in Cuts / Layers, then enter a preset name, optional thickness (0 means unspecified) and notes such as laser model/material. Save layer as new captures the active layer's applied settings: speed, power, Line/Fill/Image mode, passes, air assist, interval and image processing. Valid layer edits apply automatically; invalid edits must be corrected before output. Presets contain no artwork, machine endpoint, S maximum, homing or position settings. No factory recipes are supplied; qualify your own settings on your machine.
 
 Select a preset to review its type/settings and edit its name, thickness or notes. Replace selected saves the entered metadata and the current active layer's settings under the selected preset's identity. It replaces settings as well as metadata. Save layer as new creates a separate preset. Duplicate names are allowed. Delete selected asks for confirmation and leaves projects unchanged. Library changes are saved immediately and are separate from project Undo.
 
 Choose the target row in Cuts / Layers, return to the library and click Apply to active layer. Image recipes require an Image layer; vector recipes require a Vector layer. Application changes process settings but preserves the target name/color, output switch, visibility, layer position and artwork associations. It is one project Undo step. Thickness/notes are reference metadata and do not calculate power, focus or passes. Recipes use percentages and are not automatically calibrated for another laser.
 
-The local, versioned materials.json is stored under LocalAppData/LaserCraft, separately from projects and portable binaries. Previous contents are retained as materials.json.bak on each successful replacement; this is one previous revision, not full history. Limits are 500 presets and 2 MB, names 128 characters, notes 2000 characters and optional thickness >0–1000 mm. A malformed/unreadable library disables saving instead of overwriting the original; preserve/repair the file or backup and restart. Import/export, search/categories, per-device binding and automated material-test grids remain planned. Applying/saving recipes sends no laser commands.
+The local, versioned materials.json is stored under LocalAppData/LaserCraft, separately from projects and portable binaries. Previous contents are retained as materials.json.bak on each successful replacement; this is one previous revision, not full history. Limits are 500 presets and 2 MB, names 128 characters, notes 2000 characters and optional thickness >0–1000 mm. A malformed/unreadable library disables saving instead of overwriting the original; preserve/repair the file or backup and restart. Import/export, categories, per-device binding and automated material-test grids remain planned. Applying/saving recipes sends no laser commands.
 
 ## Select artwork with a box
 
@@ -135,7 +137,7 @@ An image must have its own Image layer. It cannot share a layer with lines, shap
 
 File / Import image accepts PNG, JPEG and BMP. Original encoded bytes are embedded in .lcraft, so reopening does not depend on the source file. Images support selection, movement, numerical resizing, mirroring, copy/duplicate and layer reassignment. They have a colored border showing the assigned layer while their original pixels remain unchanged. Drawing tools switch back to an eligible vector layer.
 
-Select the image or its image layer and choose Image settings…. The dialog compares the original with prepared engraving pixels. Choose Threshold, FloydSteinberg, OrderedBayer (4 x 4), Grayscale, Stucki, Jarvis or Atkinson; adjust brightness, contrast, gamma and inversion. Threshold is enabled only for Threshold mode. Update preview recalculates the sample view; Apply saves the independent settings to that layer. Cancel leaves the project unchanged. Original image bytes remain untouched and undo/redo includes processing settings.
+Select the image or its image layer and choose Image settings…. The dialog compares the original with prepared engraving pixels. Choose Threshold, FloydSteinberg, OrderedBayer (4 x 4), Grayscale, Stucki, Jarvis or Atkinson; adjust brightness, contrast, gamma and inversion. Threshold is enabled only for Threshold mode. Brightness, contrast, gamma and threshold have synchronized sliders and numeric fields. All settings automatically prepare a fresh preview 150 ms after changes; there is no Update preview button. Apply stays disabled while preparing, on invalid values or after a failed preparation, and saves only settings matching the current preview. Reset restores the settings present when the dialog opened, including interval and scanning options; it does not restore factory defaults. Cancel leaves the project unchanged. Original image bytes remain untouched and undo/redo includes processing settings. Old work is cancelled and cannot replace a newer preview. Closing cancels preparation and waits for background work to finish. If the source document changed while the dialog was open, reopen it before applying. Preparation uses the full output-resolution sample grid within the existing limits; its display bitmap is reduced to at most 800 pixels on the long axis. It is not a physical burn prediction.
 
 Interval sets a maximum sample spacing in mm; sample counts are rounded upward and evenly cover the full physical image size, so effective DPI may be slightly higher than 25.4 / interval. The dialog reports effective horizontal/vertical DPI. Transparent pixels stay laser-off even when inverted. Partial alpha blends toward white after tone adjustments. Processing uses sRGB-weighted luminance and 8-bit output; no material-response or optical calibration is implied.
 

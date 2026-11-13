@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.32
+# Feature parity matrix - working baseline 0.33
+
+0.33: live image preparation sliders/numbers, current-preview-only Apply, cancellation and opening-settings Reset; material name/notes search and type filter. Original source and recipe settings preserved; no physical output claim. See [validation](../testing/milestone-33.md).
 
 0.32: circular/full/partial-arc arrays with optional vector rotation, independent image layers, live bounds and Undo; native disconnected and automated checks. No raster rotation, overlap removal or new output scheduling. See [validation](../testing/milestone-32.md).
 
@@ -42,14 +44,14 @@
 | DXF / PDF / AI / EPS | R | Planned | Codec/license review and malformed input tests |
 | PNG / JPEG / BMP / TIFF / WebP / GIF | R | Partial: PNG/JPEG/BMP embedding, rendering, transforms and dedicated layers | High-resolution optimization, TIFF/WebP/GIF and orientation coverage |
 | Vector-to-bitmap | D p929 | Planned | Outlines/fills rendering correctness |
-| Nondestructive raster adjustments | R | Partial: brightness/contrast/gamma/invert with original/processed view | Curves, sharpening, masks, calibrated materials, higher precision |
+| Nondestructive raster adjustments | R | Partial: live brightness/contrast/gamma/threshold sliders/numbers, invert, original/processed view, cancellation, Reset and current-preview-only Apply | Curves, sharpening, masks, calibrated materials, higher precision |
 | Threshold raster engraving | D p1001 | Implemented for simulator paths, tested | Physical output qualification |
 | Error diffusion / ordered / grayscale modes | D p1001ff; R expanded algorithms | Partial: Floyd-Steinberg, Stucki, Jarvis, Atkinson, 4x4 Bayer and grayscale planning, tested | More algorithms, photographic/material quality benchmarks |
 | DPI / scan interval / overscan | R | Partial: interval/effective DPI, bidirectional scan and bounded off-power overscan | Scan angles, device acceleration and calibration |
 | Outline / centerline tracing | D p1705; official 2.2 TraceImage reference; host 1.3.01 observation | Partial: brightness range, noise blur, polyline smoothing/reduction, local-contrast sketch, speckle filtering, live zoomable preview; one NASA photograph integration fixture | Bézier fitting, centerlines, region selection, broader photographic quality/scale qualification; algorithm equivalence unverified |
 | Cut preview / time estimate | R | Partial: independent read-only snapshot window, processed raster/vector paths, playback/seek and ideal estimate; tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
-| Material libraries / test grids | R | Partial: typed local recipes, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories/search, per-device binding, material-test grids and physical calibration |
+| Material libraries / test grids | R | Partial: typed local recipes, name/notes search and type filtering, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories, per-device binding, material-test grids and physical calibration |
 | GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and reviewed one-line test and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | User observed query-only USB connection in 0.14; user-reported 0.24 line cut succeeded; new homing/document qualification and startup/reset variants pending |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |

@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.32 - circular arrays
+## Current milestone 0.33 - live image controls and material search
+
+Image preparation now updates automatically with synchronized tone sliders/numbers, cancellation, a single preparation gate, current-preview-only Apply and opening-settings Reset. Blank/invalid inputs block preparation; source-document checks prevent stale layer writes. Added material name/notes search, Vector/Image filter and count, plus current layer validation before recipe capture. 464 tests pass; disconnected image slider/Reset/Apply/Undo and empty-library filter layout checked. Large-photo cancellation stress and populated material UI qualification remain pending. See [validation](../testing/milestone-33.md).
+
+## Milestone 0.32 - circular arrays
 
 Added full-circle and partial-arc arrays, mm/in center inputs, fixed-orientation or rotated-vector cells, independent image layers, live bounds and one-step Undo. Copy budgets are shared with rectangular arrays and account for rotated shape expansion. Disconnected native four-cell creation/dynamic count/Undo checked; 454 tests pass. Raster rotation, automatic overlap removal and cell-by-cell output remain unimplemented. See [validation](../testing/milestone-32.md).
 
