@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.33 - live image controls and material search
+## Current milestone 0.34 - grayscale and bounded photo editing
+
+Fixed the reported blank prepared image: the editor was using full-resolution output sampling and rejecting oversized photos. Editing now uses a bounded aspect-preserving preview, original/adjusted grayscale and optional laser-format view; actual output limits remain unchanged and explicit. Native Blue Marble at 5000 x 5000 output samples visibly updated brightness and Stucki display. 467 tests pass; see [validation](../testing/milestone-34.md).
+
+## Milestone 0.33 - live image controls and material search
 
 Image preparation now updates automatically with synchronized tone sliders/numbers, cancellation, a single preparation gate, current-preview-only Apply and opening-settings Reset. Blank/invalid inputs block preparation; source-document checks prevent stale layer writes. Added material name/notes search, Vector/Image filter and count, plus current layer validation before recipe capture. 464 tests pass; disconnected image slider/Reset/Apply/Undo and empty-library filter layout checked. Large-photo cancellation stress and populated material UI qualification remain pending. See [validation](../testing/milestone-33.md).
 

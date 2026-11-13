@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.33
+# Feature parity matrix - working baseline 0.34
+
+0.34: original/adjusted grayscale image editor, optional selected laser-format display, and bounded photo editing independent of output sampling. Oversized output still warns/fails output validation; no silent output downsampling. Native oversized-photo check and regression tests passed. See [validation](../testing/milestone-34.md).
 
 0.33: live image preparation sliders/numbers, current-preview-only Apply, cancellation and opening-settings Reset; material name/notes search and type filter. Original source and recipe settings preserved; no physical output claim. See [validation](../testing/milestone-33.md).
 
