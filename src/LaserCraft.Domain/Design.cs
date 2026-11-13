@@ -17,7 +17,7 @@ public sealed record DesignShape(Guid Id, ShapeKind Kind, double X, double Y, do
 public enum CutMode { Line, Fill, Image }
 public enum PassOrderMode { WholeLayer, PerObject }
 public enum LayerKind { Vector, Image }
-public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector, RasterSettings? Raster = null,PassOrderMode PassOrder=PassOrderMode.WholeLayer);
+public sealed record CutLayer(string Name, string Color, double Speed = 1200, double Power = 20, bool Output = true, CutMode Mode = CutMode.Line, int Passes = 1, bool Visible = true, bool AirAssist = false, double Interval = .1, LayerKind Kind = LayerKind.Vector, RasterSettings? Raster = null,PassOrderMode PassOrder=PassOrderMode.WholeLayer,bool KeepEmpty=false);
 public sealed record DesignDocument(int Version, string Name, double Width, double Height, List<DesignShape> Shapes, List<CutLayer> Layers)
 {
     public static DesignDocument Empty(string name = "Untitled") => new(1, name, 400, 400, [], [new("Layer 1", "#4169E1")]);

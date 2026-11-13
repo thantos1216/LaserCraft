@@ -56,21 +56,28 @@ public static class ToolpathPlanner
                     var b = ShapeEditing.Bounds(batch); var rows = Math.Ceiling(b.Height / cut.Interval);
                     if (rows > 100000) throw new InvalidDataException("Fill preview exceeds the 100000-row limit. Increase line interval.");
                     if (batch.Any(s => s.Kind == ShapeKind.Path && s.Path!.Contours.Any(c => !c.Closed))) throw new InvalidDataException("Fill requires closed contours. Close the path or choose Line mode.");
-                    var pathEdges = batch.Where(s => s.Kind == ShapeKind.Path).ToDictionary(s => s.Id, s => VectorPaths.Edges(s).ToArray());
-                    fillWork += (long)rows * batch.Sum(s => s.Kind == ShapeKind.Path ? pathEdges[s.Id].Length : 1);
-                    if (fillWork > 3_000_000) throw new InvalidDataException("Fill preview is too complex for the current interactive planner. Reduce shapes, passes or scan density.");
+                    // Index edges once by their first/last intersected scan row. Horizontal edges never cross a row.
+                    int FirstRow(double edgeY)
+                    {
+                        var r=Math.Clamp((int)Math.Ceiling((edgeY-b.Y)/cut.Interval-.5),0,(int)rows);
+                        while(r>0&&b.Y+(r-1+.5)*cut.Interval>=edgeY)r--;
+                        while(r<rows&&b.Y+(r+.5)*cut.Interval<edgeY)r++;
+                        return r;
+                    }
+                    var events = batch.Where(s=>s.Kind==ShapeKind.Path).SelectMany(VectorPaths.Edges).Where(e=>e.From.Y!=e.To.Y)
+                        .Select(e=>(A:e.From,Z:e.To,Start:FirstRow(Math.Min(e.From.Y,e.To.Y)),End:FirstRow(Math.Max(e.From.Y,e.To.Y))))
+                        .Where(e=>e.Start<e.End).OrderBy(e=>e.Start).ToArray();
+                    var active = new List<(PointMm A,PointMm Z,int Start,int End)>();var cursor=0;var primitives=batch.Where(s=>s.Kind!=ShapeKind.Path).ToArray();
                     for (int row = 0; row < rows; row++)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         var y = b.Y + (row + .5) * cut.Interval; var crossings = new List<double>();
-                        foreach (var s in batch)
+                        active.RemoveAll(e=>e.End<=row);while(cursor<events.Length&&events[cursor].Start<=row){active.Add(events[cursor]);cursor++;}
+                        fillWork+=active.Count+primitives.Length;if(fillWork>3_000_000)throw new InvalidDataException("Fill exceeds the 3-million active-intersection budget. Increase interval or simplify artwork.");
+                        foreach(var edge in active) { var a=edge.A;var z=edge.Z;if((a.Y>y)!=(z.Y>y))crossings.Add(a.X+(y-a.Y)*(z.X-a.X)/(z.Y-a.Y)); }
+                        foreach (var s in primitives)
                         {
                             if (y < s.Y || y >= s.Y + s.Height) continue;
-                            if (s.Kind == ShapeKind.Path)
-                            {
-                                foreach (var (a, z) in pathEdges[s.Id]) if ((a.Y > y) != (z.Y > y)) crossings.Add(a.X + (y - a.Y) * (z.X - a.X) / (z.Y - a.Y));
-                                continue;
-                            }
                             var extent = s.Width / 2;
                             if (s.Kind == ShapeKind.Ellipse) extent *= Math.Sqrt(Math.Max(0, 1 - Math.Pow((y - s.Y - s.Height / 2) / (s.Height / 2), 2)));
                             crossings.Add(s.X + s.Width / 2 - extent); crossings.Add(s.X + s.Width / 2 + extent);

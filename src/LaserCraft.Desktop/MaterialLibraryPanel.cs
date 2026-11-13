@@ -19,7 +19,7 @@ public sealed partial class MainWindow
     private Control BuildMaterialLibrary()
     {
         var panel = new StackPanel { Spacing = 4, Margin = new Avalonia.Thickness(10) };
-        panel.Children.Add(Label("Material presets", 16)); panel.Children.Add(Label("Save the active layer's applied settings. Apply to the active Cuts / Layers row; artwork and layer identity stay unchanged. Presets are user recipes, not validated manufacturer settings."));
+        panel.Children.Add(Label("Material presets", 16));panel.Children.Add(AsyncButton("Create test grid…",CreateMaterialTest)); panel.Children.Add(Label("Save the active layer's applied settings. Apply to the active Cuts / Layers row; artwork and layer identity stay unchanged. Presets are user recipes, not validated manufacturer settings."));
         var filter = new WrapPanel(); filter.Children.Add(materialSearch); materialSearch.Width=250; filter.Children.Add(materialType); panel.Children.Add(filter); panel.Children.Add(materialCount);
         materialSearch.TextChanged+=(_,_)=>RefreshMaterials(); materialType.SelectionChanged+=(_,_)=>RefreshMaterials();
         panel.Children.Add(materialList); panel.Children.Add(materialName); var row = new WrapPanel(); Inline(row, "Thickness mm · 0 = unspecified", materialThickness, 190); panel.Children.Add(row); panel.Children.Add(materialNotes);

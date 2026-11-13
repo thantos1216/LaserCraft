@@ -42,11 +42,11 @@ public sealed class VectorPathTests
         Assert.EndsWith("M5\nM9\n", GrblExport.Write(plan, DeviceProfile.Simulator()));
     }
     [Fact]
-    public void FillIntersectionBudgetRejectsExcessiveWorkBeforeScanning()
+    public void FillIntersectionBudgetRejectsActualActiveWork()
     {
-        var s = VectorPaths.Create(Enumerable.Range(0, 100).Select(i => Square(i * 2, 10, 1))); var d = Document(s, CutMode.Fill); d.Layers[0] = d.Layers[0] with { Interval = .01 };
-        // 100 rows * 400 edges is within the budget; reducing height density on taller geometry is not.
-        var tall = s with { Height = 100 }; Assert.Throws<InvalidDataException>(() => ToolpathPlanner.Build(Document(tall, CutMode.Fill) with { Layers = [d.Layers[0]] }));
+        var s=VectorPaths.Create(Enumerable.Range(0,1000).Select(_=>Square(10,10,200)));var d=Document(s,CutMode.Fill);d.Layers[0]=d.Layers[0] with {Interval=.1};
+        // Coincident pairs emit little geometry but require 2000 active intersections on each of 2000 rows.
+        var error=Assert.Throws<InvalidDataException>(()=>ToolpathPlanner.Build(d));Assert.Contains("active-intersection",error.Message);
     }
     [Fact]
     public void MirroringAndResizingTransformActualVertices()

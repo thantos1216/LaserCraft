@@ -8,11 +8,12 @@ public sealed partial class MainWindow
     private bool CommitLayerEdits()
     {
         if(applyingLayerEdits||refreshingLayerEditor||changingUnits||sessions.Count==0)return true;
+        if(KeepPendingGeometry()&&!CommitGeometryEdits())return false;
         if(speed.Value is null||power.Value is null||passes.Value is null||interval.Value is null){status.Text="Complete the layer values before running.";return false;}
         if(passes.Value!=decimal.Truncate(passes.Value.Value)){status.Text="Passes must be a whole number.";return false;}
         try
         {
-            var c=Current.Canvas;var d=c.History.Document;var i=Math.Max(0,layer.SelectedIndex);var source=d.Layers[i];
+            var c=Current.Canvas;var d=c.History.Document;var i=c.ActiveLayer;var source=d.Layers[i];
             var edited=source with {Speed=Millimetres(speed),Power=(double)power.Value.Value,Passes=(int)passes.Value.Value,Interval=Millimetres(interval),Name=layerName.Text??"",Color=layerColorValue,Mode=source.Kind==LayerKind.Image?CutMode.Image:(CutMode)Math.Max(0,mode.SelectedIndex),AirAssist=air.IsChecked==true,Output=output.IsChecked==true,Visible=visible.IsChecked==true,PassOrder=(PassOrderMode)Math.Max(0,passOrder.SelectedIndex)};
             if(edited==source)return true;
             var layers=d.Layers.ToList();layers[i]=edited;var next=d with {Layers=layers};next.Validate();

@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.34
+# Feature parity matrix - working baseline 0.35
+
+0.35: automatic unused-layer cleanup and empty-start UI; active-edge Fill; live text/double-click editing; automatic dimensions/aspect lock; toolbar grouping; editable material-test grids with interpolated speed/power/passes. See [validation](../testing/milestone-35.md).
 
 0.34: original/adjusted grayscale image editor, optional selected laser-format display, and bounded photo editing independent of output sampling. Oversized output still warns/fails output validation; no silent output downsampling. Native oversized-photo check and regression tests passed. See [validation](../testing/milestone-34.md).
 
@@ -39,7 +41,7 @@
 | Text / text-to-path / text-on-path | R | Partial: editable basic Latin source with cached closed paths, font/style/size/line spacing/tolerance, conversion and persistence tested | Complex-script shaping, kerning/ligatures, text-on-path, welding and variable text |
 | Arrays / nesting | R | Rectangular and circular/partial-arc arrays with optional vector rotation, dedicated image-copy layers and expansion checks, tested | Nesting, raster rotation and overlap constraints |
 | Multiple pages | R | Planned | Per-page data and ordering |
-| Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers; independent settings and stored air | Sublayers, cut ordering, advanced settings |
+| Layer assignment and settings | D p81 | Partial: create/reassign/reorder typed layers, automatic cleanup/empty-start UI; independent settings and stored air | Sublayers, cut ordering, advanced settings |
 | Fill / offset fill | D p81 | Partial: horizontal even-odd fill for rectangles/ellipses and closed compound paths, tested | Offset fill, angles, overscan and controller planning |
 | Native editable project | R | Partial v1, tested | Assets, recovery, migrations, previews |
 | SVG | D p63-67; W3C SVG 2 paths | Export + basic vector elements; M/L/H/V/Z/C/S/Q/T paths, physical-tolerance flattening and cancellable import options tested | Arcs, transforms, styling, native curve retention and broad conformance |
@@ -53,7 +55,7 @@
 | Outline / centerline tracing | D p1705; official 2.2 TraceImage reference; host 1.3.01 observation | Partial: brightness range, noise blur, polyline smoothing/reduction, local-contrast sketch, speckle filtering, live zoomable preview; one NASA photograph integration fixture | Bézier fitting, centerlines, region selection, broader photographic quality/scale qualification; algorithm equivalence unverified |
 | Cut preview / time estimate | R | Partial: independent read-only snapshot window, processed raster/vector paths, playback/seek and ideal estimate; tested | Acceleration, controller timing and physical validation |
 | Path optimization / cut order | R | Partial: user-defined layer order | Inner-before-outer and geometry optimization |
-| Material libraries / test grids | R | Partial: typed local recipes, name/notes search and type filtering, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories, per-device binding, material-test grids and physical calibration |
+| Material libraries / test grids | R | Partial: editable 2-axis Line/Fill material-test grids and typed local recipes, name/notes search and type filtering, capture/replace/delete/apply, raster settings, backup, validation and Undo tested | Import/export, categories, per-device binding, advanced test families and physical calibration |
 | GRBL controller | R, Atezr priority; official GRBL 1.1 protocol | Partial: query diagnostics, opt-in guided X/Y/pulse/cancel/off and reviewed one-line test and single-line console/settings writes via serial/TCP; telemetry, startup delay, simulator/UI and TCP loopback tested | User observed query-only USB connection in 0.14; user-reported 0.24 line cut succeeded; new homing/document qualification and startup/reset variants pending |
 | grblHAL / FluidNC / Marlin / Smoothieware | R | Partial: experimental GRBL queries for grblHAL/FluidNC; other families profile-only | Firmware-specific protocol qualification |
 | Ruida / Trocen / Galvo controllers | R | Planned | Documented interoperability + licensing review |

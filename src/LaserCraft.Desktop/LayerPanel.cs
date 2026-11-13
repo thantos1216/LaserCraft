@@ -21,13 +21,8 @@ public sealed partial class MainWindow
     }
     private void MoveLayer(int direction)
     {
-        var c = Current.Canvas; var from = c.ActiveLayer; var to = from + direction; if (to < 0 || to >= c.History.Document.Layers.Count) return;
+        var c = Current.Canvas; var from = c.ActiveLayer; var visible=LayerEditing.VisibleIndices(c.History.Document).ToList();var nextIndex=visible.IndexOf(from)+direction;if(nextIndex<0||nextIndex>=visible.Count)return;var to=visible[nextIndex];
         var next = LayerEditing.Move(c.History.Document, from, to); c.ActiveLayer = to; c.Apply(next); status.Text = $"Layer moved to job step {to + 1}. Enabled layers run from top to bottom.";
-    }
-    private void RemoveLayer()
-    {
-        try { var c = Current.Canvas; var next = LayerEditing.RemoveEmpty(c.History.Document, c.ActiveLayer); c.ActiveLayer = Math.Min(c.ActiveLayer, next.Layers.Count - 1); c.Apply(next); }
-        catch (InvalidDataException ex) { status.Text = ex.Message; }
     }
     private async Task ImportImage()
     {

@@ -12,6 +12,7 @@ public static class ShapeEditing
     public static bool HitTest(DesignDocument d, DesignShape s, double x, double y, double tolerance)
     {
         if (x < s.X - tolerance || y < s.Y - tolerance || x > s.X + s.Width + tolerance || y > s.Y + s.Height + tolerance) return false;
+        if(s.Text is not null && x>=s.X && x<=s.X+s.Width && y>=s.Y && y<=s.Y+s.Height)return true;
         var inside = x >= s.X && y >= s.Y && x <= s.X + s.Width && y <= s.Y + s.Height;
         if (s.Kind == ShapeKind.Image) return inside;
         if (s.Kind == ShapeKind.Path) return VectorPaths.Edges(s).Any(e => VectorPaths.Distance(new(x, y), e.From, e.To) <= tolerance) || (d.Layers[s.Layer].Mode == CutMode.Fill && s.Path!.Contours.All(c => c.Closed) && VectorPaths.Contains(s, new(x, y)));

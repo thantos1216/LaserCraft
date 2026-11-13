@@ -34,7 +34,11 @@ public sealed partial class MainWindow
             window.Closed+=(_,_)=>{if(outputPreview==window)outputPreview=null;};window.Show(this);status.Text="Preview opened separately; design remains editable.";
         }
         catch(OperationCanceledException){if(!workspaceClosed)status.Text="Preview preparation cancelled.";}
-        catch(Exception ex)when(ex is InvalidDataException or ArgumentException){status.Text="Preview: "+ex.Message;}
+        catch(Exception ex)when(ex is InvalidDataException or ArgumentException)
+        {
+            if(workspaceClosed||request.IsCancellationRequested)return;status.Text="Preview: "+ex.Message;
+            var message=new Window {Title="Preview unavailable",Width=540,Height=220,WindowStartupLocation=WindowStartupLocation.CenterOwner,Background=Background,Foreground=Foreground};var panel=new StackPanel {Margin=new Avalonia.Thickness(16),Spacing=8};panel.Children.Add(Label(ex.Message));panel.Children.Add(Button("Close",message.Close));message.Content=panel;await message.ShowDialog(this);
+        }
         finally{if(previewBuild==request)previewBuild=null;}
     }
 }

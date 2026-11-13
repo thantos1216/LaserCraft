@@ -1,10 +1,19 @@
 namespace LaserCraft.Domain;
 
+public sealed record LayerCleanup(DesignDocument Document,int ActiveLayer);
 public static class LayerEditing
 {
+    public static LayerCleanup PruneUnused(DesignDocument d,int activeLayer=0)
+    {
+        d.Validate();var used=d.Shapes.Select(s=>s.Layer).ToHashSet();var order=Enumerable.Range(0,d.Layers.Count).Where(i=>used.Contains(i)||d.Layers[i].KeepEmpty).ToArray();
+        if(order.Length==0)return new(d with {Layers=[new("Layer 1","#4169E1")]},0);
+        var map=order.Select((old,index)=>(old,index)).ToDictionary(p=>p.old,p=>p.index);
+        return new(d with {Layers=order.Select(i=>used.Contains(i)&&d.Layers[i].KeepEmpty?d.Layers[i] with {KeepEmpty=false}:d.Layers[i]).ToList(),Shapes=d.Shapes.Select(s=>s with {Layer=map[s.Layer]}).ToList()},map.GetValueOrDefault(activeLayer,0));
+    }
+    public static IReadOnlyList<int> VisibleIndices(DesignDocument d) {var used=d.Shapes.Select(s=>s.Layer).ToHashSet();return Enumerable.Range(0,d.Layers.Count).Where(i=>d.Layers[i].KeepEmpty||used.Contains(i)).ToArray();}
     public static DesignDocument Add(DesignDocument d, string name, LayerKind kind, string? color = null)
     {
-        var layer = new CutLayer(name, color ?? LayerPalette.Colors[d.Layers.Count % LayerPalette.Colors.Length], Mode: kind == LayerKind.Image ? CutMode.Image : CutMode.Line, Kind: kind);
+        var layer = new CutLayer(name, color ?? LayerPalette.Colors[d.Layers.Count % LayerPalette.Colors.Length], Mode: kind == LayerKind.Image ? CutMode.Image : CutMode.Line, Kind: kind,KeepEmpty:true);
         var result = d with { Layers = [.. d.Layers, layer] }; result.Validate(); return result;
     }
     public static DesignDocument Move(DesignDocument d, int from, int to)

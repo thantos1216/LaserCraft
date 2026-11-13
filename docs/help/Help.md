@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.34 - grayscale and large-photo editing
+Version 0.35 - layer cleanup, live text, sizing and material tests
 
 ## Connect and disconnect
 
@@ -41,6 +41,20 @@ Per-device defaults include jog distance, feed, pulse power/duration, exact-posi
 
 Move provides relative X/Y jogs, Home, bounded Pulse, Laser off, Cancel jog, exact bed X/Y moves, Read position and Set User Origin. Bed X/Y are distances along controller axes from the signed machine-range minimum; negative coordinates are translated automatically. Ack means accepted, not arrived. Read position after movement. Bed 0,0 can lie at a limit; allow clearance. Pulse is limited to 5% / 500 ms and reads the required power/laser settings. No calibrated plywood recipe is supplied.
 
+## Material test grids (0.35)
+
+Open Laser Tools / Material test grid or Materials / Create test grid. Choose Line for cut outlines or Fill for engraving, square or circle/ellipse cells, rows/columns, cell dimensions, gap, X/Y and optional air assist. All dimensions in this dialog explicitly use mm. Row 1 is at the smallest drawing Y, Column 1 at the smallest X.
+
+Choose two distinct axes from Speed, Power and Passes. Each axis interpolates its minimum to maximum across its count, including both endpoints. With one row/column it uses that axis minimum. Passes round to the nearest integer (halves upward); large counts across a narrow pass range can repeat values. The third process setting uses its fixed field. Preview and the R/C settings list update automatically. The list and generated layer names identify cells; no labels are engraved automatically.
+
+Create editable project opens a new unsaved project with one ordinary object and independent layer per cell. Cells are grouped by default for collective movement; disable Group cells or use Ungroup/Alt-click for individual editing. Grouping preserves separate laser settings and does not change pass scheduling. Save it as .lcraft, modify shapes/settings, reorder layers and inspect output Preview/placement before Run. Grid creation never connects, moves or fires hardware. The current project is left intact.
+
+Limits are 256 cells/layers, existing process ranges and bed fit; normal planner/output budgets still apply to dense Fill or many passes. Numerical defaults are examples, not calibrated recipes for plywood or any laser. Automatic cooling, focus ramps, raster-photo charts, temperature models and auto-engraved axis labels remain future work.
+
+## Numerical size and aspect lock (0.35)
+
+Select text, images, shapes or a group. Width/Height edits apply automatically after 350 ms; Apply still commits position and size immediately. X/Y define the top-left of the combined selection bounds. Lock between Width and Height preserves aspect: doubling either dimension doubles the other, halving it halves the other. Without Lock, each axis scales independently. Internal path coordinates, text source/mirrors/groups and layer settings are retained; text remains editable. Each applied resize can be undone. Pending sizing is validated before Preview/Run/Save or text editing; switching the document/selection discards stale pending sizing. Zero-extent path axes cannot acquire a new extent by scaling, and ratio lock requires both extents to be nonzero. Lock is local to the current window.
+
 ## Material Library
 
 Search names and notes to filter recipes as you type. Every whitespace-separated word must match somewhere in the name or notes, without regard to case. Choose All types, Vector or Image to combine a type filter with search. The count shows matching/total presets. Filtering does not change recipes; a hidden selection cannot be applied or replaced. Clear the search/filter to find it again. Search is temporary to this window and is not saved. Saving a layer recipe first validates its current editor values.
@@ -61,7 +75,7 @@ Hold Ctrl when starting to add matches. Hold Alt to select individual visible gr
 
 ## Group artwork
 
-Select at least two objects and choose Arrange / Group (Ctrl+G). Click a member's outline to select the whole group; drag moves the selected set together. A cyan box marks combined group bounds. Ctrl-click toggles a group. Alt-click selects one member; Ctrl+Alt-click toggles one member. Individual selections allow edits within a group. Arrange / Ungroup (Ctrl+Shift+G) clears the selected groups, including their other members. Group and Ungroup are each one Undo step.
+Select at least two objects and choose the Group toolbar icon or Arrange / Group (Ctrl+G). Click a member's outline to select the whole group; drag moves the selected set together. A cyan box marks combined group bounds. Ctrl-click toggles a group. Alt-click selects one member; Ctrl+Alt-click toggles one member. Individual selections allow edits within a group. The Ungroup toolbar icon or Arrange / Ungroup (Ctrl+Shift+G) clears the selected groups, including their other members. Group and Ungroup are each one Undo step.
 
 Groups can contain vectors, cached text and images across layers. Normal group selection includes hidden members; the selection label reports their count. Select All starts with visible objects and includes their grouped companions. Check this count before transforming, reassigning or deleting artwork. Images still require dedicated Image layers. Grouping does not merge layers, change cut settings or override layer burn order.
 
@@ -83,13 +97,13 @@ The simulator accepts numeric settings $10, $13, $30, $31, $32, $130 and $131 in
 
 ## Create and edit text
 
-Choose the left T button or Tools / Create text. Choose an installed font family, Bold/Italic if that style exists, font em height in millimetres, line spacing and curve tolerance. Em height is a font design unit, not the exact visible capital-letter height; the dialog reports actual ink bounds. Enter multiple lines with Return. The initial outlines prepare automatically. After changing values, use Preview text; Create/Update stays disabled until those exact settings have a successful preview. Cancel changes nothing.
+Choose the left T button or Tools / Create text. Choose an installed font family, Bold/Italic if that style exists, font em height in millimetres, line spacing and curve tolerance. Em height is a font design unit, not the exact visible capital-letter height; the dialog reports actual ink bounds. Enter multiple lines with Return. The initial outlines prepare automatically. Every content/font/style/size/spacing/tolerance change automatically regenerates outlines after 150 ms; there is no Preview text button. Obsolete work is cancelled and only the current preview enables Create/Update. Cancel changes nothing.
 
 This first text engine supports basic Latin/precomposed extended-Latin characters in U+0020–U+024F, excluding controls/format characters. Maximum 512 characters and 32 lines. Tabs, combining sequences, complex scripts, bidirectional shaping, ligatures, kerning controls, rich text, text-on-path and variable text are not implemented. Unsupported characters, missing glyphs, missing font/style, open/empty outlines or excessive geometry fail explicitly; an unavailable font is not silently substituted.
 
 Create inserts one selected text-outline object on the active vector layer, falling back to an existing vector layer if an image layer is active. It is centered on the bed when it fits. Use the main inspector to position/resize it and Cuts / Layers to assign speed, power, Line/Fill, passes and air. A very large text object can extend off-bed; Preview/export retains its existing bounds checks. Creating/updating is one Undo step.
 
-Select exactly one text object and choose Tools / Edit selected text to change its source settings. Editing keeps identity, position, cut layer, mirrors and existing horizontal/vertical resize factors; the new content's natural dimensions are multiplied by those factors. Its top-left ink anchor stays fixed, so a longer edit grows to the right. Blank lines add baseline spacing, but leading/trailing whitespace has no independent selectable bounds.
+Select exactly one text object and choose the toolbar Edit text icon or Tools / Edit selected text, or double-click the text in Select mode to change its source settings. Editing keeps identity, position, cut layer, mirrors and existing horizontal/vertical resize factors; the new content's natural dimensions are multiplied by those factors. Its top-left ink anchor stays fixed, so a longer edit grows to the right. Blank lines add baseline spacing, but leading/trailing whitespace has no independent selectable bounds.
 
 Native .lcraft saves both source text/settings and cached closed polylines. Reopening, display and output use the saved geometry without requiring that font to be installed. Editing requires the named font/style or an explicit replacement. Fonts are not embedded or distributed. Changing fonts/versions and regenerating can change geometry; inspect the preview. Curve tolerance (0.001–1 mm) applies before later resizing; it is not a physical accuracy guarantee. Existing path-vertex and file-size budgets apply.
 
@@ -123,9 +137,9 @@ Try samples/arrangement-demo.lcraft (included in the portable package). Ctrl+A s
 
 ## Create layers and control order
 
-New projects start with one vector layer. In Cuts / Layers, choose + Layer, enter a name, and choose Vector or Image. You can optionally assign the current selection when creating it. Each layer has its own name, color, speed, power, passes, pass order, output, visibility and air-assist setting. Valid field edits apply immediately; the row shows the effective pass count.
+New projects show no layer rows, palette entries or layer settings until artwork is created (or you explicitly create a draft layer). A hidden fallback vector layer preserves compatibility with existing project files. In Cuts / Layers, choose + Layer, enter a name, and choose Vector or Image. You can optionally assign the current selection when creating it. Each layer has its own name, color, speed, power, passes, pass order, output, visibility and air-assist setting. Valid field edits apply immediately; the row shows the effective pass count.
 
-Enabled layers run from top to bottom. Select a row and use the up/down buttons to change its job order. Object associations and settings move with the layer. Reordering is undoable. Delete empty removes unused layers; move their objects elsewhere first. At least one layer remains. Existing projects keep their layer lists.
+Enabled layers run from top to bottom. Select a row and use the up/down buttons to change its job order. Object associations and settings move with the layer. Reordering is undoable. Artwork commits automatically remove unused layers and remap object associations and the active layer. Deleting an image removes its image layer; deleting the last object leaves no visible default row. This cleanup is part of the same Undo step, so Undo restores both artwork and settings. The Delete empty button has been removed. Explicitly created unused draft layers remain available for assignment; once populated they are cleaned up normally when emptied. Undo can discard a new draft layer. Unused legacy layers are hidden and removed on the next artwork commit.
 
 Choose the Layer color button to open a visual picker with palette swatches and red/green/blue sliders. Apply color updates the selected layer and its artwork, and can be undone. Cancel keeps its previous color. Hex entry is no longer required.
 
@@ -252,6 +266,8 @@ Top-toolbar Preview opens a separate read-only snapshot window. The design canva
 Preview follows enabled layers in list order and honors Output scope, passes and pass scheduling. Black marks are weighted by commanded power and include the processed image scan paths. It is an ideal path/power view, not a material darkness, thermal or calibrated burn model. A preview is a snapshot: later edits do not change it. Open Preview again to replace it with current artwork/settings. Obsolete background preparation is discarded if the document or scope changes before it finishes.
 
 The preview window sends no machine commands. Connected Run and connected frames remain in the main Laser panel. Disconnected frame icons open a separate outline preview. G-code export prepares output independently without opening or replacing Preview. Timing assumes constant layer speed and 6000 mm/min inter-path travel, excluding acceleration, material effects and the captured-head return move.
+
+Fill uses indexed active edges rather than probing every contour edge on every row. Closed-contour even-odd coverage and holes are preserved; open contours still require closing before Fill. Complex jobs can still exceed the explicit active-intersection or segment limits; a Preview unavailable dialog explains the failure rather than leaving only a missing preview.
 
 Planning limits remain 100000 fill rows, 200000 segments, 16000 samples per axis, 4 million samples per image and 8 million raster cells including repeated passes, plus a bounded vector intersection-work budget. Increase interval or reduce passes for dense plans. The separate preview draws every planned segment; above 25000 segments playback refreshes at 5 frames per second. Large-photo responsiveness still needs broader qualification.
 

@@ -24,6 +24,7 @@ public sealed class DesignCanvas : Control
     public bool Snap { get; set; } = true;
     public int ActiveLayer { get; set; }
     public event Action? Changed;
+    public event Action? EditTextRequested;
     public event Action<string>? Notice;
     public string NodeDescription => CurrentNode && activeNode is { } n ? $" · contour {n.Contour + 1}, node {n.Vertex + 1} / {n.Owner.Path!.Contours[n.Contour].Points.Length}" : "";
     private Point? start;
@@ -79,7 +80,11 @@ public sealed class DesignCanvas : Control
         try { var s = VectorPaths.Create([new([.. pathDraft], closed)], ActiveLayer); Apply(History.Document with { Shapes = [.. History.Document.Shapes, s] }); Selected = s.Id; pathDraft.Clear(); draftCursor = null; Refresh(); }
         catch (InvalidDataException) { /* Keep the draft so Escape or a different finish can recover. */ }
     }
-    public void Apply(DesignDocument d) { History.Apply(d); Refresh(); }
+    private void CommitDocument(DesignDocument d)
+    {
+        var cleaned=LayerEditing.PruneUnused(d,ActiveLayer);History.Apply(cleaned.Document);ActiveLayer=cleaned.ActiveLayer;
+    }
+    public void Apply(DesignDocument d) { CommitDocument(d);Refresh(); }
     public bool Inches {get;set;}
     public void ReleaseImages() { foreach (var artwork in bitmaps.Values) artwork.Bitmap?.Dispose(); bitmaps.Clear(); }
     private async void PrepareArtwork(DesignShape shape, CutLayer layer, Artwork entry)
@@ -242,6 +247,8 @@ public sealed class DesignCanvas : Control
         if (Tool == "Select")
         {
             original = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, p.X, p.Y, 5 / Scale));
+            if(original is not null)ActiveLayer=original.Layer;
+            if(original?.Text is not null&&e.ClickCount==2){Selected=original.Id;start=null;original=null;Refresh();EditTextRequested?.Invoke();e.Handled=true;return;}
             if (original is null)
             {
                 boxStart = boxEnd = World(e.GetPosition(this)); boxPrevious = Selection.ToHashSet();
@@ -288,17 +295,17 @@ public sealed class DesignCanvas : Control
         }
         else if (nodeVertex >= 0 && preview is not null)
         {
-            try { if (preview != original) History.Apply(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); activeNode = (preview, nodeContour, nodeVertex); } catch (InvalidDataException) { activeNode = null; /* Invalid node moves preserve the original. */ }
+            try { if (preview != original) CommitDocument(History.Document with { Shapes = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList() }); activeNode = (preview, nodeContour, nodeVertex); } catch (InvalidDataException) { activeNode = null; /* Invalid node moves preserve the original. */ }
         }
         else if (original is not null && moveDelta != default)
         {
-            try { History.Apply(ShapeEditing.Transform(History.Document, Selection, s => s with { X = s.X + moveDelta.X, Y = s.Y + moveDelta.Y })); } catch (InvalidDataException) { /* Invalid moves leave the document unchanged. */ }
+            try { CommitDocument(ShapeEditing.Transform(History.Document, Selection, s => s with { X = s.X + moveDelta.X, Y = s.Y + moveDelta.Y })); } catch (InvalidDataException) { /* Invalid moves leave the document unchanged. */ }
         }
         else if (preview is not null && preview != original)
         {
             var items = History.Document.Shapes.Select(s => s.Id == preview.Id ? preview : s).ToList();
             if (!items.Any(s => s.Id == preview.Id)) items.Add(preview);
-            try { History.Apply(History.Document with { Shapes = items }); } catch (InvalidDataException) { Selected = null; }
+            try { CommitDocument(History.Document with { Shapes = items }); } catch (InvalidDataException) { Selected = null; }
         }
         preview = null; original = null; nodeContour = nodeVertex = -1; moveDelta = default; start = null; panStart = null; e.Pointer.Capture(null); Refresh();
     }

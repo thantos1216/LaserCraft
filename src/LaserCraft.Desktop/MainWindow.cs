@@ -16,6 +16,7 @@ public sealed partial class MainWindow : Window
     private readonly List<Session> sessions = [];
     private readonly TextBlock status = new(), selection = new();
     private readonly ComboBox layer = new();
+    private List<int> layerIndices = [];
     private bool updatingInspector;
     private readonly List<TextBlock> accentLabels = [];
     private readonly NumericUpDown x = Number(), y = Number(), width = Number(.1m), height = Number(.1m), speed = Number(1, 100000), power = Number(0, 100);
@@ -42,8 +43,8 @@ public sealed partial class MainWindow : Window
             if (heading) { block.FontWeight = FontWeight.SemiBold; accentLabels.Add(block); }
             help.Children.Add(block);
         }
-        LoadSettings();InstallLayerBindings(); KeyDown += OnShortcut;
-        Closing += (_, e) => { if(allowClose)return;e.Cancel=true;if(shutdownInProgress)return;if(sessions.Any(IsDirty)){_=ConfirmClose();return;}_=ShutdownAndClose(); };
+        LoadSettings();InstallLayerBindings();InstallGeometryBindings(); KeyDown += OnShortcut;
+        Closing += (_, e) => { if(allowClose)return;if(KeepPendingGeometry())CommitGeometryEdits();e.Cancel=true;if(shutdownInProgress)return;if(sessions.Any(IsDirty)){_=ConfirmClose();return;}_=ShutdownAndClose(); };
     }
     private bool shutdownInProgress;
     private async Task ShutdownAndClose()
@@ -69,16 +70,16 @@ public sealed partial class MainWindow : Window
         var device=connectedProfile??profiles.ElementAtOrDefault(deviceChoice.SelectedIndex);if(device is not null && device.Connection!=ConnectionKind.Simulator)d=d with {Width=device.BedWidth,Height=device.BedHeight};
         d.Validate(); RasterImages.Verify(d);
         var s = new Session { Path = path };s.Canvas.Inches=inches; s.Canvas.History.Reset(d); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
-        s.Canvas.Changed += Refresh; s.Canvas.Notice += message => status.Text = message; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
+        s.Canvas.EditTextRequested += ()=>_ = EditText(true); s.Canvas.Changed += Refresh; s.Canvas.Notice += message => status.Text = message; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
     }
     private void Refresh()
     {
         foreach (var s in sessions) s.Tab.Header = s.Canvas.History.Document.Name + (IsDirty(s) ? " •" : "");
         var c = Current.Canvas; var d = c.History.Document; var shape = d.Shapes.FirstOrDefault(s => s.Id == c.Selected);
-        var present = d.Shapes.Select(s => s.Id).ToHashSet(); c.Selection.RemoveWhere(id => !present.Contains(id));
-        updatingInspector = true; c.ActiveLayer = Math.Clamp(c.ActiveLayer, 0, d.Layers.Count - 1); layer.ItemsSource = d.Layers.Select((l, i) => $"{i:00}  {l.Name}").ToArray(); layer.SelectedIndex = c.ActiveLayer; updatingInspector = false;
+        var selectedShapes=d.Shapes.Where(s=>c.Selection.Contains(s.Id)).ToArray();
+        updatingInspector = true; c.ActiveLayer = Math.Clamp(c.ActiveLayer, 0, d.Layers.Count - 1); layerIndices=LayerEditing.VisibleIndices(d).ToList(); layer.ItemsSource = layerIndices.Select(i => $"{i:00}  {d.Layers[i].Name}").ToArray(); layer.SelectedIndex = layerIndices.IndexOf(c.ActiveLayer); updatingInspector = false;
         selection.Text = shape is null ? "Select an object to edit its dimensions." : $"{shape.Kind} · layer {shape.Layer + 1}";
-        if (c.Selection.Count > 0) { var bounds = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); SetMillimetres(x,bounds.X); SetMillimetres(y,bounds.Y); SetMillimetres(width,bounds.Width); SetMillimetres(height,bounds.Height); }
+        if (selectedShapes.Length > 0 && !KeepPendingGeometry()) { syncingGeometry=true; var bounds = ShapeEditing.Bounds(selectedShapes); SetMillimetres(x,bounds.X); SetMillimetres(y,bounds.Y); SetMillimetres(width,bounds.Width); SetMillimetres(height,bounds.Height); syncingGeometry=false; }
         RefreshWorkspace();
         RefreshStatus(); RefreshLayer();
     }
@@ -87,12 +88,15 @@ public sealed partial class MainWindow : Window
         var c = Current.Canvas; var d = c.History.Document;
         status.Text = $"{d.Name}  ·  {DisplayValue(d.Width):0.###} × {DisplayValue(d.Height):0.###} {(inches?"in":"mm")}  ·  {d.Shapes.Count} objects  ·  {c.Tool}  ·  {(monitor is null ? connecting ? "Connecting" : "Disconnected" : PhysicalControlsAvailable ? "Physical control enabled" : manualConsole.IsChecked == true ? "Manual console enabled" : "Query connection")}";
     }
-    private void RefreshLayer() { if(applyingLayerEdits)return;refreshingLayerEditor=true;try{ var i = Math.Max(0, layer.SelectedIndex); var l = Current.Canvas.History.Document.Layers[i]; SetMillimetres(speed,l.Speed); power.Value = (decimal)l.Power; passes.Value = l.Passes; SetMillimetres(interval,l.Interval); mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible;passOrder.SelectedIndex=(int)l.PassOrder; }finally{refreshingLayerEditor=false;} }
-    private void ApplyGeometry()
+    private void RefreshLayer() { if(applyingLayerEdits)return;refreshingLayerEditor=true;try{ var i = Current.Canvas.ActiveLayer; var l = Current.Canvas.History.Document.Layers[i]; SetMillimetres(speed,l.Speed); power.Value = (decimal)l.Power; passes.Value = l.Passes; SetMillimetres(interval,l.Interval); mode.ItemsSource = l.Kind == LayerKind.Image ? new[] { "Image" } : new[] { "Line", "Fill" }; mode.SelectedIndex = l.Kind == LayerKind.Image ? 0 : (int)l.Mode; layerName.Text = l.Name; layerColorValue = l.Color; layerColor.Background = new SolidColorBrush(Color.Parse(l.Color)); air.IsChecked = l.AirAssist; output.IsChecked = l.Output; visible.IsChecked = l.Visible;passOrder.SelectedIndex=(int)l.PassOrder; }finally{refreshingLayerEditor=false;} }
+    private void ApplyGeometry()=>CommitGeometryEdits();
+    private bool CommitGeometryEdits()
     {
-        try { var c = Current.Canvas; var d = c.History.Document; if (c.Selection.Count == 0) return; var b = ShapeEditing.Bounds(d.Shapes.Where(s => c.Selection.Contains(s.Id))); var sx = b.Width == 0 ? 1 : Millimetres(width) / b.Width; var sy = b.Height == 0 ? 1 : Millimetres(height) / b.Height; c.Apply(ShapeEditing.Transform(d, c.Selection, s => s with { X = Millimetres(x) + (s.X - b.X) * sx, Y = Millimetres(y) + (s.Y - b.Y) * sy, Width = s.Width * sx, Height = s.Height * sy })); }
-        catch (Exception ex) { status.Text = ex.Message; }
+        geometryTimer?.Stop();geometryPending=false;
+        try { var c=Current.Canvas;if(c.Selection.Count==0)return true;if(width.Value is null||height.Value is null||x.Value is null||y.Value is null)throw new InvalidDataException("Complete all dimensions first.");c.Apply(GeometrySizing.Resize(c.History.Document,c.Selection,Millimetres(x),Millimetres(y),Millimetres(width),Millimetres(height)));return true; }
+        catch(InvalidDataException ex){status.Text="Size: "+ex.Message;return false;}
     }
+
     private static FilePickerFileType ProjectType => new("LaserCraft project") { Patterns = ["*.lcraft"] };
     private async Task Open()
     {
