@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.36 - stable preview updates
+## Current milestone 0.37 - drawing-table context menu
+
+Added selection-aware right-click access to imports, text/image editing, tracing, clipboard actions, grouping, mirroring, centering and compound-path operations. Reuses existing command handlers and undo behavior; no hardware execution changes. Boolean welding remains planned. See [validation](../testing/milestone-37.md).
+
+## Milestone 0.36 - stable preview updates
 
 Image and text previews retain their last completed view while updating; only current results can apply. Reserved status space prevents normal pending/current messages shifting controls. Opening a project selects its first visible layer, avoiding a hidden fallback inspector. Added material-grid save/load/group-movement/ungrouping coverage. Native large-photo pending/result frames checked; 474 tests pass. See [validation](../testing/milestone-36.md).
 

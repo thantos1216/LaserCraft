@@ -25,6 +25,7 @@ public sealed class DesignCanvas : Control
     public int ActiveLayer { get; set; }
     public event Action? Changed;
     public event Action? EditTextRequested;
+    public event Action? ArtworkMenuRequested;
     public event Action<string>? Notice;
     public string NodeDescription => CurrentNode && activeNode is { } n ? $" · contour {n.Contour + 1}, node {n.Vertex + 1} / {n.Owner.Path!.Contours[n.Contour].Points.Length}" : "";
     private Point? start;
@@ -187,6 +188,17 @@ public sealed class DesignCanvas : Control
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         Focus(); var props = e.GetCurrentPoint(this).Properties;
+        if (props.IsRightButtonPressed && !ShowPreview)
+        {
+            var point = World(e.GetPosition(this));
+            var hit = History.Document.Shapes.LastOrDefault(s => History.Document.Layers[s.Layer].Visible && ShapeEditing.HitTest(History.Document, s, point.X, point.Y, 5 / Scale));
+            if (hit is not null)
+            {
+                var selected = ShapeGroups.Select(History.Document, Selection, hit.Id, false, e.KeyModifiers.HasFlag(KeyModifiers.Alt));
+                Selection.Clear(); Selection.UnionWith(selected); ActiveLayer = hit.Layer; Refresh();
+            }
+            return;
+        }
         if (props.IsMiddleButtonPressed) { panStart = e.GetPosition(this); e.Pointer.Capture(this); return; }
         if (!props.IsLeftButtonPressed) return;
         if (ShowPreview) return;
@@ -282,6 +294,11 @@ public sealed class DesignCanvas : Control
     }
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
+        if (e.InitialPressMouseButton == MouseButton.Right)
+        {
+            if (!ShowPreview) ArtworkMenuRequested?.Invoke();
+            e.Handled = true; return;
+        }
         if (Tool == "Lines") { panStart = null; e.Pointer.Capture(null); return; }
         if (boxStart is Point ba)
         {

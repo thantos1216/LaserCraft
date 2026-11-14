@@ -1,0 +1,5 @@
+# Milestone 0.37 validation
+
+Added a drawing-table context menu backed by existing editing commands. Selection-aware entries include imports, text/image editing, tracing, clipboard, grouping, transforms and compound-path operations. Right-click uses the existing group selection rule, preserves selection on blank space and does not commit a drawing operation on release. Menu contents are rebuilt before explicit opening; unavailable actions are disabled. This avoids the custom canvas bypassing Avalonia's context-request event.
+
+Release build passed with zero warnings/errors. Existing 435 unit and 39 integration tests passed. Native disconnected Release QA confirmed the 0.37 workspace, empty layer list, visible right-click menu with import/create options, disabled selection-dependent actions and nested transform/path menus. Individual command dialogs and populated-selection menu states were not exhaustively exercised in this milestone; existing handlers and their model tests are reused. No hardware commands were sent. Boolean union/welding remains planned; compound combine/separate is not boolean geometry.

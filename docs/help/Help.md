@@ -1,6 +1,6 @@
 # LaserCraft Help
 
-Version 0.36 - stable live previews
+Version 0.37 - stable live previews
 
 ## Connect and disconnect
 
@@ -292,3 +292,9 @@ Try samples/raster-engraving.lcraft for a working mixed raster/vector preview, s
 Window / Light / dark switches the persisted theme. Help is copied from docs/help/Help.md at build time. LaserCraft's original source is MIT-licensed; third-party packages retain their own licenses. No LightBurn source or protected assets are used.
 
 Full parity remains unfinished: native Bézier editing, advanced text/shaping, advanced node operations, curve-fitted and centerline tracing, booleans, additional raster algorithms and high-resolution optimization, advanced imports, real docking, cameras, rotary, materials, AI and advanced job placement remain planned. Console supports single-line queries and explicitly enabled writes; macros remain planned; initial reviewed physical streaming is implemented. Disabled commands identify unimplemented capabilities. The feature matrix and progress record distinguish tested behavior from planned work.
+
+## Drawing-table right-click menu
+
+Right-click the drawing table to import an image or SVG, create text, copy, paste, duplicate, delete, group or ungroup. Right-click an object to select it; clicking an already selected member preserves the multi-selection. Blank-space right-click keeps the current selection. Alt-right-click selects an individual group member.
+
+Edit artwork opens text editing, image preparation, tracing or path nodes. Transform offers mirroring and centering. Combine / separate paths offers conversion, same-layer compound contours, contour separation and endpoint joining. Convert shapes to paths before combining. Compound combination preserves contours; it does not weld overlaps or perform a boolean union. Separate contours splits a compound path into individual objects, not arbitrary image regions. Unavailable actions are disabled for the current selection. Existing Undo/Redo applies to these edits.

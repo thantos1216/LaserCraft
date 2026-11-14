@@ -89,3 +89,5 @@ Connection journal export and Windows x64 self-contained packaging are implement
 ## Console 0.19
 
 Console now has a single-line command box and Submit/Enter. Default query mode and explicit per-connection setting/G-code permission, raw replies, history, timeout and reconnect-after-uncertainty are implemented and tested with simulator/TCP loopback. Raw commands can move/fire or persist settings; physical USB behavior remains unverified. 0.22 adds separate guided GRBL motion/pulse controls. Firmware-image flashing, hardware emergency controls, macros and job streaming remain unavailable.
+
+Drawing-table context menu (0.37): implemented for imports, edit/trace, clipboard, grouping, transforms and existing compound-path operations. Boolean union/welding and arbitrary image splitting remain unavailable.
