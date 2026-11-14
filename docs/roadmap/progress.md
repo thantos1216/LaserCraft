@@ -1,6 +1,10 @@
 # Progress
 
-## Current milestone 0.35 - workspace fixes and material-test grids
+## Current milestone 0.36 - stable preview updates
+
+Image and text previews retain their last completed view while updating; only current results can apply. Reserved status space prevents normal pending/current messages shifting controls. Opening a project selects its first visible layer, avoiding a hidden fallback inspector. Added material-grid save/load/group-movement/ungrouping coverage. Native large-photo pending/result frames checked; 474 tests pass. See [validation](../testing/milestone-36.md).
+
+## Milestone 0.35 - workspace fixes and material-test grids
 
 Added canonical layer cleanup with empty-start presentation, indexed active-edge Fill for complex traces, live text generation, text double-click/Edit icon, automatic dimensions and proportional locking. Existing Group/Ungroup now has toolbar icons. Editable Line/Fill square/circle grids interpolate speed/power/pass ranges into independent layers and can group cells for movement. 473 tests pass (435 unit, 38 integration), with zero-warning/error build. No hardware execution changes; full parity remains incomplete. See [validation](../testing/milestone-35.md).
 

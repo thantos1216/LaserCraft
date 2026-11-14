@@ -1,6 +1,6 @@
-# LaserCraft 0.35 hardware qualification
+# LaserCraft 0.36 hardware qualification
 
-Extract the complete portable ZIP into a fresh folder on the Windows computer with the USB laser. Confirm toolbar 0.35 and close other port users.
+Extract the complete portable ZIP into a fresh folder on the Windows computer with the USB laser. Confirm toolbar 0.36 and close other port users.
 
 1. Select the physical device and detected COM port in the top-right connection box. The profile bed adjusts automatically and the selection/defaults persist.
 2. Clear travel, then Connect. GRBL homing runs after a one-second pause if $22=1. Use Home again whenever a new reference is required.

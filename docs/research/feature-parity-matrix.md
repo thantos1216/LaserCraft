@@ -1,4 +1,6 @@
-# Feature parity matrix - working baseline 0.35
+# Feature parity matrix - working baseline 0.36
+
+0.36: stable image/text previews during asynchronous updates, reserved status layout, populated-layer selection on project open, and material-grid persistence/group workflow regression. See [validation](../testing/milestone-36.md).
 
 0.35: automatic unused-layer cleanup and empty-start UI; active-edge Fill; live text/double-click editing; automatic dimensions/aspect lock; toolbar grouping; editable material-test grids with interpolated speed/power/passes. See [validation](../testing/milestone-35.md).
 

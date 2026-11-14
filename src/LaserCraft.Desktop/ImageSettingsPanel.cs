@@ -20,7 +20,7 @@ public sealed partial class MainWindow
         var threshold = Number(0, 255); threshold.Value = originalOptions.Threshold; var spacing = Number(.01m, 100); spacing.Increment = .01m; spacing.Value = (decimal)cut.Interval; var overscan = Number(0, 100); overscan.Increment = .1m; overscan.Value = (decimal)originalOptions.Overscan;
         threshold.IsEnabled = originalOptions.Mode == RasterMode.Threshold; imageMode.SelectionChanged += (_, _) => threshold.IsEnabled = imageMode.SelectedItem is RasterMode.Threshold;
         var invert = new CheckBox { Content = "Invert", IsChecked = originalOptions.Invert, Margin = new Thickness(8) }; var bidirectional = new CheckBox { Content = "Bidirectional", IsChecked = originalOptions.Bidirectional, Margin = new Thickness(8) };
-        Bitmap? original = null; Bitmap? processed = null; var sourceView=new Image {Stretch=Stretch.Uniform,Height=330}; var laserView=new CheckBox {Content="Show laser format",IsChecked=false,Margin=new Thickness(8)}; var prepared = new Image { Stretch = Stretch.Uniform }; var info = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(8) };
+        Bitmap? original = null; Bitmap? processed = null; var sourceView=new Image {Stretch=Stretch.Uniform,Height=330}; var laserView=new CheckBox {Content="Show laser format",IsChecked=false,Margin=new Thickness(8)}; var prepared = new Image { Stretch = Stretch.Uniform }; var info = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(8),MinHeight=72 };
         var root = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto,Auto"), Margin = new Thickness(16) }; root.Children.Add(Label("Grayscale source and live adjustments · source pixels are preserved", 17));
         var images = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*") }; var left = new StackPanel(); left.Children.Add(Label("Original grayscale")); left.Children.Add(sourceView); images.Children.Add(left); var right = new StackPanel(); right.Children.Add(Label("Adjusted grayscale / laser format (display approximation)")); prepared.Height = 330; right.Children.Add(prepared); Grid.SetColumn(right, 1); images.Children.Add(right); Grid.SetRow(images, 1); root.Children.Add(images);
         Control SliderInput(string name,NumericUpDown number,double min,double max,double step)
@@ -63,7 +63,7 @@ public sealed partial class MainWindow
             using var request=CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);running=request;var token=request.Token;Bitmap? next=null;Bitmap? nextOriginal=null;
             try
             {
-                var settings=Read();var showLaser=laserView.IsChecked==true;info.Text="Preparing current settings…";await gate.WaitAsync(token);
+                var settings=Read();var showLaser=laserView.IsChecked==true;info.Text=processed is null?"Preparing current settings…":"Preparing current settings… previous preview stays visible.";await gate.WaitAsync(token);
                 RasterImages.EditPreview preview;
                 try { preview=await Task.Run(()=>RasterImages.PrepareEditPreview(shape,settings,token),token);token.ThrowIfCancellationRequested();next=await Task.Run(()=>RasterImages.ProcessedPreview(showLaser?preview.Laser:preview.Adjusted),token);token.ThrowIfCancellationRequested();nextOriginal=await Task.Run(()=>RasterImages.ProcessedPreview(preview.Original),token); }
                 finally { gate.Release(); }
@@ -73,14 +73,14 @@ public sealed partial class MainWindow
                 info.Text=$"{preview.Original.Width} × {preview.Original.Height} display samples · {(showLaser?settings.Raster.Mode.ToString():"Adjusted grayscale")} · output {preview.OutputWidth} × {preview.OutputHeight} samples. "+(preview.Reduced?"Display is reduced; laser dots are approximate. ":"")+(!preview.OutputSupported?"Output exceeds the 16000-axis / 4-million sample limit: increase interval or reduce image size before Run. Editing can still be saved.":"Preview is current; Apply saves these settings.");
             }
             catch(OperationCanceledException) { }
-            catch(Exception ex) when(ex is InvalidDataException or ArgumentException) { if(!closed&&running==request)info.Text=ex.Message; }
+            catch(Exception ex) when(ex is InvalidDataException or ArgumentException) { if(!closed&&running==request)info.Text=(processed is null?"Preview unavailable. ":"Previous preview retained. ")+ex.Message; }
             finally { nextOriginal?.Dispose();next?.Dispose();if(running==request)running=null; }
         }
         void StartUpdate(){if(closed)return;running?.Cancel();jobs.RemoveAll(t=>t.IsCompleted);jobs.Add(Update());}
         void Changed()
         {
             if(closed||resetting)return;ready=null;apply.IsEnabled=false;running?.Cancel();debounce.Stop();
-            prepared.Source=null;processed?.Dispose();processed=null;info.Text="Settings changed · preparing automatically…";debounce.Start();
+            info.Text=processed is null?"Settings changed · preparing automatically…":"Settings changed · showing previous preview while preparing…";debounce.Start();
         }
         debounce.Tick+=(_,_)=>{debounce.Stop();StartUpdate();};
         foreach(var input in new[]{brightness,contrast,gamma,threshold,spacing,overscan}) { input.ValueChanged+=(_,_)=>Changed(); input.PropertyChanged+=(_,e)=>{if(e.Property==NumericUpDown.TextProperty)Changed();}; }

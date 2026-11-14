@@ -23,14 +23,14 @@ public sealed partial class MainWindow
         var spacing = Number(.5m, 5); spacing.Value = (decimal)source.LineSpacing; spacing.Increment = .1m;
         var tolerance = Number(.001m, 1); tolerance.Value = (decimal)source.Tolerance; tolerance.Increment = .01m;
         var bold = new CheckBox { Content = "Bold", IsChecked = source.Bold }; var italic = new CheckBox { Content = "Italic", IsChecked = source.Italic };
-        var preview = new TextOutlinePreview(); var info = Label("Preparing editable outlines automatically…"); DesignShape? prepared = null;
+        var preview = new TextOutlinePreview(); var info = Label("Preparing editable outlines automatically…"); info.MinHeight=48; DesignShape? prepared = null;
         using var lifetime = new CancellationTokenSource(); CancellationTokenSource? worker = null; TextSource? activeOptions = null; bool closed = false; Button apply = null!; var jobs=new List<Task>(); using var gate=new SemaphoreSlim(1); var debounce=new Avalonia.Threading.DispatcherTimer {Interval=TimeSpan.FromMilliseconds(150)};
         double Required(NumericUpDown input)=>input.Value is decimal value&&decimal.TryParse(input.Text,System.Globalization.NumberStyles.Number,System.Globalization.CultureInfo.CurrentCulture,out var typed)&&typed>=input.Minimum&&typed<=input.Maximum?(double)value:throw new InvalidDataException("Complete the text dimensions within their ranges.");
         TextSource Read() => new((content.Text ?? "").Replace("\r\n", "\n").Replace('\r', '\n'), family.SelectedItem as string ?? "", Required(height), bold.IsChecked == true, italic.IsChecked == true, Required(spacing), Required(tolerance));
-        void Stale() { if(closed)return; activeOptions = null; prepared = null; apply.IsEnabled = false; preview.Shape = null; preview.InvalidateVisual(); worker?.Cancel(); info.Text = "Settings changed · preparing automatically…";debounce.Stop();debounce.Start(); }
+        void Stale() { if(closed)return; activeOptions = null; prepared = null; apply.IsEnabled = false; worker?.Cancel(); info.Text = preview.Shape is null?"Settings changed · preparing automatically…":"Settings changed · previous preview stays visible while preparing…";debounce.Stop();debounce.Start(); }
         async Task Generate()
         {
-             apply.IsEnabled = false; prepared = null; preview.Shape = null; preview.InvalidateVisual(); info.Text = "Preparing font outlines…";
+             apply.IsEnabled = false; prepared = null; info.Text = preview.Shape is null?"Preparing font outlines…":"Preparing font outlines… previous preview stays visible.";
             using var cancel = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token); worker = cancel;
             try
             {
@@ -40,7 +40,7 @@ public sealed partial class MainWindow
                 info.Text = FormattableString.Invariant($"Natural ink bounds {shape.Width:0.###} × {shape.Height:0.###} mm · {shape.Path!.Contours.Length} contours · {shape.Path.Contours.Sum(c => c.Points.Length)} vertices. Cached outlines save with the project; fonts are not embedded.");
             }
             catch (OperationCanceledException) { }
-            catch (Exception ex) when (ex is InvalidDataException or ArgumentException) { if (!closed && worker==cancel) info.Text = ex.Message; }
+            catch (Exception ex) when (ex is InvalidDataException or ArgumentException) { if (!closed && worker==cancel) info.Text = (preview.Shape is null?"Preview unavailable. ":"Previous preview retained. ")+ex.Message; }
             finally { if(worker==cancel)worker=null; }
         }
         void Start() {debounce.Stop();if(closed)return;worker?.Cancel();jobs.RemoveAll(t=>t.IsCompleted);jobs.Add(Generate());}

@@ -69,7 +69,7 @@ public sealed partial class MainWindow : Window
     {
         var device=connectedProfile??profiles.ElementAtOrDefault(deviceChoice.SelectedIndex);if(device is not null && device.Connection!=ConnectionKind.Simulator)d=d with {Width=device.BedWidth,Height=device.BedHeight};
         d.Validate(); RasterImages.Verify(d);
-        var s = new Session { Path = path };s.Canvas.Inches=inches; s.Canvas.History.Reset(d); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
+        var s = new Session { Path = path };s.Canvas.Inches=inches; s.Canvas.History.Reset(d); s.Canvas.ActiveLayer=LayerEditing.VisibleIndices(d).FirstOrDefault(); s.Saved = Snapshot(s); s.Tab.Content = s.Canvas;
         s.Canvas.EditTextRequested += ()=>_ = EditText(true); s.Canvas.Changed += Refresh; s.Canvas.Notice += message => status.Text = message; sessions.Add(s); tabs.Items.Add(s.Tab); tabs.SelectedIndex = sessions.Count - 1; Refresh();
     }
     private void Refresh()
